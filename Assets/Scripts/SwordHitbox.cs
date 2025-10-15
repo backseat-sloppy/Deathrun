@@ -45,12 +45,8 @@ public class SwordHitbox : MonoBehaviour
                 other.attachedRigidbody.AddForce(direction * force);
                 Debug.Log($"Force applied to: {other.name}");
             }
-            EnemyHealth enemy = other.GetComponent<EnemyHealth>();
-            if (enemy != null)
-            {
-                enemy.TakeDamage(damage);
-                Debug.Log($"Damage applied to: {other.name}");
-            }
+            
+            
         }
         else
         {
