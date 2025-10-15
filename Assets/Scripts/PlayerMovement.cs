@@ -35,7 +35,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetMouseButtonDown(0)) // Left-click
         {
             animator.SetTrigger("Swing");
-            Debug.Log("Swing Triggered");  // Debug log to confirm the trigger is set
+           
         }
 
         // Handle movement input (horizontal and vertical axes)
@@ -82,9 +82,7 @@ public class PlayerMovement : MonoBehaviour
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0); // Layer 0
 
         // Debugging the current state and normalizedTime
-        Debug.Log("Current Animator State: " + stateInfo.fullPathHash);
-        Debug.Log("Normalized Time: " + stateInfo.normalizedTime);
-
+      
         // Check if the Swing animation is playing
         if (stateInfo.IsName("Armature|Swing") && stateInfo.normalizedTime >= 0.1f && stateInfo.normalizedTime <= 0.9f) // Adjust time as needed
         {
