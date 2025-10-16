@@ -1,27 +1,30 @@
 using UnityEngine;
+using Unity.Netcode; // Add this
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : NetworkBehaviour // Change from MonoBehaviour
 {
-    public CharacterController controller; // Reference to the Character Controller component
-    public Animator animator; // Reference to the Animator component
-    public float speed = 6f; // Movement speed
-    public float gravity = -9.81f; // Gravity force
-    public float jumpHeight = 2f; // Jump height
+    public CharacterController controller;
+    public Animator animator;
+    public float speed = 6f;
+    public float gravity = -9.81f;
+    public float jumpHeight = 2f;
 
-    private Vector3 velocity; // Stores current velocity
-    private bool isGrounded; // Checks if the player is on the ground
+    private Vector3 velocity;
+    private bool isGrounded;
 
-    public Transform groundCheck; // Position to check for ground
-    public float groundDistance = 0.4f; // Radius of the ground check sphere
-    public LayerMask groundMask; // Layer mask for the ground
+    public Transform groundCheck;
+    public float groundDistance = 0.4f;
+    public LayerMask groundMask;
 
-    public Transform cameraTransform; // Reference to the camera transform
-    public float rotationSpeed = 10f; // Speed for rotation smoothing
+    public Transform cameraTransform;
+    public float rotationSpeed = 10f;
 
-    public SwordHitbox swordHitbox; // Reference to the SwordHitbox component (attached to the sword)
+    public SwordHitbox swordHitbox;
 
     void Update()
     {
+        if (!IsOwner) return; // Add this line - only owner controls input
+
         // Check if the player is grounded
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
@@ -35,7 +38,6 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetMouseButtonDown(0)) // Left-click
         {
             animator.SetTrigger("Swing");
-           
         }
 
         // Handle movement input (horizontal and vertical axes)
