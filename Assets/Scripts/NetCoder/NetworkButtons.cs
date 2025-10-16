@@ -1,4 +1,4 @@
-using Unity.Netcode;
+﻿using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,13 +25,18 @@ public class NetworkButtons : MonoBehaviour
         hostButton.onClick.AddListener(() =>
         {
             ConfigureTransportForHost();
-            NetworkManager.Singleton.StartHost();
-            CopyIpAddress.gameObject.SetActive(true);
-
-            StartCoroutine(GetPublicIPAddress((publicIP) =>
+            bool success = NetworkManager.Singleton.StartHost();
+            
+            Debug.Log($"🎮 HOST STARTED: {success}");
+            
+            if (success)
             {
-                cachedPublicIP = publicIP;
-            }));
+                CopyIpAddress.gameObject.SetActive(true);
+                StartCoroutine(GetPublicIPAddress((publicIP) =>
+                {
+                    cachedPublicIP = publicIP;
+                }));
+            }
 
             hostButton.interactable = false;
             clientButton.interactable = false;
@@ -40,7 +45,20 @@ public class NetworkButtons : MonoBehaviour
         clientButton.onClick.AddListener(() =>
         {
             ConfigureTransportForClient();
-            NetworkManager.Singleton.StartClient();
+            
+            Debug.Log($"🎮 CLIENT STARTING...");
+            Debug.Log($"   IsClient before: {NetworkManager.Singleton.IsClient}");
+            Debug.Log($"   IsConnectedClient before: {NetworkManager.Singleton.IsConnectedClient}");
+            
+            bool success = NetworkManager.Singleton.StartClient();
+            
+            Debug.Log($"   StartClient() returned: {success}");
+            Debug.Log($"   IsClient after: {NetworkManager.Singleton.IsClient}");
+            
+            if (success)
+            {
+                StartCoroutine(MonitorClientConnection());
+            }
             
             hostButton.interactable = false;
             clientButton.interactable = false;
@@ -62,10 +80,103 @@ public class NetworkButtons : MonoBehaviour
             {
                 string localIP = GetLocalIPAddress();
                 string fullAddress = $"{localIP}:{port}";
-                GUIUtility.systemCopyBuffer = fullAddress;
+                GUIUtility.systemCopyBuffer = fullAddress;      
                 Debug.LogWarning($"Public IP not available. Copied LOCAL IP: {fullAddress}");
             }
         });
+    }
+
+    private void OnEnable()
+    {
+        if (NetworkManager.Singleton != null)
+        {
+            NetworkManager.Singleton.OnServerStarted += OnServerStarted;
+            NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (NetworkManager.Singleton != null)
+        {
+            NetworkManager.Singleton.OnServerStarted -= OnServerStarted;
+            NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
+            NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnected;
+        }
+    }
+
+    private void OnServerStarted()
+    {
+        Debug.Log("═══════════════════════════════");
+        Debug.Log("✅ SERVER STARTED SUCCESSFULLY");
+        Debug.Log($"   Player Prefab: {NetworkManager.Singleton.NetworkConfig.PlayerPrefab?.name ?? "NULL"}");
+        Debug.Log($"   Prefabs List Count: {NetworkManager.Singleton.NetworkConfig.Prefabs.NetworkPrefabsLists.Count}");
+        Debug.Log("═══════════════════════════════");
+    }
+
+    private void OnClientConnected(ulong clientId)
+    {
+        bool isLocalClient = clientId == NetworkManager.Singleton.LocalClientId;
+        
+        Debug.Log("═══════════════════════════════");
+        Debug.Log($"✅ CLIENT CONNECTED!");
+        Debug.Log($"   Client ID: {clientId}");
+        Debug.Log($"   Is Local Client: {isLocalClient}");
+        Debug.Log($"   Is Host: {NetworkManager.Singleton.IsHost}");
+        Debug.Log($"   Is Server: {NetworkManager.Singleton.IsServer}");
+        Debug.Log($"   Total Clients: {NetworkManager.Singleton.ConnectedClients.Count}");
+        
+        // Check for player object
+        if (NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(clientId) != null)
+        {
+            var playerObj = NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(clientId);
+            Debug.Log($"   ✅ PLAYER SPAWNED!");
+            Debug.Log($"      GameObject: {playerObj.gameObject.name}");
+            Debug.Log($"      NetworkObjectId: {playerObj.NetworkObjectId}");
+            Debug.Log($"      IsOwner: {playerObj.IsOwner}");
+        }
+        else
+        {
+            Debug.LogWarning($"   ⚠️ PLAYER NOT SPAWNED FOR CLIENT {clientId}");
+            
+            // Additional diagnostics
+            Debug.LogWarning($"   Player Prefab Assigned: {NetworkManager.Singleton.NetworkConfig.PlayerPrefab != null}");
+            Debug.LogWarning($"   Spawned Objects Count: {NetworkManager.Singleton.SpawnManager.SpawnedObjectsList.Count}");
+        }
+        Debug.Log("═══════════════════════════════");
+    }
+
+    private void OnClientDisconnected(ulong clientId)
+    {
+        string reason = NetworkManager.Singleton.DisconnectReason;
+        Debug.LogError($"❌ CLIENT DISCONNECTED!");
+        Debug.LogError($"   Client ID: {clientId}");
+        Debug.LogError($"   Reason: {reason}");
+    }
+
+    private IEnumerator MonitorClientConnection()
+    {
+        float timeout = 10f;
+        float elapsed = 0f;
+        
+        Debug.Log("⏳ Monitoring client connection...");
+        
+        while (elapsed < timeout)
+        {
+            if (NetworkManager.Singleton.IsConnectedClient)
+            {
+                Debug.Log($"✅ Client connected after {elapsed:F2} seconds!");
+                yield break;
+            }
+            
+            elapsed += 0.5f;
+            yield return new WaitForSeconds(0.5f);
+        }
+        
+        Debug.LogError($"❌ Client connection TIMEOUT after {timeout} seconds");
+        Debug.LogError($"   IsClient: {NetworkManager.Singleton.IsClient}");
+        Debug.LogError($"   IsConnectedClient: {NetworkManager.Singleton.IsConnectedClient}");
     }
 
     private void ConfigureTransportForHost()
@@ -74,7 +185,11 @@ public class NetworkButtons : MonoBehaviour
         if (transport != null)
         {
             transport.SetConnectionData("0.0.0.0", port, "0.0.0.0");
-            Debug.Log($"Host configured to listen on port {port}");
+            Debug.Log($"[HOST] Listening on 0.0.0.0:{port}");
+        }
+        else
+        {
+            Debug.LogError("[HOST] UnityTransport component not found!");
         }
     }
 
@@ -83,15 +198,13 @@ public class NetworkButtons : MonoBehaviour
         var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
         if (transport != null)
         {
-            // Use input field value if provided, otherwise use Inspector default
             string targetIP = connectToIP;
             ushort targetPort = port;
 
             if (ipInputField != null && !string.IsNullOrEmpty(ipInputField.text))
             {
-                // Parse "IP:PORT" format
                 string[] parts = ipInputField.text.Split(':');
-                targetIP = parts[0];
+                targetIP = parts[0].Trim();
                 if (parts.Length > 1 && ushort.TryParse(parts[1], out ushort parsedPort))
                 {
                     targetPort = parsedPort;
@@ -99,7 +212,11 @@ public class NetworkButtons : MonoBehaviour
             }
 
             transport.SetConnectionData(targetIP, targetPort);
-            Debug.Log($"Client configured to connect to {targetIP}:{targetPort}");
+            Debug.Log($"[CLIENT] Connecting to {targetIP}:{targetPort}");
+        }
+        else
+        {
+            Debug.LogError("[CLIENT] UnityTransport component not found!");
         }
     }
 

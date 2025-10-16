@@ -20,7 +20,10 @@ public class PlayerMovement : NetworkBehaviour // Change from MonoBehaviour
     public float rotationSpeed = 10f;
 
     public SwordHitbox swordHitbox;
-
+    private void Start()
+    {
+        Debug.Log("I am now DJ");
+    }
     void Update()
     {
         if (!IsOwner) return; // Add this line - only owner controls input
@@ -38,6 +41,7 @@ public class PlayerMovement : NetworkBehaviour // Change from MonoBehaviour
         if (Input.GetMouseButtonDown(0)) // Left-click
         {
             animator.SetTrigger("Swing");
+           
         }
 
         // Handle movement input (horizontal and vertical axes)
