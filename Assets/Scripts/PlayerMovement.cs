@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using Unity.Netcode;
+using NUnit.Framework;
+using System.Collections.Generic;
 
 public class PlayerMovement : NetworkBehaviour
 {
@@ -20,6 +22,9 @@ public class PlayerMovement : NetworkBehaviour
     public float rotationSpeed = 10f;
 
     public SwordHitbox swordHitbox;
+
+
+    [SerializeField] private string[] Taunts;
 
     // Called when player spawns on network
     public override void OnNetworkSpawn()
@@ -43,6 +48,8 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
 
+ 
+
     void Update()
     {
         if (!IsOwner) return;
@@ -65,6 +72,25 @@ public class PlayerMovement : NetworkBehaviour
                 animator.SetTrigger("Swing");
             }
         }
+
+        int i = 0;
+            while (i < Taunts.Length && i < 9)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1 + i))
+            {
+                if (animator != null)
+                {
+                    animator.SetTrigger(Taunts[i]);
+                }
+                else 
+                {
+                    Debug.LogWarning("Animator not found");
+                }
+            }
+            i++;
+        }
+        
+
 
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
