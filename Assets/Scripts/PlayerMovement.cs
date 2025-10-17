@@ -1,7 +1,7 @@
-using UnityEngine;
-using Unity.Netcode; // Add this
+﻿using UnityEngine;
+using Unity.Netcode;
 
-public class PlayerMovement : NetworkBehaviour // Change from MonoBehaviour
+public class PlayerMovement : NetworkBehaviour
 {
     public CharacterController controller;
     public Animator animator;
@@ -20,88 +20,122 @@ public class PlayerMovement : NetworkBehaviour // Change from MonoBehaviour
     public float rotationSpeed = 10f;
 
     public SwordHitbox swordHitbox;
-    private void Start()
+
+    // Called when player spawns on network
+    public override void OnNetworkSpawn()
     {
-        Debug.Log("I am now DJ");
+        base.OnNetworkSpawn();
+        
+        Debug.Log($"🎮 Player spawned! IsOwner: {IsOwner}, ClientId: {OwnerClientId}");
+        
+        
+        if (!IsOwner)
+        {
+            if (cameraTransform != null)
+            {
+                cameraTransform.gameObject.SetActive(false);
+                Debug.Log("👁️ Disabled camera for remote player");
+            }
+        }
+        else
+        {
+            Debug.Log("✅ This is MY player - camera active");
+        }
     }
+
     void Update()
     {
-        if (!IsOwner) return; // Add this line - only owner controls input
+        if (!IsOwner) return;
 
-        // Check if the player is grounded
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        // Null safety check
+        if (groundCheck != null)
+        {
+            isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        }
 
-        // Reset downward velocity when grounded
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
         }
 
-        // Handle sword swing animation trigger
-        if (Input.GetMouseButtonDown(0)) // Left-click
+        if (Input.GetMouseButtonDown(0))
         {
-            animator.SetTrigger("Swing");
-           
+            if (animator != null)
+            {
+                animator.SetTrigger("Swing");
+            }
         }
 
-        // Handle movement input (horizontal and vertical axes)
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
-        Vector3 cameraForward = cameraTransform.forward;
-        Vector3 cameraRight = cameraTransform.right;
-
-        cameraForward.y = 0f;
-        cameraRight.y = 0f;
-
-        // Normalize the direction vectors to avoid unequal movement speeds
-        cameraForward.Normalize();
-        cameraRight.Normalize();
-
-        // Calculate the movement direction relative to the camera orientation
-        Vector3 move = cameraForward * z + cameraRight * x;
-
-        // If there is movement input, rotate the player to face that direction
-        if (move.magnitude > 0f)
+        if (cameraTransform != null)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(move);
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
-            controller.Move(move * speed * Time.deltaTime);
-            animator.SetFloat("Speed", move.magnitude);
-        }
-        else
-        {
-            animator.SetFloat("Speed", 0f);
+            Vector3 cameraForward = cameraTransform.forward;
+            Vector3 cameraRight = cameraTransform.right;
+
+            cameraForward.y = 0f;
+            cameraRight.y = 0f;
+
+            cameraForward.Normalize();
+            cameraRight.Normalize();
+
+            Vector3 move = cameraForward * z + cameraRight * x;
+
+            if (move.magnitude > 0f)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(move);
+                transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+                
+                if (controller != null)
+                {
+                    controller.Move(move * speed * Time.deltaTime);
+                }
+                
+                if (animator != null)
+                {
+                    animator.SetFloat("Speed", move.magnitude);
+                }
+            }
+            else
+            {
+                if (animator != null)
+                {
+                    animator.SetFloat("Speed", 0f);
+                }
+            }
         }
 
-        // Handle jumping logic (check if grounded and jump if pressed)
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
 
-        // Apply gravity
         velocity.y += gravity * Time.deltaTime;
-        controller.Move(velocity * Time.deltaTime);
-
-        // Handle sword hitbox enabling/disabling based on the current animation state
-        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0); // Layer 0
-
-        // Debugging the current state and normalizedTime
-      
-        // Check if the Swing animation is playing
-        if (stateInfo.IsName("Armature|Swing") && stateInfo.normalizedTime >= 0.1f && stateInfo.normalizedTime <= 0.9f) // Adjust time as needed
+        
+        if (controller != null)
         {
-            if (!swordHitbox.IsHitboxActive)
-            {
-                swordHitbox.EnableHitbox();
-            }
+            controller.Move(velocity * Time.deltaTime);
         }
-        else
+
+        // Sword hitbox with null checks
+        if (animator != null && swordHitbox != null)
         {
-            if (swordHitbox.IsHitboxActive)
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+            if (stateInfo.IsName("Armature|Swing") && stateInfo.normalizedTime >= 0.1f && stateInfo.normalizedTime <= 0.9f)
             {
-                swordHitbox.DisableHitbox();
+                if (!swordHitbox.IsHitboxActive)
+                {
+                    swordHitbox.EnableHitbox();
+                }
+            }
+            else
+            {
+                if (swordHitbox.IsHitboxActive)
+                {
+                    swordHitbox.DisableHitbox();
+                }
             }
         }
     }
