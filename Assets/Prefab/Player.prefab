@@ -655,6 +655,8 @@ MonoBehaviour:
   cameraTransform: {fileID: 1528188245273982969}
   rotationSpeed: 10
   swordHitbox: {fileID: 7477460612795186994}
+  Taunts: []
+  tauntCooldown: 1
 --- !u!95 &3506272099137903102
 Animator:
   serializedVersion: 7
