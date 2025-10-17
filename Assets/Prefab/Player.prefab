@@ -646,12 +646,12 @@ MonoBehaviour:
   animator: {fileID: 3506272099137903102}
   speed: 6
   gravity: -9.81
-  jumpHeight: 2
+  jumpForce: 5
   groundCheck: {fileID: 5005362030224139359}
   groundDistance: 0.4
   groundMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   cameraTransform: {fileID: 1528188245273982969}
   rotationSpeed: 10
   swordHitbox: {fileID: 7477460612795186994}
