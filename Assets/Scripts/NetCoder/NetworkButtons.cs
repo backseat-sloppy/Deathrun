@@ -16,6 +16,7 @@ public class NetworkButtons : MonoBehaviour
     [SerializeField] private Button hostButton;
     [SerializeField] private Button clientButton;
     [SerializeField] private Button copyJoinCodeButton;
+    [SerializeField] private Button startGameButton; // Manual close menu button
     [SerializeField] private TMP_InputField joinCodeInputField;
 
     [Header("UI Management")]
@@ -99,6 +100,12 @@ public class NetworkButtons : MonoBehaviour
                 Debug.LogWarning("⚠️ No join code available!");
             }
         });
+
+        // Manual close menu button
+        startGameButton.onClick.AddListener(() =>
+        {
+            HideMenuCanvas();
+        });
     }
 
     private async Task StartHostWithRelay()
@@ -126,6 +133,7 @@ public class NetworkButtons : MonoBehaviour
             {
                 Debug.Log("✅ Host started successfully with Relay!");
                 copyJoinCodeButton.gameObject.SetActive(true);
+          
             }
             else
             {
@@ -243,18 +251,19 @@ public class NetworkButtons : MonoBehaviour
             var playerObj = NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(clientId);
             Debug.Log($"   ✅ PLAYER SPAWNED!");
             Debug.Log($"      GameObject: {playerObj.gameObject.name}");
+            
+            // Show Start Game button ONLY for the local client when they are fully connected and spawned
+            if (isLocalClient)
+            {
+                startGameButton.gameObject.SetActive(true);
+                Debug.Log("🎮 Start Game button shown - ready to play!");
+            }
         }
         else
         {
             Debug.LogWarning($"   ⚠️ Player not spawned yet for client {clientId}");
         }
-        Debug.Log("═══════════════════════════════");   
-
-        // Hide UI canvas when local player connects
-        if (isLocalClient)
-        {
-            HideMenuCanvas();
-        }
+        Debug.Log("═══════════════════════════════");
     }
 
     private void OnClientDisconnected(ulong clientId)
@@ -263,10 +272,11 @@ public class NetworkButtons : MonoBehaviour
         Debug.LogWarning($"❌ CLIENT {clientId} DISCONNECTED");
         Debug.LogWarning($"   Reason: {reason}");
 
-        // Show UI canvas again on disconnect (optional - for re-connection)
+        // Hide Start Game button on disconnect
         bool wasLocalClient = clientId == NetworkManager.Singleton.LocalClientId;
         if (wasLocalClient)
         {
+            startGameButton.gameObject.SetActive(false);
             ShowMenuCanvas();
         }
     }
@@ -313,6 +323,7 @@ public class NetworkButtons : MonoBehaviour
             if (NetworkManager.Singleton.IsConnectedClient)
             {
                 Debug.Log($"✅ Client connected via Relay after {elapsed:F2}s!");
+                // REMOVED: startGameButton activation - now handled in OnClientConnected
                 yield break;
             }
             
