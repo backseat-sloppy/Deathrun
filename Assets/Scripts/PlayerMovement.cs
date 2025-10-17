@@ -7,14 +7,14 @@ public class PlayerMovement : NetworkBehaviour
     public Animator animator;
     public float speed = 6f;
     public float gravity = -9.81f;
-    public float jumpHeight = 2f;
+    public float jumpForce = 5f;
 
     private Vector3 velocity;
     private bool isGrounded;
 
     public Transform groundCheck;
-    public float groundDistance = 0.4f;
-    public LayerMask groundMask;
+    public float groundDistance = 0.4f; 
+    public LayerMask groundMask; 
 
     public Transform cameraTransform;
     public float rotationSpeed = 10f;
@@ -27,13 +27,13 @@ public class PlayerMovement : NetworkBehaviour
 
     private float lastTauntTime;
 
-    // Called when player spawns on network
+    
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-
+        
         Debug.Log($"🎮 Player spawned! IsOwner: {IsOwner}, ClientId: {OwnerClientId}");
-
+        
         if (!IsOwner)
         {
             if (cameraTransform != null)
@@ -52,11 +52,8 @@ public class PlayerMovement : NetworkBehaviour
     {
         if (!IsOwner) return;
 
-        // Null safety check
-        if (groundCheck != null)
-        {
-            isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-        }
+        // IMPROVED: Raycast ground detection (more efficient than CheckSphere)
+        isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, groundDistance, groundMask);
 
         if (isGrounded && velocity.y < 0)
         {
@@ -70,11 +67,8 @@ public class PlayerMovement : NetworkBehaviour
         {
             if (animator != null)
             {
-                // This trigger is automatically synced to all clients by NetworkAnimator
                 animator.SetTrigger("Swing");
                 Debug.Log("⚔️ Swing animation triggered");
-
-                // Note: Hitbox enabling is handled separately below
             }
         }
 
@@ -106,16 +100,14 @@ public class PlayerMovement : NetworkBehaviour
             {
                 Quaternion targetRotation = Quaternion.LookRotation(move);
                 transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
-
+                
                 if (controller != null)
                 {
                     controller.Move(move * speed * Time.deltaTime);
                 }
-
+                
                 if (animator != null)
                 {
-                    // This float parameter is automatically synced by NetworkAnimator
-                    // Remote players will see the walking animation based on this value
                     animator.SetFloat("Speed", move.magnitude);
                 }
             }
@@ -123,39 +115,38 @@ public class PlayerMovement : NetworkBehaviour
             {
                 if (animator != null)
                 {
-                    // Setting Speed to 0 triggers idle animation
-                    // This is also automatically synced
                     animator.SetFloat("Speed", 0f);
                 }
             }
         }
 
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        // ========================================
+        // JUMPING SYSTEM (Trigger - Auto Synced by NetworkAnimator)
+        // ========================================
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            velocity.y = jumpForce;
+            
+            if (animator != null)
+            {
+                animator.SetTrigger("Jump");
+                Debug.Log("🦘 Jump animation triggered");
+            }
         }
 
         velocity.y += gravity * Time.deltaTime;
-
+        
         if (controller != null)
         {
             controller.Move(velocity * Time.deltaTime);
         }
 
-        // ========================================
-        // SWORD HITBOX (Manual Sync Required)
-        // This needs manual syncing because it's a gameplay event,
-        // not just a visual animation
-        // ========================================
         HandleSwordHitbox();
     }
 
     private void HandleTauntInput()
     {
-        // Performance optimization: only check if any key is pressed
         if (!Input.anyKeyDown) return;
-
-        // Check cooldown
         if (Time.time - lastTauntTime < tauntCooldown) return;
 
         for (int i = 0; i < Mathf.Min(Taunts.Length, 9); i++)
@@ -164,8 +155,6 @@ public class PlayerMovement : NetworkBehaviour
             {
                 if (!string.IsNullOrEmpty(Taunts[i]))
                 {
-                    // Trigger is automatically synced by NetworkAnimator
-                    // All clients will see this taunt animation
                     animator.SetTrigger(Taunts[i]);
                     lastTauntTime = Time.time;
                     Debug.Log($"🎭 Taunt triggered: {Taunts[i]}");
@@ -177,19 +166,14 @@ public class PlayerMovement : NetworkBehaviour
 
     private void HandleSwordHitbox()
     {
-        // This logic runs on ALL clients (owner and remote)
-        // because NetworkAnimator syncs the animation state
         if (animator == null || swordHitbox == null) return;
 
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
 
-        // Check if swing animation is playing
         if (stateInfo.IsName("Armature|Swing") &&
             stateInfo.normalizedTime >= 0.1f &&
             stateInfo.normalizedTime <= 0.9f)
         {
-            // Only enable hitbox on the OWNER
-            // Remote players just see the animation
             if (IsOwner && !swordHitbox.IsHitboxActive)
             {
                 swordHitbox.EnableHitbox();
@@ -198,12 +182,21 @@ public class PlayerMovement : NetworkBehaviour
         }
         else
         {
-            // Disable hitbox when swing animation ends
             if (IsOwner && swordHitbox.IsHitboxActive)
             {
                 swordHitbox.DisableHitbox();
                 Debug.Log("⚔️ Sword hitbox DISABLED");
             }
+        }
+    }
+
+    // Optional: Visualize raycast in Scene view
+    void OnDrawGizmosSelected()
+    {
+        if (groundCheck != null)
+        {
+            Gizmos.color = isGrounded ? Color.green : Color.red;
+            Gizmos.DrawRay(groundCheck.position, Vector3.down * groundDistance);
         }
     }
 }
