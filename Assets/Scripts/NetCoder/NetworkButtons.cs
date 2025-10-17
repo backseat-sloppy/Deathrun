@@ -15,11 +15,14 @@ public class NetworkButtons : MonoBehaviour
 {
     [SerializeField] private Button hostButton;
     [SerializeField] private Button clientButton;
-    [SerializeField] private Button copyJoinCodeButton; // Renamed from CopyIpAddress
-    [SerializeField] private TMP_InputField joinCodeInputField; // Renamed from ipInputField
+    [SerializeField] private Button copyJoinCodeButton;
+    [SerializeField] private TMP_InputField joinCodeInputField;
+
+    [Header("UI Management")]
+    [SerializeField] private Canvas menuCanvas; // Add this in Inspector - drag your main UI canvas here
 
     [Header("Relay Settings")]
-    [SerializeField] private int maxConnections = 3; // 3 clients + 1 host = 4 players total
+    [SerializeField] private int maxConnections = 3;
 
     private string currentJoinCode;
     private bool isInitialized = false;
@@ -104,10 +107,7 @@ public class NetworkButtons : MonoBehaviour
         {
             Debug.Log("🎮 Creating Relay allocation...");
             
-            // Create relay allocation
             Allocation allocation = await RelayService.Instance.CreateAllocationAsync(maxConnections);
-            
-            // Get join code
             currentJoinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
             
             Debug.Log("═══════════════════════════════");
@@ -117,11 +117,9 @@ public class NetworkButtons : MonoBehaviour
             Debug.Log($"   Region: {allocation.Region}");
             Debug.Log("═══════════════════════════════");
             
-            // Configure transport to use Relay
             var relayServerData = new RelayServerData(allocation, "dtls");
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
             
-            // Start host
             bool success = NetworkManager.Singleton.StartHost();
             
             if (success)
@@ -161,7 +159,6 @@ public class NetworkButtons : MonoBehaviour
             
             Debug.Log($"🎮 Joining Relay with code: {joinCode}");
             
-            // Join relay using code
             JoinAllocation joinAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
             
             Debug.Log("═══════════════════════════════");
@@ -170,11 +167,9 @@ public class NetworkButtons : MonoBehaviour
             Debug.Log($"   Region: {joinAllocation.Region}");
             Debug.Log("═══════════════════════════════");
             
-            // Configure transport
             var relayServerData = new RelayServerData(joinAllocation, "dtls");
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
             
-            // Start client
             bool success = NetworkManager.Singleton.StartClient();
             
             if (success)
@@ -253,7 +248,13 @@ public class NetworkButtons : MonoBehaviour
         {
             Debug.LogWarning($"   ⚠️ Player not spawned yet for client {clientId}");
         }
-        Debug.Log("═══════════════════════════════");
+        Debug.Log("═══════════════════════════════");   
+
+        // Hide UI canvas when local player connects
+        if (isLocalClient)
+        {
+            HideMenuCanvas();
+        }
     }
 
     private void OnClientDisconnected(ulong clientId)
@@ -261,11 +262,48 @@ public class NetworkButtons : MonoBehaviour
         string reason = NetworkManager.Singleton.DisconnectReason;
         Debug.LogWarning($"❌ CLIENT {clientId} DISCONNECTED");
         Debug.LogWarning($"   Reason: {reason}");
+
+        // Show UI canvas again on disconnect (optional - for re-connection)
+        bool wasLocalClient = clientId == NetworkManager.Singleton.LocalClientId;
+        if (wasLocalClient)
+        {
+            ShowMenuCanvas();
+        }
+    }
+
+    private void HideMenuCanvas()
+    {
+        if (menuCanvas != null)
+        {
+            menuCanvas.gameObject.SetActive(false);
+            Debug.Log("🎨 Menu canvas hidden - game started!");
+            
+            // Unlock cursor for gameplay
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+        else
+        {
+            Debug.LogWarning("⚠️ Menu canvas reference not set in NetworkButtons!");
+        }
+    }
+
+    private void ShowMenuCanvas()
+    {
+        if (menuCanvas != null)
+        {
+            menuCanvas.gameObject.SetActive(true);
+            Debug.Log("🎨 Menu canvas shown");
+            
+            // Unlock cursor for menu interaction
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
     }
 
     private IEnumerator MonitorClientConnection()
     {
-        float timeout = 15f; // Relay can take longer
+        float timeout = 15f;
         float elapsed = 0f;
         
         Debug.Log("⏳ Monitoring client connection via Relay...");

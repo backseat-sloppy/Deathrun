@@ -1674,7 +1674,8 @@ MonoBehaviour:
   clientButton: {fileID: 674009531}
   copyJoinCodeButton: {fileID: 364648632}
   joinCodeInputField: {fileID: 1026504609}
-  maxConnections: 3
+  menuCanvas: {fileID: 107503894}
+  maxConnections: 6
 --- !u!1 &1804848602
 GameObject:
   m_ObjectHideFlags: 0
