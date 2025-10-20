@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 3952807692603412537}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.007, y: 0.378, z: -0.03}
+  m_LocalPosition: {x: -0.007, y: 0.205, z: -0.03}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -281,6 +281,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2b7f956d989eae34dabafdd8af52e309, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4368086327393262945}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2b7f956d989eae34dabafdd8af52e309, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1302523023944129831}
   m_SourcePrefab: {fileID: 100100000, guid: 2b7f956d989eae34dabafdd8af52e309, type: 3}
 --- !u!4 &7151568341757897807 stripped
 Transform:
@@ -349,7 +352,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7526826869725394677}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: edef7f15b4713a04c8ae249cf3fbd762, type: 3}
   m_Name: 
@@ -359,19 +362,16 @@ MonoBehaviour:
   animator: {fileID: 6198052981723059342}
   speed: 6
   gravity: -9.81
-  jumpForce: 5
+  jumpForce: 10
   groundCheck: {fileID: 8011244775203976970}
-  groundDistance: 3.89
+  groundDistance: 0.4
   groundMask:
     serializedVersion: 2
     m_Bits: 8
   cameraTransform: {fileID: 6026217876315447400}
   rotationSpeed: 10
   swordHitbox: {fileID: 0}
-  Taunts:
-  - Taunt1
-  - Taunt2
-  - Taunt3
+  Taunts: []
   tauntCooldown: 1
 --- !u!95 &6198052981723059342
 Animator:
@@ -504,3 +504,34 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &1302523023944129831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7526826869725394677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3343d9303df9e4146a5cd3cd7987f5f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 8
+  controller: {fileID: 855495938818100667}
+  animator: {fileID: 6198052981723059342}
+  jumpForce: 3
+  BaseSpeed: 6
+  gravity: -9.81
+  airControlMultiplier: 2
+  airStrafeMultiplier: 2
+  crouchSpeedMultiplier: 0.5
+  friction: 0.1
+  airFriction: 0.05
+  velocity: {x: 0, y: 0, z: 0}
+  isGrounded: 0
+  groundCheck: {fileID: 8011244775203976970}
+  groundDistance: 0.4
+  cameraTransform: {fileID: 6026217876315447400}
