@@ -1,0 +1,580 @@
+{
+  "assetCategories": {
+    "surface": {
+      "historical": {
+        "asian": {}
+      },
+      "stone": {
+        "wall": {}
+      }
+    }
+  },
+  "averageColor": "#5E5939",
+  "categories": [
+    "surface",
+    "stone",
+    "wall"
+  ],
+  "comp_version": 1,
+  "description": "",
+  "displacementBias": 0.775651,
+  "displacementCalibrationAccuracy": 0.815343,
+  "displacementScale": 6.050747,
+  "environment": {
+    "biome": "undefined",
+    "region": "undefined"
+  },
+  "highest_available_res": 8192,
+  "id": "tfphafjq",
+  "json": {
+    "contentLength": 12336,
+    "uri": "tfphafjq.json"
+  },
+  "maps": [
+    {
+      "averageColor": "#ACACAC",
+      "bitDepth": 32,
+      "colorSpace": "sRGB",
+      "contentLength": 116581451,
+      "maxIntensity": 255,
+      "mimeType": "image/x-exr",
+      "minIntensity": 9,
+      "name": "AO",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "ao",
+      "uri": "tfphafjq_8K_AO.exr"
+    },
+    {
+      "averageColor": "#ACACAC",
+      "bitDepth": 8,
+      "colorSpace": "sRGB",
+      "contentLength": 50011182,
+      "maxIntensity": 255,
+      "mimeType": "image/jpeg",
+      "minIntensity": 9,
+      "name": "AO",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "ao",
+      "uri": "tfphafjq_8K_AO.jpg"
+    },
+    {
+      "averageColor": "#5E5939",
+      "bitDepth": 16,
+      "colorSpace": "sRGB",
+      "contentLength": 265087646,
+      "maxIntensity": 156,
+      "mimeType": "image/x-exr",
+      "minIntensity": 35,
+      "name": "Basecolor",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "basecolor",
+      "uri": "tfphafjq_8K_Basecolor.exr"
+    },
+    {
+      "averageColor": "#5E5939",
+      "bitDepth": 8,
+      "colorSpace": "sRGB",
+      "contentLength": 63513909,
+      "maxIntensity": 156,
+      "mimeType": "image/jpeg",
+      "minIntensity": 35,
+      "name": "Basecolor",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "basecolor",
+      "uri": "tfphafjq_8K_Basecolor.jpg"
+    },
+    {
+      "averageColor": "#808080",
+      "bitDepth": 32,
+      "colorSpace": "Linear",
+      "contentLength": 203492819,
+      "maxIntensity": 255,
+      "mimeType": "image/x-exr",
+      "minIntensity": 0,
+      "name": "Bump",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "bump",
+      "uri": "tfphafjq_8K_Bump.exr"
+    },
+    {
+      "averageColor": "#808080",
+      "bitDepth": 8,
+      "colorSpace": "Linear",
+      "contentLength": 23800039,
+      "maxIntensity": 255,
+      "mimeType": "image/jpeg",
+      "minIntensity": 0,
+      "name": "Bump",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "bump",
+      "uri": "tfphafjq_8K_Bump.jpg"
+    },
+    {
+      "averageColor": "#FFFFFF",
+      "bitDepth": 32,
+      "colorSpace": "sRGB",
+      "contentLength": 211455038,
+      "maxIntensity": 255,
+      "mimeType": "image/x-exr",
+      "minIntensity": 255,
+      "name": "Cavity",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "cavity",
+      "uri": "tfphafjq_8K_Cavity.exr"
+    },
+    {
+      "averageColor": "#FFFFFF",
+      "bitDepth": 8,
+      "colorSpace": "sRGB",
+      "contentLength": 57145756,
+      "maxIntensity": 255,
+      "mimeType": "image/jpeg",
+      "minIntensity": 255,
+      "name": "Cavity",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "cavity",
+      "uri": "tfphafjq_8K_Cavity.jpg"
+    },
+    {
+      "averageColor": "#818181",
+      "bitDepth": 32,
+      "colorSpace": "Linear",
+      "contentLength": 93533113,
+      "maxIntensity": 137,
+      "mimeType": "image/x-exr",
+      "minIntensity": 114,
+      "name": "Displacement",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "displacement",
+      "uri": "tfphafjq_8K_Displacement.exr"
+    },
+    {
+      "averageColor": "#818181",
+      "bitDepth": 8,
+      "colorSpace": "Linear",
+      "contentLength": 9898524,
+      "maxIntensity": 137,
+      "mimeType": "image/jpeg",
+      "minIntensity": 114,
+      "name": "Displacement",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "displacement",
+      "uri": "tfphafjq_8K_Displacement.jpg"
+    },
+    {
+      "averageColor": "#0F0F0F",
+      "bitDepth": 32,
+      "colorSpace": "Linear",
+      "contentLength": 125652901,
+      "maxIntensity": 43,
+      "mimeType": "image/x-exr",
+      "minIntensity": 0,
+      "name": "Gloss",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "gloss",
+      "uri": "tfphafjq_8K_Gloss.exr"
+    },
+    {
+      "averageColor": "#0F0F0F",
+      "bitDepth": 8,
+      "colorSpace": "Linear",
+      "contentLength": 29729333,
+      "maxIntensity": 43,
+      "mimeType": "image/jpeg",
+      "minIntensity": 0,
+      "name": "Gloss",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "gloss",
+      "uri": "tfphafjq_8K_Gloss.jpg"
+    },
+    {
+      "averageColor": "#8B7EE1",
+      "bitDepth": 16,
+      "colorSpace": "Linear",
+      "contentLength": 251566020,
+      "maxIntensity": 214,
+      "mimeType": "image/x-exr",
+      "minIntensity": 49,
+      "name": "Normal",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "normal",
+      "uri": "tfphafjq_8K_Normal.exr"
+    },
+    {
+      "averageColor": "#8B7EE1",
+      "bitDepth": 8,
+      "colorSpace": "Linear",
+      "contentLength": 116030106,
+      "maxIntensity": 214,
+      "mimeType": "image/jpeg",
+      "minIntensity": 49,
+      "name": "Normal",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "normal",
+      "uri": "tfphafjq_8K_Normal.jpg"
+    },
+    {
+      "averageColor": "#F0F0F0",
+      "bitDepth": 32,
+      "colorSpace": "Linear",
+      "contentLength": 130046899,
+      "maxIntensity": 255,
+      "mimeType": "image/x-exr",
+      "minIntensity": 212,
+      "name": "Roughness",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "roughness",
+      "uri": "tfphafjq_8K_Roughness.exr"
+    },
+    {
+      "averageColor": "#F0F0F0",
+      "bitDepth": 8,
+      "colorSpace": "Linear",
+      "contentLength": 29521354,
+      "maxIntensity": 255,
+      "mimeType": "image/jpeg",
+      "minIntensity": 212,
+      "name": "Roughness",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "roughness",
+      "uri": "tfphafjq_8K_Roughness.jpg"
+    },
+    {
+      "averageColor": "#383838",
+      "bitDepth": 16,
+      "colorSpace": "sRGB",
+      "contentLength": 258915217,
+      "maxIntensity": 56,
+      "mimeType": "image/x-exr",
+      "minIntensity": 56,
+      "name": "Specular",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "specular",
+      "uri": "tfphafjq_8K_Specular.exr"
+    },
+    {
+      "averageColor": "#383838",
+      "bitDepth": 8,
+      "colorSpace": "sRGB",
+      "contentLength": 39400213,
+      "maxIntensity": 56,
+      "mimeType": "image/jpeg",
+      "minIntensity": 56,
+      "name": "Specular",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "specular",
+      "uri": "tfphafjq_8K_Specular.jpg"
+    }
+  ],
+  "meta": [
+    {
+      "key": "scanArea",
+      "name": "Scan Area",
+      "value": "2x2 m"
+    },
+    {
+      "key": "height",
+      "name": "Height",
+      "value": "0.018 m"
+    },
+    {
+      "key": "tileable",
+      "name": "Tileable",
+      "value": true
+    },
+    {
+      "key": "texelDensity",
+      "name": "Texel Density",
+      "value": "4096 px/m"
+    },
+    {
+      "key": "calibration",
+      "name": "Calibration",
+      "value": "GretagMacbeth ColorChecker Color Rendition Chart"
+    },
+    {
+      "key": "scanner",
+      "name": "Scanner",
+      "value": "MKX"
+    }
+  ],
+  "models": [],
+  "name": "Temple Mossy Stone Wall",
+  "pack": {
+    "_id": "ancient-temple",
+    "name": "Ancient Temple"
+  },
+  "physicalSize": null,
+  "points": 2,
+  "previews": {
+    "images": [
+      {
+        "contentLength": 260083,
+        "resolution": "360x360",
+        "tags": [
+          "thumb"
+        ],
+        "uri": "tfphafjq_Grid_360.png"
+      },
+      {
+        "contentLength": 353838,
+        "resolution": "420x420",
+        "tags": [
+          "thumb"
+        ],
+        "uri": "tfphafjq_Grid_420.png"
+      },
+      {
+        "contentLength": 1044682,
+        "resolution": "720x720",
+        "tags": [
+          "thumb",
+          "retina"
+        ],
+        "uri": "tfphafjq_Grid_720.png"
+      },
+      {
+        "contentLength": 1423468,
+        "resolution": "840x840",
+        "tags": [
+          "thumb",
+          "retina"
+        ],
+        "uri": "tfphafjq_Grid_840.png"
+      },
+      {
+        "contentLength": 3164873,
+        "resolution": "1440x768",
+        "tags": [
+          "preview",
+          "clay"
+        ],
+        "uri": "tfphafjq_PopupClay_1440.png"
+      },
+      {
+        "contentLength": 6001634,
+        "resolution": "1920x1080",
+        "tags": [
+          "preview",
+          "clay"
+        ],
+        "uri": "tfphafjq_PopupClay_1920.png"
+      },
+      {
+        "contentLength": 12922897,
+        "resolution": "2880x1536",
+        "tags": [
+          "preview",
+          "clay",
+          "retina"
+        ],
+        "uri": "tfphafjq_PopupClay_2880.png"
+      },
+      {
+        "contentLength": 24085897,
+        "resolution": "3840x2160",
+        "tags": [
+          "preview",
+          "clay",
+          "retina"
+        ],
+        "uri": "tfphafjq_PopupClay_3840.png"
+      },
+      {
+        "contentLength": 3382870,
+        "resolution": "1440x768",
+        "tags": [
+          "preview",
+          "tiled"
+        ],
+        "uri": "tfphafjq_PopupTiled_1440.png"
+      },
+      {
+        "contentLength": 6345157,
+        "resolution": "1920x1080",
+        "tags": [
+          "preview",
+          "tiled"
+        ],
+        "uri": "tfphafjq_PopupTiled_1920.png"
+      },
+      {
+        "contentLength": 13543699,
+        "resolution": "2880x1536",
+        "tags": [
+          "preview",
+          "tiled",
+          "retina"
+        ],
+        "uri": "tfphafjq_PopupTiled_2880.png"
+      },
+      {
+        "contentLength": 25383655,
+        "resolution": "3840x2160",
+        "tags": [
+          "preview",
+          "tiled",
+          "retina"
+        ],
+        "uri": "tfphafjq_PopupTiled_3840.png"
+      },
+      {
+        "contentLength": 3388931,
+        "resolution": "1440x768",
+        "tags": [
+          "preview"
+        ],
+        "uri": "tfphafjq_Popup_1440.png"
+      },
+      {
+        "contentLength": 6358695,
+        "resolution": "1920x1080",
+        "tags": [
+          "preview"
+        ],
+        "uri": "tfphafjq_Popup_1920.png"
+      },
+      {
+        "contentLength": 13501626,
+        "resolution": "2880x1536",
+        "tags": [
+          "preview",
+          "retina"
+        ],
+        "uri": "tfphafjq_Popup_2880.png"
+      },
+      {
+        "contentLength": 24739959,
+        "resolution": "3840x2160",
+        "tags": [
+          "preview",
+          "retina"
+        ],
+        "uri": "tfphafjq_Popup_3840.png"
+      }
+    ],
+    "relativeSize": "1x1",
+    "scaleReferences": []
+  },
+  "process_date": "2024-04-17 10:20:11",
+  "properties": [],
+  "referencePreviews": {
+    "maps": [],
+    "models": []
+  },
+  "references": [],
+  "revised": false,
+  "revision": 0,
+  "semanticTags": {
+    "3d_mesh": [],
+    "architectural_style": {},
+    "asset_type": "surface",
+    "contains": [
+      "moss",
+      "stone",
+      "wall",
+      "stone wall"
+    ],
+    "descriptive": [
+      "rough",
+      " mossy",
+      " worn"
+    ],
+    "environment": [
+      "ancient"
+    ],
+    "industry": [
+      "archviz",
+      "games",
+      "VFX"
+    ],
+    "interior_exterior": [
+      "exterior"
+    ],
+    "kit": "",
+    "latin_name": [],
+    "locations": {
+      "Asia": {
+        "Cambodia": {}
+      }
+    },
+    "maxSize": 2,
+    "minSize": 2,
+    "name": "Temple Mossy Stone Wall",
+    "orientation": [
+      "wall"
+    ],
+    "resolution": 8192,
+    "season": [],
+    "state": [
+      "old"
+    ],
+    "subject_matter": "manmade",
+    "theme": [
+      "ancient",
+      " temple"
+    ]
+  },
+  "tags": [
+    "surface",
+    "stone",
+    "wall",
+    "cambodia",
+    "archviz"
+  ],
+  "texelDensity": 4096,
+  "texture_type": "basic",
+  "ue_plugin_archives": [
+    {
+      "contentLength": 377189066,
+      "gltfVersion": "2.0",
+      "tier": 0,
+      "type": "gltf",
+      "uri": "ue_plugin_archives/tier_0/tfphafjq_tier_0.zip",
+      "version": 1
+    },
+    {
+      "contentLength": 119927836,
+      "gltfVersion": "2.0",
+      "tier": 1,
+      "type": "gltf",
+      "uri": "ue_plugin_archives/tier_1/tfphafjq_tier_1.zip",
+      "version": 1
+    },
+    {
+      "contentLength": 29213253,
+      "gltfVersion": "2.0",
+      "tier": 2,
+      "type": "gltf",
+      "uri": "ue_plugin_archives/tier_2/tfphafjq_tier_2.zip",
+      "version": 1
+    },
+    {
+      "contentLength": 2880660,
+      "gltfVersion": "2.0",
+      "tier": 3,
+      "type": "gltf",
+      "uri": "ue_plugin_archives/tier_3/tfphafjq_tier_3.zip",
+      "version": 1
+    }
+  ],
+  "version": 2
+}

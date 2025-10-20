@@ -2,88 +2,209 @@
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Net;
-using System.Net.Sockets;
 using System.Collections;
-using UnityEngine.Networking;
 using TMPro;
+using Unity.Services.Core;
+using Unity.Services.Authentication;
+using Unity.Services.Relay;
+using Unity.Services.Relay.Models;
+using Unity.Networking.Transport.Relay;
+using System.Threading.Tasks;
 
 public class NetworkButtons : MonoBehaviour
 {
     [SerializeField] private Button hostButton;
     [SerializeField] private Button clientButton;
-    [SerializeField] private Button CopyIpAddress;
-    [SerializeField] private TMP_InputField ipInputField; 
+    [SerializeField] private Button copyJoinCodeButton;
+    [SerializeField] private Button startGameButton; // Manual close menu button
+    [SerializeField] private TMP_InputField joinCodeInputField;
 
-    [SerializeField] private ushort port = 7777;
-    [SerializeField] private string connectToIP;
+    [Header("UI Management")]
+    [SerializeField] private Canvas menuCanvas; // Add this in Inspector - drag your main UI canvas here
 
-    private string cachedPublicIP = null;
+    [Header("Relay Settings")]
+    [SerializeField] private int maxConnections = 3;
+
+    private string currentJoinCode;
+    private bool isInitialized = false;
+
+    private async void Start()
+    {
+        await InitializeUnityServices();
+    }
+
+    private async Task InitializeUnityServices()
+    {
+        try
+        {
+            Debug.Log("🔄 Initializing Unity Services...");
+            
+            await UnityServices.InitializeAsync();
+            
+            if (!AuthenticationService.Instance.IsSignedIn)
+            {
+                await AuthenticationService.Instance.SignInAnonymouslyAsync();
+                Debug.Log($"✅ Signed in as: {AuthenticationService.Instance.PlayerId}");
+            }
+            
+            isInitialized = true;
+            Debug.Log("✅ Unity Services initialized successfully!");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"❌ Failed to initialize Unity Services: {e.Message}");
+            isInitialized = false;
+        }
+    }
 
     private void Awake()
     {
-        hostButton.onClick.AddListener(() =>
+        hostButton.onClick.AddListener(async () =>
         {
-            ConfigureTransportForHost();
-            bool success = NetworkManager.Singleton.StartHost();
-            
-            Debug.Log($"🎮 HOST STARTED: {success}");
-            
-            if (success)
+            if (!isInitialized)
             {
-                CopyIpAddress.gameObject.SetActive(true);
-                StartCoroutine(GetPublicIPAddress((publicIP) =>
-                {
-                    cachedPublicIP = publicIP;
-                }));
+                Debug.LogError("❌ Unity Services not initialized yet!");
+                return;
             }
 
             hostButton.interactable = false;
             clientButton.interactable = false;
+            
+            await StartHostWithRelay();
         });
 
-        clientButton.onClick.AddListener(() =>
+        clientButton.onClick.AddListener(async () =>
         {
-            ConfigureTransportForClient();
-            
-            Debug.Log($"🎮 CLIENT STARTING...");
-            Debug.Log($"   IsClient before: {NetworkManager.Singleton.IsClient}");
-            Debug.Log($"   IsConnectedClient before: {NetworkManager.Singleton.IsConnectedClient}");
-            
-            bool success = NetworkManager.Singleton.StartClient();
-            
-            Debug.Log($"   StartClient() returned: {success}");
-            Debug.Log($"   IsClient after: {NetworkManager.Singleton.IsClient}");
-            
-            if (success)
+            if (!isInitialized)
             {
-                StartCoroutine(MonitorClientConnection());
+                Debug.LogError("❌ Unity Services not initialized yet!");
+                return;
             }
-            
+
             hostButton.interactable = false;
             clientButton.interactable = false;
+            
+            await StartClientWithRelay();
         });
 
-        CopyIpAddress.onClick.AddListener(() =>
+        copyJoinCodeButton.onClick.AddListener(() =>
         {
-            if (!string.IsNullOrEmpty(cachedPublicIP))
+            if (!string.IsNullOrEmpty(currentJoinCode))
             {
-                string fullAddress = $"{cachedPublicIP}:{port}";
-                GUIUtility.systemCopyBuffer = fullAddress;
-                Debug.Log($"=== CONNECTION INFO ===");      
-                Debug.Log($"Public IP (Internet): {fullAddress}");
-                Debug.Log($"Local IP (LAN): {GetLocalIPAddress()}:{port}");
-                Debug.Log($"Copied PUBLIC IP to clipboard: {fullAddress}");
-                Debug.Log($"Remember to port forward {port} in your router!");
+                GUIUtility.systemCopyBuffer = currentJoinCode;
+                Debug.Log($"📋 Copied join code to clipboard: {currentJoinCode}");
+                Debug.Log("Share this code with friends!");
             }
             else
             {
-                string localIP = GetLocalIPAddress();
-                string fullAddress = $"{localIP}:{port}";
-                GUIUtility.systemCopyBuffer = fullAddress;      
-                Debug.LogWarning($"Public IP not available. Copied LOCAL IP: {fullAddress}");
+                Debug.LogWarning("⚠️ No join code available!");
             }
         });
+
+        // Manual close menu button
+        startGameButton.onClick.AddListener(() =>
+        {
+            HideMenuCanvas();
+        });
+    }
+
+    private async Task StartHostWithRelay()
+    {
+        try
+        {
+            Debug.Log("🎮 Creating Relay allocation...");
+            
+            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(maxConnections);
+            currentJoinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+            
+            Debug.Log("═══════════════════════════════");
+            Debug.Log("✅ RELAY ALLOCATION CREATED!");
+            Debug.Log($"   Join Code: {currentJoinCode}");
+            Debug.Log($"   Max Players: {maxConnections + 1}");
+            Debug.Log($"   Region: {allocation.Region}");
+            Debug.Log("═══════════════════════════════");
+            
+            var relayServerData = new RelayServerData(allocation, "dtls");
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
+            
+            bool success = NetworkManager.Singleton.StartHost();
+            
+            if (success)
+            {
+                Debug.Log("✅ Host started successfully with Relay!");
+                copyJoinCodeButton.gameObject.SetActive(true);
+          
+            }
+            else
+            {
+                Debug.LogError("❌ Failed to start host!");
+                hostButton.interactable = true;
+                clientButton.interactable = true;
+            }
+        }
+        catch (RelayServiceException e)
+        {
+            Debug.LogError($"❌ Relay allocation failed: {e.Message}");
+            Debug.LogError($"   Error Code: {e.ErrorCode}");
+            hostButton.interactable = true;
+            clientButton.interactable = true;
+        }
+    }
+
+    private async Task StartClientWithRelay()
+    {
+        try
+        {
+            string joinCode = joinCodeInputField.text.Trim().ToUpper();
+            
+            if (string.IsNullOrEmpty(joinCode))
+            {
+                Debug.LogError("❌ Join code is empty! Please enter a join code.");
+                hostButton.interactable = true;
+                clientButton.interactable = true;
+                return;
+            }
+            
+            Debug.Log($"🎮 Joining Relay with code: {joinCode}");
+            
+            JoinAllocation joinAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
+            
+            Debug.Log("═══════════════════════════════");
+            Debug.Log("✅ JOINED RELAY ALLOCATION!");
+            Debug.Log($"   Host Address: {joinAllocation.RelayServer.IpV4}");
+            Debug.Log($"   Region: {joinAllocation.Region}");
+            Debug.Log("═══════════════════════════════");
+            
+            var relayServerData = new RelayServerData(joinAllocation, "dtls");
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
+            
+            bool success = NetworkManager.Singleton.StartClient();
+            
+            if (success)
+            {
+                Debug.Log("✅ Client started successfully with Relay!");
+                StartCoroutine(MonitorClientConnection());
+            }
+            else
+            {
+                Debug.LogError("❌ Failed to start client!");
+                hostButton.interactable = true;
+                clientButton.interactable = true;
+            }
+        }
+        catch (RelayServiceException e)
+        {
+            Debug.LogError($"❌ Failed to join Relay: {e.Message}");
+            Debug.LogError($"   Error Code: {e.ErrorCode}");
+            
+            if (e.ErrorCode == (int)RelayExceptionReason.JoinCodeNotFound)
+            {
+                Debug.LogError("   The join code is invalid or expired!");
+            }
+            
+            hostButton.interactable = true;
+            clientButton.interactable = true;
+        }
     }
 
     private void OnEnable()
@@ -109,9 +230,9 @@ public class NetworkButtons : MonoBehaviour
     private void OnServerStarted()
     {
         Debug.Log("═══════════════════════════════");
-        Debug.Log("✅ SERVER STARTED SUCCESSFULLY");
-        Debug.Log($"   Player Prefab: {NetworkManager.Singleton.NetworkConfig.PlayerPrefab?.name ?? "NULL"}");
-        Debug.Log($"   Prefabs List Count: {NetworkManager.Singleton.NetworkConfig.Prefabs.NetworkPrefabsLists.Count}");
+        Debug.Log("✅ SERVER STARTED");
+        Debug.Log($"   Using Unity Relay: YES");
+        Debug.Log($"   Join Code: {currentJoinCode}");
         Debug.Log("═══════════════════════════════");
     }
 
@@ -120,29 +241,27 @@ public class NetworkButtons : MonoBehaviour
         bool isLocalClient = clientId == NetworkManager.Singleton.LocalClientId;
         
         Debug.Log("═══════════════════════════════");
-        Debug.Log($"✅ CLIENT CONNECTED!");
+        Debug.Log($"✅ CLIENT CONNECTED (via Relay)");
         Debug.Log($"   Client ID: {clientId}");
-        Debug.Log($"   Is Local Client: {isLocalClient}");
-        Debug.Log($"   Is Host: {NetworkManager.Singleton.IsHost}");
-        Debug.Log($"   Is Server: {NetworkManager.Singleton.IsServer}");
+        Debug.Log($"   Is Local: {isLocalClient}");
         Debug.Log($"   Total Clients: {NetworkManager.Singleton.ConnectedClients.Count}");
         
-        // Check for player object
         if (NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(clientId) != null)
         {
             var playerObj = NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(clientId);
             Debug.Log($"   ✅ PLAYER SPAWNED!");
             Debug.Log($"      GameObject: {playerObj.gameObject.name}");
-            Debug.Log($"      NetworkObjectId: {playerObj.NetworkObjectId}");
-            Debug.Log($"      IsOwner: {playerObj.IsOwner}");
+            
+            // Show Start Game button ONLY for the local client when they are fully connected and spawned
+            if (isLocalClient)
+            {
+                startGameButton.gameObject.SetActive(true);
+                Debug.Log("🎮 Start Game button shown - ready to play!");
+            }
         }
         else
         {
-            Debug.LogWarning($"   ⚠️ PLAYER NOT SPAWNED FOR CLIENT {clientId}");
-            
-            // Additional diagnostics
-            Debug.LogWarning($"   Player Prefab Assigned: {NetworkManager.Singleton.NetworkConfig.PlayerPrefab != null}");
-            Debug.LogWarning($"   Spawned Objects Count: {NetworkManager.Singleton.SpawnManager.SpawnedObjectsList.Count}");
+            Debug.LogWarning($"   ⚠️ Player not spawned yet for client {clientId}");
         }
         Debug.Log("═══════════════════════════════");
     }
@@ -150,23 +269,61 @@ public class NetworkButtons : MonoBehaviour
     private void OnClientDisconnected(ulong clientId)
     {
         string reason = NetworkManager.Singleton.DisconnectReason;
-        Debug.LogError($"❌ CLIENT DISCONNECTED!");
-        Debug.LogError($"   Client ID: {clientId}");
-        Debug.LogError($"   Reason: {reason}");
+        Debug.LogWarning($"❌ CLIENT {clientId} DISCONNECTED");
+        Debug.LogWarning($"   Reason: {reason}");
+
+        // Hide Start Game button on disconnect
+        bool wasLocalClient = clientId == NetworkManager.Singleton.LocalClientId;
+        if (wasLocalClient)
+        {
+            startGameButton.gameObject.SetActive(false);
+            ShowMenuCanvas();
+        }
+    }
+
+    private void HideMenuCanvas()
+    {
+        if (menuCanvas != null)
+        {
+            menuCanvas.gameObject.SetActive(false);
+            Debug.Log("🎨 Menu canvas hidden - game started!");
+            
+            // Unlock cursor for gameplay
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+        else
+        {
+            Debug.LogWarning("⚠️ Menu canvas reference not set in NetworkButtons!");
+        }
+    }
+
+    private void ShowMenuCanvas()
+    {
+        if (menuCanvas != null)
+        {
+            menuCanvas.gameObject.SetActive(true);
+            Debug.Log("🎨 Menu canvas shown");
+            
+            // Unlock cursor for menu interaction
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
     }
 
     private IEnumerator MonitorClientConnection()
     {
-        float timeout = 10f;
+        float timeout = 15f;
         float elapsed = 0f;
         
-        Debug.Log("⏳ Monitoring client connection...");
+        Debug.Log("⏳ Monitoring client connection via Relay...");
         
         while (elapsed < timeout)
         {
             if (NetworkManager.Singleton.IsConnectedClient)
             {
-                Debug.Log($"✅ Client connected after {elapsed:F2} seconds!");
+                Debug.Log($"✅ Client connected via Relay after {elapsed:F2}s!");
+                // REMOVED: startGameButton activation - now handled in OnClientConnected
                 yield break;
             }
             
@@ -174,102 +331,6 @@ public class NetworkButtons : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
         }
         
-        Debug.LogError($"❌ Client connection TIMEOUT after {timeout} seconds");
-        Debug.LogError($"   IsClient: {NetworkManager.Singleton.IsClient}");
-        Debug.LogError($"   IsConnectedClient: {NetworkManager.Singleton.IsConnectedClient}");
-    }
-
-    private void ConfigureTransportForHost()
-    {
-        var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
-        if (transport != null)
-        {
-            transport.SetConnectionData("0.0.0.0", port, "0.0.0.0");
-            Debug.Log($"[HOST] Listening on 0.0.0.0:{port}");
-        }
-        else
-        {
-            Debug.LogError("[HOST] UnityTransport component not found!");
-        }
-    }
-
-    private void ConfigureTransportForClient()
-    {
-        var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
-        if (transport != null)
-        {
-            string targetIP = connectToIP;
-            ushort targetPort = port;
-
-            if (ipInputField != null && !string.IsNullOrEmpty(ipInputField.text))
-            {
-                string[] parts = ipInputField.text.Split(':');
-                targetIP = parts[0].Trim();
-                if (parts.Length > 1 && ushort.TryParse(parts[1], out ushort parsedPort))
-                {
-                    targetPort = parsedPort;
-                }
-            }
-
-            transport.SetConnectionData(targetIP, targetPort);
-            Debug.Log($"[CLIENT] Connecting to {targetIP}:{targetPort}");
-        }
-        else
-        {
-            Debug.LogError("[CLIENT] UnityTransport component not found!");
-        }
-    }
-
-    private IEnumerator GetPublicIPAddress(System.Action<string> callback)
-    {
-        string[] ipServices = new string[]
-        {
-            "https://api.ipify.org",
-            "https://icanhazip.com",
-            "https://checkip.amazonaws.com"
-        };
-
-        foreach (string service in ipServices)
-        {
-            UnityWebRequest request = UnityWebRequest.Get(service);
-            request.timeout = 5;
-
-            yield return request.SendWebRequest();
-
-            if (request.result == UnityWebRequest.Result.Success)
-            {
-                string publicIP = request.downloadHandler.text.Trim();
-                Debug.Log($"Public IP retrieved from {service}: {publicIP}");
-                callback?.Invoke(publicIP);
-                yield break;
-            }
-            else
-            {
-                Debug.LogWarning($"Failed to get IP from {service}: {request.error}");
-            }
-        }
-
-        Debug.LogError("Failed to retrieve public IP from all services. Using local IP as fallback.");
-        callback?.Invoke(GetLocalIPAddress());
-    }
-
-    private string GetLocalIPAddress()
-    {
-        try
-        {
-            var host = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (var ip in host.AddressList)
-            {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    return ip.ToString();
-                }
-            }
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogError($"Failed to get IP: {e.Message}");
-        }
-        return "127.0.0.1";
+        Debug.LogError($"❌ Client connection TIMEOUT after {timeout}s");
     }
 }
