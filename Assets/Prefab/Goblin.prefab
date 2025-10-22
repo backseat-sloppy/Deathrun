@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 3952807692603412537}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.007, y: 0.51, z: -0.03}
+  m_LocalPosition: {x: -0.007, y: -0.037, z: -0.03}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -345,17 +345,19 @@ MonoBehaviour:
     m_Bits: 8
   groundCheck: {fileID: 8011244775203976970}
   groundDistance: 0.4
-  moveSpeed: 6
-  acceleration: 50
+  maxSpeed: 10
+  timeToMaxSpeed: 0.3
+  timeToStop: 0.3
   airAcceleration: 25
-  jumpForce: 10
-  maxSpeed: 8
+  jumpForce: 7
   airStrafeMultiplier: 0.3
   airRedirectSpeed: 5
   groundDrag: 6
   airDrag: 0.5
   rotationSpeed: 10
   airRotationSpeed: 15
+  minSpeedForRotation: 0.1
+  swingCooldown: 1.5
   _isGrounded: 0
 --- !u!95 &6198052981723059342
 Animator:

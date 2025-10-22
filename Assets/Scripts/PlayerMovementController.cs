@@ -19,11 +19,11 @@ public class PlayerMovementController : NetworkBehaviour
     [SerializeField] private float groundDistance = 0.4f;
 
     [Header("Movement Parameters")]
-    [SerializeField] private float moveSpeed = 6f;
-    [SerializeField] private float acceleration = 50f;
+    [SerializeField] private float maxSpeed = 8f; // Maximum movement speed
+    [SerializeField] private float timeToMaxSpeed = 0.3f; // Time to reach max speed
+    [SerializeField] private float timeToStop = 0.3f; // Time to decelerate to stop
     [SerializeField] private float airAcceleration = 25f;
     [SerializeField] private float jumpForce = 10f;
-    [SerializeField] private float maxSpeed = 8f;
 
     [Header("Air Control")]
     [SerializeField] private float airStrafeMultiplier = 0.3f;
@@ -36,9 +36,13 @@ public class PlayerMovementController : NetworkBehaviour
     [SerializeField] private float airRotationSpeed = 15f;
     [SerializeField] private float minSpeedForRotation = 0.1f; // Minimum speed before rotating
 
+    [Header("Animation")]
+    [SerializeField] private float swingCooldown = 1.5f;
+
     // State
     [SerializeField] private bool _isGrounded;
     private InputPayloadNetwork _networkSync;
+    private float _lastSwingTime = -999f;
 
     public float VelocityMagnitude => new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z).magnitude;
     public bool IsGrounded => _isGrounded;
@@ -81,6 +85,9 @@ public class PlayerMovementController : NetworkBehaviour
         // Only the owner can provide input
         if (!IsOwner) return;
 
+        // Handle animation inputs
+        HandleAnimationInput();
+
         // Gather input
         InputPayload input = new InputPayload
         {
@@ -106,6 +113,65 @@ public class PlayerMovementController : NetworkBehaviour
         
         // Apply drag
         rb.linearDamping = _isGrounded ? groundDrag : airDrag;
+    }
+
+    private void HandleAnimationInput()
+    {
+        // Swing on mouse click (left mouse button) with cooldown
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (Time.time >= _lastSwingTime + swingCooldown)
+            {
+                TriggerSwingServerRpc();
+                _lastSwingTime = Time.time;
+            }
+        }
+
+        // Taunts on number keys 1, 2, 3
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            TriggerTauntServerRpc(1);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            TriggerTauntServerRpc(2);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            TriggerTauntServerRpc(3);
+        }
+    }
+
+    [ServerRpc]
+    private void TriggerSwingServerRpc()
+    {
+        // Trigger animation on all clients
+        TriggerSwingClientRpc();
+    }
+
+    [ClientRpc]
+    private void TriggerSwingClientRpc()
+    {
+        if (animator != null)
+        {
+            animator.SetTrigger("Swing");
+        }
+    }
+
+    [ServerRpc]
+    private void TriggerTauntServerRpc(int tauntNumber)
+    {
+        // Trigger animation on all clients
+        TriggerTauntClientRpc(tauntNumber);
+    }
+
+    [ClientRpc]
+    private void TriggerTauntClientRpc(int tauntNumber)
+    {
+        if (animator != null)
+        {
+            animator.SetTrigger($"Taunt{tauntNumber}");
+        }
     }
 
     private Vector3 GetMovementInput()
@@ -134,18 +200,32 @@ public class PlayerMovementController : NetworkBehaviour
         
         if (_isGrounded)
         {
-            // GROUNDED: Full control over movement direction
-            Vector3 targetVelocity = input.InputVector * moveSpeed;
+            // GROUNDED: Smooth acceleration/deceleration using lerp
+            // FIXED: Use maxSpeed as the target velocity, not moveSpeed
+            Vector3 targetVelocity = input.InputVector * maxSpeed;
             
-            // Calculate horizontal velocity change
+            // Get current horizontal velocity
             Vector3 horizontalVel = new Vector3(currentVelocity.x, 0, currentVelocity.z);
             Vector3 targetHorizontalVel = new Vector3(targetVelocity.x, 0, targetVelocity.z);
             
-            // Apply acceleration
-            Vector3 velocityChange = (targetHorizontalVel - horizontalVel) * acceleration * Time.fixedDeltaTime;
+            // Calculate lerp speed based on whether we're accelerating or decelerating
+            float lerpSpeed;
+            if (targetHorizontalVel.magnitude > 0.01f)
+            {
+                // Accelerating toward target velocity
+                lerpSpeed = 1f / timeToMaxSpeed;
+            }
+            else
+            {
+                // Decelerating to stop
+                lerpSpeed = 1f / timeToStop;
+            }
             
-            // Clamp to max speed (horizontal only)
-            Vector3 newHorizontalVel = horizontalVel + velocityChange;
+            // Lerp velocity smoothly
+            Vector3 newHorizontalVel = Vector3.Lerp(horizontalVel, targetHorizontalVel, lerpSpeed * Time.fixedDeltaTime);
+            
+            // No need to clamp anymore since we're already targeting maxSpeed
+            // But keep it as a safety measure
             if (newHorizontalVel.magnitude > maxSpeed)
             {
                 newHorizontalVel = newHorizontalVel.normalized * maxSpeed;
@@ -164,7 +244,7 @@ public class PlayerMovementController : NetworkBehaviour
                 cameraForward.y = 0;
                 cameraForward.Normalize();
                 
-                // Get current horizontal velocity
+                // Get current horizontal velocity 
                 Vector3 horizontalVel = new Vector3(currentVelocity.x, 0, currentVelocity.z);
                 float currentSpeed = horizontalVel.magnitude;
                 
@@ -196,7 +276,7 @@ public class PlayerMovementController : NetworkBehaviour
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
         }
 
-        // CHANGED: Player ALWAYS rotates to face movement direction (velocity)
+        // Player ALWAYS rotates to face movement direction (velocity)
         Vector3 movementDirection = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
         
         // Only rotate if moving fast enough (prevents jittering when idle)
