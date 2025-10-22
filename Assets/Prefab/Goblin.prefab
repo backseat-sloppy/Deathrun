@@ -345,14 +345,14 @@ MonoBehaviour:
     m_Bits: 8
   groundCheck: {fileID: 8011244775203976970}
   groundDistance: 0.4
-  maxSpeed: 10
-  timeToMaxSpeed: 0.3
-  timeToStop: 0.3
+  maxSpeed: 14
+  timeToMaxSpeed: 0.2
+  timeToStop: 0.2
   airAcceleration: 25
-  jumpForce: 7
+  jumpForce: 14
   airStrafeMultiplier: 0.3
   airRedirectSpeed: 5
-  groundDrag: 6
+  groundDrag: 3
   airDrag: 0.5
   rotationSpeed: 10
   airRotationSpeed: 15
