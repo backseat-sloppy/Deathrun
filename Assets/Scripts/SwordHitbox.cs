@@ -23,14 +23,14 @@ public class SwordHitbox : MonoBehaviour
     {
         swordCollider.enabled = true;  // Enable hitbox during the swing
         IsHitboxActive = true;  // Set the hitbox as active
-        Debug.Log("Hitbox Enabled");
+
     }
 
     public void DisableHitbox()
     {
         swordCollider.enabled = false;  // Disable hitbox when swing is over
         IsHitboxActive = false;  // Set the hitbox as inactive
-        Debug.Log("Hitbox Disabled");
+       
     }
 
     void OnTriggerEnter(Collider other)
@@ -43,7 +43,7 @@ public class SwordHitbox : MonoBehaviour
             {
                 Vector3 direction = (other.transform.position - transform.position).normalized;
                 other.attachedRigidbody.AddForce(direction * force);
-                Debug.Log($"Force applied to: {other.name}");
+              
             }
             
             
