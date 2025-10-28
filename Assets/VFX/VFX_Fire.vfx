@@ -117,6 +117,9 @@ MonoBehaviour:
     - model: {fileID: 8926484042661614744}
       id: 2
       isStickyNote: 0
+    - model: {fileID: 8926484042661614889}
+      id: 0
+      isStickyNote: 0
   - title: Flames
     position:
       serializedVersion: 2
@@ -3060,7 +3063,7 @@ MonoBehaviour:
   m_Parent: {fileID: 114350483966674976}
   m_Children: []
   m_UIPosition: {x: 0, y: 0}
-  m_UICollapsed: 1
+  m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_InputSlots: []
   m_OutputSlots:
@@ -3081,7 +3084,15 @@ MonoBehaviour:
   m_EnumValues: []
   m_ValueFilter: 0
   m_Tooltip: 
-  m_Nodes: []
+  m_Nodes:
+  - m_Id: 0
+    linkedSlots:
+    - outputSlot: {fileID: 8926484042661614890}
+      inputSlot: {fileID: 8926484042661615042}
+    position: {x: 2475.4001, y: 1159.9001}
+    expandedSlots: []
+    expanded: 1
+    supecollapsed: 0
 --- !u!114 &8926484042661614890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3119,7 +3130,8 @@ MonoBehaviour:
       m_SerializableType: UnityEngine.Color, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
   m_Direction: 1
-  m_LinkedSlots: []
+  m_LinkedSlots:
+  - {fileID: 8926484042661615042}
 --- !u!114 &8926484042661614891
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4423,7 +4435,8 @@ MonoBehaviour:
       m_SerializableType: UnityEngine.Color, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
   m_Direction: 0
-  m_LinkedSlots: []
+  m_LinkedSlots:
+  - {fileID: 8926484042661614890}
 --- !u!114 &8926484042661615043
 MonoBehaviour:
   m_ObjectHideFlags: 0
