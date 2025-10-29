@@ -19,22 +19,21 @@ public class PlayerMovementController : NetworkBehaviour
     [SerializeField] private float groundDistance = 0.4f;
 
     [Header("Movement Parameters")]
-    [SerializeField] private float maxSpeed = 8f; // Maximum movement speed
-    [SerializeField] private float timeToMaxSpeed = 0.3f; // Time to reach max speed
-    [SerializeField] private float timeToStop = 0.3f; // Time to decelerate to stop
-    [SerializeField] private float airAcceleration = 25f;
-    [SerializeField] private float jumpForce = 10f;
+    [SerializeField] private float maxSpeed = 4f; // Reduced for smaller map
+    [SerializeField] private float groundAcceleration = 200f; // Keep instant response
+    [SerializeField] private float groundDeceleration = 500f; // Keep instant stopping
+    [SerializeField] private float airAcceleration = 10f; // Slightly reduced air control
+    [SerializeField] private float jumpForce = 8f; // Reduced jump height for smaller map
 
-    [Header("Air Control")]
-    [SerializeField] private float airStrafeMultiplier = 0.3f;
-    [SerializeField] private float airRedirectSpeed = 5f; // How fast velocity direction changes in air
-    [SerializeField] private float groundDrag = 0f;
-    [SerializeField] private float airDrag = 0.5f;
+    [Header("Physics Settings")]
+    [SerializeField] private float groundFriction = 10f; // Much higher friction coefficient
+    [SerializeField] private float airResistance = 0.1f;
     
     [Header("Rotation")]
     [SerializeField] private float rotationSpeed = 10f;
     [SerializeField] private float airRotationSpeed = 15f;
-    [SerializeField] private float minSpeedForRotation = 0.1f; // Minimum speed before rotating
+    [SerializeField] private float minSpeedForRotation = 0.1f;
+    [SerializeField] private bool rotateToInput = true; // Rotate to input direction instead of velocity
 
     [Header("Animation")]
     [SerializeField] private float swingCooldown = 1.5f;
@@ -43,6 +42,7 @@ public class PlayerMovementController : NetworkBehaviour
     [SerializeField] private bool _isGrounded;
     private InputPayloadNetwork _networkSync;
     private float _lastSwingTime = -999f;
+    private Vector3 _lastInputDirection;
 
     public float VelocityMagnitude => new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z).magnitude;
     public bool IsGrounded => _isGrounded;
@@ -53,14 +53,16 @@ public class PlayerMovementController : NetworkBehaviour
         base.OnNetworkSpawn();
         Debug.Log($"🎮 Player spawned! IsOwner: {IsOwner}, IsServer: {IsServer}, IsHost: {IsHost}, ClientId: {OwnerClientId}");
         
-        // Configure Rigidbody
+        // Configure Rigidbody for deterministic physics
         if (rb == null) rb = GetComponent<Rigidbody>();
         rb.interpolation = RigidbodyInterpolation.Interpolate;
         rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         rb.constraints = RigidbodyConstraints.FreezeRotation;
         rb.useGravity = true;
-        rb.linearDamping = 0f;
+        rb.linearDamping = 0f; // No built-in damping - we handle friction manually
+        rb.angularDamping = 0f;
         rb.isKinematic = false;
+        rb.mass = 1f;
 
         // Get network sync component
         _networkSync = GetComponent<InputPayloadNetwork>();
@@ -108,11 +110,8 @@ public class PlayerMovementController : NetworkBehaviour
     {
         if (!IsOwner) return;
 
-        // Ground check
+        // Update ground detection
         _isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, groundDistance, groundMask);
-        
-        // Apply drag
-        rb.linearDamping = _isGrounded ? groundDrag : airDrag;
     }
 
     private void HandleAnimationInput()
@@ -192,108 +191,142 @@ public class PlayerMovementController : NetworkBehaviour
     }
 
     /// <summary>
-    /// Processes movement based on input. Called by InputPayloadNetwork for prediction and reconciliation.
+    /// Processes player movement using physics-based forces.
+    /// Called by the networking system for client-side prediction and server reconciliation.
     /// </summary>
+    /// <param name="input">Validated input from the network synchronization system</param>
     public void ProcessMovement(InputPayload input)
     {
-        Vector3 currentVelocity = rb.linearVelocity;
+        Vector3 inputVector = ClampInputMagnitude(input.InputVector);
         
+        // Update rotation direction cache
+        if (inputVector.magnitude > 0.01f)
+        {
+            _lastInputDirection = inputVector;
+        }
+        
+        // Apply movement forces based on grounded state
         if (_isGrounded)
         {
-            // GROUNDED: Smooth acceleration/deceleration using lerp
-            // FIXED: Use maxSpeed as the target velocity, not moveSpeed
-            Vector3 targetVelocity = input.InputVector * maxSpeed;
-            
-            // Get current horizontal velocity
-            Vector3 horizontalVel = new Vector3(currentVelocity.x, 0, currentVelocity.z);
-            Vector3 targetHorizontalVel = new Vector3(targetVelocity.x, 0, targetVelocity.z);
-            
-            // Calculate lerp speed based on whether we're accelerating or decelerating
-            float lerpSpeed;
-            if (targetHorizontalVel.magnitude > 0.01f)
-            {
-                // Accelerating toward target velocity
-                lerpSpeed = 1f / timeToMaxSpeed;
-            }
-            else
-            {
-                // Decelerating to stop
-                lerpSpeed = 1f / timeToStop;
-            }
-            
-            // Lerp velocity smoothly
-            Vector3 newHorizontalVel = Vector3.Lerp(horizontalVel, targetHorizontalVel, lerpSpeed * Time.fixedDeltaTime);
-            
-            // No need to clamp anymore since we're already targeting maxSpeed
-            // But keep it as a safety measure
-            if (newHorizontalVel.magnitude > maxSpeed)
-            {
-                newHorizontalVel = newHorizontalVel.normalized * maxSpeed;
-            }
-
-            // Apply velocity
-            rb.linearVelocity = new Vector3(newHorizontalVel.x, currentVelocity.y, newHorizontalVel.z);
+            ApplyGroundMovement(inputVector);
         }
         else
         {
-            // AIRBORNE: Redirect velocity toward camera direction while maintaining speed
-            if (input.CameraRotation != Quaternion.identity)
-            {
-                // Get camera's forward direction (flattened to horizontal plane)
-                Vector3 cameraForward = input.CameraRotation * Vector3.forward;
-                cameraForward.y = 0;
-                cameraForward.Normalize();
-                
-                // Get current horizontal velocity 
-                Vector3 horizontalVel = new Vector3(currentVelocity.x, 0, currentVelocity.z);
-                float currentSpeed = horizontalVel.magnitude;
-                
-                if (currentSpeed > 0.1f && cameraForward.sqrMagnitude > 0.01f)
-                {
-                    // Calculate target direction (camera forward)
-                    Vector3 targetDirection = cameraForward;
-                    
-                    // Current direction
-                    Vector3 currentDirection = horizontalVel.normalized;
-                    
-                    // Smoothly rotate velocity direction toward camera direction
-                    Vector3 newDirection = Vector3.Slerp(
-                        currentDirection, 
-                        targetDirection, 
-                        Time.fixedDeltaTime * airRedirectSpeed
-                    );
-                    
-                    // Apply new direction while maintaining speed
-                    Vector3 newHorizontalVel = newDirection * currentSpeed;
-                    rb.linearVelocity = new Vector3(newHorizontalVel.x, currentVelocity.y, newHorizontalVel.z);
-                }
-            }
+            ApplyAirMovement(inputVector);
         }
-
-        // Jumping
+        
+        // Handle jumping
         if (input.Jump && _isGrounded)
         {
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
-
-        // Player ALWAYS rotates to face movement direction (velocity)
-        Vector3 movementDirection = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
         
-        // Only rotate if moving fast enough (prevents jittering when idle)
-        if (movementDirection.sqrMagnitude > minSpeedForRotation * minSpeedForRotation)
+        // Update player rotation
+        UpdatePlayerRotation();
+    }
+
+    /// <summary>
+    /// Applies physics-based ground movement using acceleration and friction forces
+    /// </summary>
+    private void ApplyGroundMovement(Vector3 inputVector)
+    {
+        Vector3 currentVelocity = rb.linearVelocity;
+        Vector3 horizontalVelocity = new Vector3(currentVelocity.x, 0, currentVelocity.z);
+        
+        if (inputVector.magnitude > 0.01f)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(movementDirection.normalized);
+            // Calculate target velocity and required acceleration
+            Vector3 targetVelocity = inputVector * maxSpeed;
+            Vector3 velocityChange = targetVelocity - horizontalVelocity;
             
-            // Use different rotation speeds for ground vs air
-            float rotSpeed = _isGrounded ? rotationSpeed : airRotationSpeed;
-            rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, Time.fixedDeltaTime * rotSpeed);
+            // Apply very strong acceleration force for near-instant response
+            Vector3 accelerationForce = velocityChange * groundAcceleration;
+            rb.AddForce(accelerationForce, ForceMode.Force);
+            
+            // Reduce friction when actively moving
+            Vector3 frictionForce = -horizontalVelocity * groundFriction * 0.1f;
+            rb.AddForce(frictionForce, ForceMode.Force);
         }
+        else
+        {
+            // Apply very strong friction when no input for near-instant stopping
+            Vector3 strongFriction = -horizontalVelocity * groundFriction * groundDeceleration;
+            rb.AddForce(strongFriction, ForceMode.Force);
+        }
+    }
+    
+    /// <summary>
+    /// Applies physics-based air movement with limited control
+    /// </summary>
+    private void ApplyAirMovement(Vector3 inputVector)
+    {
+        if (inputVector.magnitude > 0.01f)
+        {
+            Vector3 targetVelocity = inputVector * maxSpeed;
+            Vector3 currentHorizontal = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+            Vector3 velocityChange = targetVelocity - currentHorizontal;
+            
+            // Limit air control - only apply force in beneficial directions
+            if (Vector3.Dot(velocityChange, inputVector) > 0)
+            {
+                Vector3 airForce = velocityChange * airAcceleration;
+                rb.AddForce(airForce, ForceMode.Force);
+            }
+        }
+        
+        // Apply air resistance
+        Vector3 horizontalVel = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+        if (horizontalVel.magnitude > 0.01f)
+        {
+            Vector3 airResistanceForce = -horizontalVel * airResistance;
+            rb.AddForce(airResistanceForce, ForceMode.Force);
+        }
+    }
+    
+    /// <summary>
+    /// Updates player rotation to face movement direction
+    /// </summary>
+    private void UpdatePlayerRotation()
+    {
+        Vector3 rotationDirection = Vector3.zero;
+        
+        // Prefer input direction, fall back to movement direction
+        if (_lastInputDirection.magnitude > 0.1f)
+        {
+            rotationDirection = _lastInputDirection;
+        }
+        else
+        {
+            Vector3 horizontalVel = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+            if (horizontalVel.magnitude > minSpeedForRotation)
+            {
+                rotationDirection = horizontalVel.normalized;
+            }
+        }
+        
+        if (rotationDirection.magnitude > 0.1f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(rotationDirection);
+            float rotSpeed = _isGrounded ? rotationSpeed : airRotationSpeed;
+            
+            rb.rotation = Quaternion.RotateTowards(rb.rotation, targetRotation, 
+                rotSpeed * 90f * Time.fixedDeltaTime);
+        }
+    }
+
+    /// <summary>
+    /// Ensures input vector magnitude doesn't exceed 1.0 to prevent exploitation
+    /// </summary>
+    private Vector3 ClampInputMagnitude(Vector3 input)
+    {
+        return input.magnitude > 1f ? input.normalized : input;
     }
 
     private void UpdateAnimator()
     {
         if (animator == null) return;
 
+        // Use actual velocity for immediate animation response
         animator.SetFloat("Speed", VelocityMagnitude);
         animator.SetBool("isGrounded", _isGrounded);
     }
