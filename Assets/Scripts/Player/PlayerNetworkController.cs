@@ -173,6 +173,9 @@ namespace DeathrunGame
         [SerializeField] private string taunt2TriggerName = "Taunt2";
         [SerializeField] private string taunt3TriggerName = "Taunt3";
         
+        [Header("Combat Settings")]
+        [SerializeField] private float swingCooldown = 1.5f; // Cooldown in seconds between swings
+        
         // Optional parameters (add these to your animator if needed)
         [SerializeField] private string isGroundedParameterName = "IsGrounded";
         [SerializeField] private string isMovingParameterName = "IsMoving";
@@ -198,6 +201,9 @@ namespace DeathrunGame
         // Animation state tracking
         private bool wasGrounded = true;
         private bool wasMoving = false;
+        
+        // Combat state tracking
+        private float lastSwingTime = -10f; // Initialize to allow immediate first swing
         private bool wasSprinting = false;
         private float smoothedAnimSpeed = 0f;
         private Vector3 smoothAnimVelocity = Vector3.zero;
@@ -1367,8 +1373,36 @@ namespace DeathrunGame
             if (!enableAnimations || animator == null)
                 return;
                 
+            // Check cooldown
+            float timeSinceLastSwing = Time.time - lastSwingTime;
+            if (timeSinceLastSwing < swingCooldown)
+            {
+                Debug.Log($"⚔️ Swing on cooldown! {(swingCooldown - timeSinceLastSwing):F1}s remaining");
+                return;
+            }
+                
             animator.SetTrigger(swingTriggerName);
+            lastSwingTime = Time.time;
             Debug.Log("⚔️ Swing animation triggered");
+        }
+        
+        /// <summary>
+        /// Check if swing is currently on cooldown
+        /// </summary>
+        /// <returns>True if swing is on cooldown, false if ready to use</returns>
+        public bool IsSwingOnCooldown()
+        {
+            return (Time.time - lastSwingTime) < swingCooldown;
+        }
+        
+        /// <summary>
+        /// Get remaining cooldown time for swing
+        /// </summary>
+        /// <returns>Remaining cooldown time in seconds, 0 if ready</returns>
+        public float GetSwingCooldownRemaining()
+        {
+            float remaining = swingCooldown - (Time.time - lastSwingTime);
+            return Mathf.Max(0f, remaining);
         }
         
         /// <summary>
