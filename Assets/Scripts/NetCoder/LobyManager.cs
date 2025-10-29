@@ -5,6 +5,7 @@ using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using Unity.Networking.Transport.Relay;
 using Unity.Services.Authentication;
+using Unity.Services.Core;  // ← ADD THIS
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using Unity.Services.Relay;
@@ -23,7 +24,7 @@ namespace DeathrunGame
 
         [Header("Lobby Settings")]
         [SerializeField] private int maxPlayers = 4;
-        [SerializeField] private int maxARPlayers = 1; // Only 1 AR Director allowed
+        [SerializeField] private int maxARPlayers = 1;
         [SerializeField] private float lobbyHeartbeatInterval = 15f;
         [SerializeField] private float lobbyPollInterval = 1.5f;
 
@@ -43,8 +44,8 @@ namespace DeathrunGame
         private bool isHost = false;
         private float nextHeartbeat;
         private float nextPollTime;
+        private bool isInitialized = false;  // ← ADD THIS
 
-        // Player role data
         public enum PlayerRole
         {
             PCRunner,
@@ -68,8 +69,51 @@ namespace DeathrunGame
             Log("LobbyManager initialized");
         }
 
+        // ← ADD THIS ENTIRE START METHOD
+        private async void Start()
+        {
+            await InitializeUnityServices();
+        }
+
+        // ← ADD THIS ENTIRE METHOD
+        private async Task InitializeUnityServices()
+        {
+            try
+            {
+                Log("🔄 Initializing Unity Services...");
+
+                // Check if already initialized
+                if (UnityServices.State == ServicesInitializationState.Initialized)
+                {
+                    Log("✅ Unity Services already initialized");
+                    isInitialized = true;
+                    return;
+                }
+
+                await UnityServices.InitializeAsync();
+
+                // Sign in anonymously if not already signed in
+                if (!AuthenticationService.Instance.IsSignedIn)
+                {
+                    await AuthenticationService.Instance.SignInAnonymouslyAsync();
+                    Log($"✅ Signed in as: {AuthenticationService.Instance.PlayerId}");
+                }
+
+                isInitialized = true;
+                Log("✅ Unity Services initialized successfully!");
+            }
+            catch (Exception e)
+            {
+                LogError($"Failed to initialize Unity Services: {e.Message}");
+                OnLobbyError?.Invoke($"Failed to connect to services: {e.Message}");
+                isInitialized = false;
+            }
+        }
+
         private void Update()
         {
+            if (!isInitialized) return;  // ← ADD THIS CHECK
+
             HandleLobbyHeartbeat();
             HandleLobbyPolling();
         }
@@ -86,18 +130,19 @@ namespace DeathrunGame
 
         #region Lobby Creation
 
-        /// <summary>
-        /// Create a new lobby with Relay integration
-        /// </summary>
-        /// <param name="lobbyName">Name of the lobby</param>
-        /// <param name="hostRole">Role of the host (PC or AR)</param>
-        /// <returns>True if successful</returns>
         public async Task<bool> CreateLobby(string lobbyName, PlayerRole hostRole)
         {
+            // ← ADD THIS CHECK AT THE START
+            if (!isInitialized)
+            {
+                LogError("Unity Services not initialized yet!");
+                OnLobbyError?.Invoke("Connecting to services... Please wait and try again.");
+                return false;
+            }
+
             try
             {
                 myRole = hostRole;
-
                 Log($"Creating lobby: {lobbyName} as {hostRole}");
 
                 // Create Relay allocation first
@@ -161,11 +206,16 @@ namespace DeathrunGame
 
         #region Lobby Joining
 
-        /// <summary>
-        /// Get list of available lobbies
-        /// </summary>
         public async Task<List<Lobby>> GetAvailableLobbies()
         {
+            // ← ADD THIS CHECK
+            if (!isInitialized)
+            {
+                LogError("Unity Services not initialized yet!");
+                OnLobbyError?.Invoke("Connecting to services... Please wait.");
+                return new List<Lobby>();
+            }
+
             try
             {
                 Log("Fetching available lobbies...");
@@ -199,19 +249,22 @@ namespace DeathrunGame
             }
         }
 
-        /// <summary>
-        /// Join an existing lobby by ID
-        /// </summary>
         public async Task<bool> JoinLobby(string lobbyId, PlayerRole desiredRole)
         {
+            // ← ADD THIS CHECK
+            if (!isInitialized)
+            {
+                LogError("Unity Services not initialized yet!");
+                OnLobbyError?.Invoke("Connecting to services... Please wait.");
+                return false;
+            }
+
             try
             {
                 Log($"Attempting to join lobby {lobbyId} as {desiredRole}");
 
-                // Get lobby details first to check AR slot
                 var lobby = await Lobbies.Instance.GetLobbyAsync(lobbyId);
 
-                // Check if AR slot is available
                 if (desiredRole == PlayerRole.ARDirector)
                 {
                     if (lobby.Data["ARSlotTaken"].Value == "True")
@@ -232,16 +285,11 @@ namespace DeathrunGame
                 currentLobby = await Lobbies.Instance.JoinLobbyByIdAsync(lobbyId, joinOptions);
                 isHost = false;
 
-                // Update AR slot status if we're taking it (only host can update lobby data)
-                // This will be handled by polling - the host sees us join and updates it
-
-                // Get Relay join code
                 currentRelayJoinCode = currentLobby.Data["RelayJoinCode"].Value;
 
                 Log($"✅ Joined lobby: {currentLobby.Name}");
                 Log($"   Relay Join Code: {currentRelayJoinCode}");
 
-                // Join Relay
                 JoinAllocation joinAllocation = await RelayService.Instance.JoinAllocationAsync(currentRelayJoinCode);
                 var relayServerData = new RelayServerData(joinAllocation, "dtls");
                 NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
@@ -266,11 +314,16 @@ namespace DeathrunGame
             }
         }
 
-        /// <summary>
-        /// Join lobby by code (quick join)
-        /// </summary>
         public async Task<bool> JoinLobbyByCode(string lobbyCode, PlayerRole desiredRole)
         {
+            // ← ADD THIS CHECK
+            if (!isInitialized)
+            {
+                LogError("Unity Services not initialized yet!");
+                OnLobbyError?.Invoke("Connecting to services... Please wait.");
+                return false;
+            }
+
             try
             {
                 Log($"Attempting to join lobby with code: {lobbyCode} as {desiredRole}");
@@ -285,10 +338,8 @@ namespace DeathrunGame
                 currentLobby = await Lobbies.Instance.JoinLobbyByCodeAsync(lobbyCode, joinOptions);
                 isHost = false;
 
-                // Check AR slot after joining
                 if (desiredRole == PlayerRole.ARDirector)
                 {
-                    // Count AR players
                     int arCount = 0;
                     foreach (var player in currentLobby.Players)
                     {
@@ -307,7 +358,6 @@ namespace DeathrunGame
                     }
                 }
 
-                // Get Relay join code and join
                 currentRelayJoinCode = currentLobby.Data["RelayJoinCode"].Value;
 
                 Log($"✅ Joined lobby by code: {currentLobby.Name}");
@@ -327,8 +377,7 @@ namespace DeathrunGame
             {
                 LogError($"Failed to join lobby by code: {e.Message} (Code: {e.ErrorCode})");
 
-                // Fixed: Use integer comparison instead of LobbyExceptionReason enum
-                if (e.ErrorCode == 16006) // 16006 = Lobby not found
+                if (e.ErrorCode == 16006)
                 {
                     OnLobbyError?.Invoke("Lobby code not found! Please check the code and try again.");
                 }
@@ -338,32 +387,32 @@ namespace DeathrunGame
                 }
                 return false;
             }
-            catch (RelayServiceException e)
-            {
-                LogError($"Failed to join Relay: {e.Message}");
-                OnLobbyError?.Invoke($"Failed to connect to game: {e.Message}");
-                return false;
-            }
-        }
+catch (RelayServiceException e)
+{
+LogError($"Failed to join Relay: {e.Message}");
+OnLobbyError?.Invoke($"Failed to connect to game: {e.Message}");
+return false;
+}
+}
 
-        #endregion
+#endregion
 
-        #region Lobby Management
+#region Lobby Management
 
-        /// <summary>
-        /// Start the game (host only)
-        /// </summary>
-        public async Task<bool> StartGame()
-        {
-            if (!isHost || currentLobby == null)
-            {
-                OnLobbyError?.Invoke("Only the host can start the game!");
-                return false;
-            }
+/// <summary>
+/// Start the game (host only)
+/// </summary>
+public async Task<bool> StartGame()
+{
+if (!isHost || currentLobby == null)
+{
+OnLobbyError?.Invoke("Only the host can start the game!");
+return false;
+}
 
-            try
-            {
-                Log("Starting game...");
+try
+{
+Log("Starting game...");
 
                 // Update lobby to indicate game is starting
                 await Lobbies.Instance.UpdateLobbyAsync(currentLobby.Id, new UpdateLobbyOptions
