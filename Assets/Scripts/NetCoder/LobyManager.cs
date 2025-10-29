@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using Unity.Networking.Transport.Relay;
 using Unity.Services.Authentication;
-using Unity.Services.Core;  // ← ADD THIS
+using Unity.Services.Core;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using Unity.Services.Relay;
@@ -31,7 +32,6 @@ namespace DeathrunGame
         [Header("Debug")]
         [SerializeField] private bool showDebugLogs = true;
 
-        // Events for UI to subscribe to
         public event Action<Lobby> OnLobbyCreated;
         public event Action<Lobby> OnLobbyJoined;
         public event Action<List<Lobby>> OnLobbyListUpdated;
@@ -44,7 +44,9 @@ namespace DeathrunGame
         private bool isHost = false;
         private float nextHeartbeat;
         private float nextPollTime;
-        private bool isInitialized = false;  // ← ADD THIS
+        private bool isInitialized = false;
+        private CancellationTokenSource cancellationTokenSource;
+        private bool isQuitting = false;
 
         public enum PlayerRole
         {
@@ -66,23 +68,21 @@ namespace DeathrunGame
             Instance = this;
             DontDestroyOnLoad(gameObject);
 
+            cancellationTokenSource = new CancellationTokenSource();
             Log("LobbyManager initialized");
         }
 
-        // ← ADD THIS ENTIRE START METHOD
         private async void Start()
         {
             await InitializeUnityServices();
         }
 
-        // ← ADD THIS ENTIRE METHOD
         private async Task InitializeUnityServices()
         {
             try
             {
                 Log("🔄 Initializing Unity Services...");
 
-                // Check if already initialized
                 if (UnityServices.State == ServicesInitializationState.Initialized)
                 {
                     Log("✅ Unity Services already initialized");
@@ -92,7 +92,6 @@ namespace DeathrunGame
 
                 await UnityServices.InitializeAsync();
 
-                // Sign in anonymously if not already signed in
                 if (!AuthenticationService.Instance.IsSignedIn)
                 {
                     await AuthenticationService.Instance.SignInAnonymouslyAsync();
@@ -112,7 +111,7 @@ namespace DeathrunGame
 
         private void Update()
         {
-            if (!isInitialized) return;  // ← ADD THIS CHECK
+            if (!isInitialized || isQuitting) return;
 
             HandleLobbyHeartbeat();
             HandleLobbyPolling();
@@ -120,10 +119,34 @@ namespace DeathrunGame
 
         private void OnApplicationQuit()
         {
+            isQuitting = true;
+            cancellationTokenSource?.Cancel();
+            
             if (currentLobby != null)
             {
-                LeaveLobby().GetAwaiter().GetResult();
+                _ = CleanupLobbyAsync();
             }
+        }
+
+        private async Task CleanupLobbyAsync()
+        {
+            try
+            {
+                using (var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(2)))
+                {
+                    await LeaveLobby(timeoutCts.Token);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.Log($"Lobby cleanup error (ignored): {e.Message}");
+            }
+        }
+
+        private void OnDestroy()
+        {
+            cancellationTokenSource?.Cancel();
+            cancellationTokenSource?.Dispose();
         }
 
         #endregion
@@ -132,7 +155,6 @@ namespace DeathrunGame
 
         public async Task<bool> CreateLobby(string lobbyName, PlayerRole hostRole)
         {
-            // ← ADD THIS CHECK AT THE START
             if (!isInitialized)
             {
                 LogError("Unity Services not initialized yet!");
@@ -145,13 +167,11 @@ namespace DeathrunGame
                 myRole = hostRole;
                 Log($"Creating lobby: {lobbyName} as {hostRole}");
 
-                // Create Relay allocation first
                 Allocation allocation = await RelayService.Instance.CreateAllocationAsync(maxPlayers - 1);
                 currentRelayJoinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
 
                 Log($"✅ Relay allocation created - Join Code: {currentRelayJoinCode}");
 
-                // Create lobby options
                 var options = new CreateLobbyOptions
                 {
                     IsPrivate = false,
@@ -175,7 +195,6 @@ namespace DeathrunGame
                 Log($"   Lobby Code: {currentLobby.LobbyCode}");
                 Log($"   Max Players: {currentLobby.MaxPlayers}");
 
-                // Setup Relay transport
                 var relayServerData = new RelayServerData(allocation, "dtls");
                 NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
 
@@ -208,7 +227,6 @@ namespace DeathrunGame
 
         public async Task<List<Lobby>> GetAvailableLobbies()
         {
-            // ← ADD THIS CHECK
             if (!isInitialized)
             {
                 LogError("Unity Services not initialized yet!");
@@ -251,7 +269,6 @@ namespace DeathrunGame
 
         public async Task<bool> JoinLobby(string lobbyId, PlayerRole desiredRole)
         {
-            // ← ADD THIS CHECK
             if (!isInitialized)
             {
                 LogError("Unity Services not initialized yet!");
@@ -316,7 +333,6 @@ namespace DeathrunGame
 
         public async Task<bool> JoinLobbyByCode(string lobbyCode, PlayerRole desiredRole)
         {
-            // ← ADD THIS CHECK
             if (!isInitialized)
             {
                 LogError("Unity Services not initialized yet!");
@@ -387,34 +403,30 @@ namespace DeathrunGame
                 }
                 return false;
             }
-catch (RelayServiceException e)
-{
-LogError($"Failed to join Relay: {e.Message}");
-OnLobbyError?.Invoke($"Failed to connect to game: {e.Message}");
-return false;
-}
-}
+            catch (RelayServiceException e)
+            {
+                LogError($"Failed to join Relay: {e.Message}");
+                OnLobbyError?.Invoke($"Failed to connect to game: {e.Message}");
+                return false;
+            }
+        }
 
-#endregion
+        #endregion
 
-#region Lobby Management
+        #region Lobby Management
 
-/// <summary>
-/// Start the game (host only)
-/// </summary>
-public async Task<bool> StartGame()
-{
-if (!isHost || currentLobby == null)
-{
-OnLobbyError?.Invoke("Only the host can start the game!");
-return false;
-}
+        public async Task<bool> StartGame()
+        {
+            if (!isHost || currentLobby == null)
+            {
+                OnLobbyError?.Invoke("Only the host can start the game!");
+                return false;
+            }
 
-try
-{
-Log("Starting game...");
+            try
+            {
+                Log("Starting game...");
 
-                // Update lobby to indicate game is starting
                 await Lobbies.Instance.UpdateLobbyAsync(currentLobby.Id, new UpdateLobbyOptions
                 {
                     Data = new Dictionary<string, DataObject>
@@ -422,12 +434,11 @@ Log("Starting game...");
                         { "StartTime", new DataObject(DataObject.VisibilityOptions.Member, DateTime.UtcNow.ToString()) },
                         { "GameStarted", new DataObject(DataObject.VisibilityOptions.Member, "true") }
                     },
-                    IsLocked = true // Lock lobby so no one else can join
+                    IsLocked = true
                 });
 
                 Log("✅ Lobby locked and marked as started");
 
-                // Start Netcode host
                 bool started = NetworkManager.Singleton.StartHost();
 
                 if (started)
@@ -451,10 +462,7 @@ Log("Starting game...");
             }
         }
 
-        /// <summary>
-        /// Leave current lobby
-        /// </summary>
-        public async Task LeaveLobby()
+        public async Task LeaveLobby(CancellationToken cancellationToken = default)
         {
             if (currentLobby == null) return;
 
@@ -465,7 +473,6 @@ Log("Starting game...");
 
                 Log($"Leaving lobby: {currentLobby.Name}");
 
-                // If host, delete lobby; otherwise just leave
                 if (isHost)
                 {
                     await Lobbies.Instance.DeleteLobbyAsync(lobbyId);
@@ -481,18 +488,19 @@ Log("Starting game...");
                 isHost = false;
                 currentRelayJoinCode = null;
             }
+            catch (OperationCanceledException)
+            {
+                Log("Lobby leave cancelled (shutting down)");
+            }
             catch (LobbyServiceException e)
             {
                 LogError($"Failed to leave lobby: {e.Message}");
             }
         }
 
-        /// <summary>
-        /// Update AR slot status (host only)
-        /// </summary>
         private async Task UpdateLobbyARSlot(bool isTaken)
         {
-            if (currentLobby == null || !isHost) return;
+            if (currentLobby == null || !isHost || isQuitting) return;
 
             try
             {
@@ -506,6 +514,10 @@ Log("Starting game...");
 
                 Log($"AR slot updated: {(isTaken ? "Taken" : "Available")}");
             }
+            catch (OperationCanceledException)
+            {
+                // Expected during shutdown
+            }
             catch (LobbyServiceException e)
             {
                 LogError($"Failed to update AR slot: {e.Message}");
@@ -518,7 +530,7 @@ Log("Starting game...");
 
         private void HandleLobbyHeartbeat()
         {
-            if (!isHost || currentLobby == null) return;
+            if (!isHost || currentLobby == null || isQuitting) return;
 
             if (Time.time >= nextHeartbeat)
             {
@@ -529,10 +541,16 @@ Log("Starting game...");
 
         private async void SendHeartbeat()
         {
+            if (isQuitting || cancellationTokenSource.IsCancellationRequested) return;
+
             try
             {
                 await Lobbies.Instance.SendHeartbeatPingAsync(currentLobby.Id);
                 Log("💓 Heartbeat sent");
+            }
+            catch (OperationCanceledException)
+            {
+                // Expected during shutdown
             }
             catch (LobbyServiceException e)
             {
@@ -542,7 +560,7 @@ Log("Starting game...");
 
         private void HandleLobbyPolling()
         {
-            if (currentLobby == null) return;
+            if (currentLobby == null || isQuitting) return;
 
             if (Time.time >= nextPollTime)
             {
@@ -553,11 +571,12 @@ Log("Starting game...");
 
         private async void PollLobbyUpdates()
         {
+            if (isQuitting || cancellationTokenSource.IsCancellationRequested) return;
+
             try
             {
                 currentLobby = await Lobbies.Instance.GetLobbyAsync(currentLobby.Id);
 
-                // Update AR slot if we're host
                 if (isHost)
                 {
                     int arCount = 0;
@@ -578,12 +597,10 @@ Log("Starting game...");
 
                 OnPlayerListChanged?.Invoke(currentLobby.Players);
 
-                // Check if game has started (for clients)
                 if (!isHost && currentLobby.Data["GameStarted"].Value == "true")
                 {
                     Log("🎮 Game started by host - connecting as client...");
 
-                    // Game started, connect as client
                     bool started = NetworkManager.Singleton.StartClient();
 
                     if (started)
@@ -596,6 +613,10 @@ Log("Starting game...");
                         LogError("Failed to connect as client!");
                     }
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                // Expected during shutdown
             }
             catch (LobbyServiceException e)
             {
@@ -621,14 +642,12 @@ Log("Starting game...");
 
         private string GetPlayerName()
         {
-            // Check if player has saved name
             string savedName = PlayerPrefs.GetString("PlayerName", "");
             if (!string.IsNullOrEmpty(savedName))
             {
                 return savedName;
             }
 
-            // Generate random name
             return $"Player_{UnityEngine.Random.Range(1000, 9999)}";
         }
 
