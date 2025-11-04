@@ -471,7 +471,8 @@ namespace DeathrunGame
         private void OnGameStarted()
         {
             HideAllPanels();
-            // The game scene will load or the menu will hide
+            // Disable the entire lobby UI GameObject
+            gameObject.SetActive(false);
             Debug.Log("🎮 Game started! Hiding UI...");
         }
 

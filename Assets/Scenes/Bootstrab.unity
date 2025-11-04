@@ -3822,7 +3822,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.00030596487, y: -0.00084023335}
+  m_AnchoredPosition: {x: 0.00030517578, y: -0.0001335144}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &713807794
@@ -3908,7 +3908,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2086443719}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.9999999
+  m_Size: 0.9999997
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -8035,7 +8035,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1604538268}
   m_HandleRect: {fileID: 1604538267}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -8091,7 +8091,6 @@ GameObject:
   - component: {fileID: 1586270718}
   - component: {fileID: 1586270717}
   - component: {fileID: 1586270716}
-  - component: {fileID: 1586270720}
   m_Layer: 5
   m_Name: LobbyUI
   m_TagString: Untagged
@@ -8188,52 +8187,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1586270720
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1586270715}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5d5b4f61abfc764f8afe6f2d4a21b00, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mainMenuPanel: {fileID: 54165513}
-  createLobbyPanel: {fileID: 1340492813}
-  browseLobbiesPanel: {fileID: 852768320}
-  lobbyRoomPanel: {fileID: 149781999}
-  errorPanel: {fileID: 628964781}
-  loadingPanel: {fileID: 1305875236}
-  createLobbyButton: {fileID: 2112703523}
-  joinLobbyButton: {fileID: 303662243}
-  quickJoinButton: {fileID: 1775799180}
-  playerNameInput: {fileID: 1700363913}
-  lobbyNameInput: {fileID: 56771165}
-  pcRunnerToggle: {fileID: 220407359}
-  arDirectorToggle: {fileID: 1231883830}
-  roleToggleGroup: {fileID: 1154773910}
-  createButton: {fileID: 318327518}
-  createBackButton: {fileID: 557283415}
-  lobbyListContent: {fileID: 1689423325}
-  lobbyListItemPrefab: {fileID: 2050952836670107480, guid: 7a21cbae26e1c1f4092acc24625e330f, type: 3}
-  refreshLobbiesButton: {fileID: 1673499396}
-  joinCodeInput: {fileID: 1465152212}
-  joinByCodeButton: {fileID: 1231560933}
-  browseBackButton: {fileID: 1699987648}
-  noLobbiesText: {fileID: 464879459}
-  lobbyNameText: {fileID: 804223784}
-  lobbyCodeText: {fileID: 824285092}
-  copyCodeButton: {fileID: 756583435}
-  playerListContent: {fileID: 708920068}
-  playerListItemPrefab: {fileID: 7079619013811101624, guid: 513705e989af6d94d966ac15440e8453, type: 3}
-  leaveButton: {fileID: 1376961313}
-  startGameButton: {fileID: 2030143869}
-  waitingForHostText: {fileID: 669018046}
-  errorMessageText: {fileID: 2084393816}
-  closeErrorButton: {fileID: 486577877}
-  loadingText: {fileID: 2004392759}
 --- !u!1 &1588057174
 GameObject:
   m_ObjectHideFlags: 0
@@ -9131,7 +9084,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.00031683262, y: -0.00040676314}
+  m_AnchoredPosition: {x: 0.00018310547, y: -0.00015258789}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1699987646
@@ -10082,6 +10035,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1947660908}
   - component: {fileID: 1947660909}
+  - component: {fileID: 1947660910}
   m_Layer: 0
   m_Name: LobbyManager
   m_TagString: Untagged
@@ -10121,6 +10075,52 @@ MonoBehaviour:
   lobbyHeartbeatInterval: 15
   lobbyPollInterval: 1.5
   showDebugLogs: 1
+--- !u!114 &1947660910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1947660907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5d5b4f61abfc764f8afe6f2d4a21b00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainMenuPanel: {fileID: 54165513}
+  createLobbyPanel: {fileID: 1340492813}
+  browseLobbiesPanel: {fileID: 852768320}
+  lobbyRoomPanel: {fileID: 149781999}
+  errorPanel: {fileID: 628964781}
+  loadingPanel: {fileID: 1305875236}
+  createLobbyButton: {fileID: 2112703523}
+  joinLobbyButton: {fileID: 303662243}
+  quickJoinButton: {fileID: 1775799180}
+  playerNameInput: {fileID: 1700363913}
+  lobbyNameInput: {fileID: 56771165}
+  pcRunnerToggle: {fileID: 220407359}
+  arDirectorToggle: {fileID: 1231883830}
+  roleToggleGroup: {fileID: 1154773910}
+  createButton: {fileID: 318327518}
+  createBackButton: {fileID: 557283415}
+  lobbyListContent: {fileID: 1689423325}
+  lobbyListItemPrefab: {fileID: 2050952836670107480, guid: 7a21cbae26e1c1f4092acc24625e330f, type: 3}
+  refreshLobbiesButton: {fileID: 1673499396}
+  joinCodeInput: {fileID: 1465152212}
+  joinByCodeButton: {fileID: 1231560933}
+  browseBackButton: {fileID: 1699987648}
+  noLobbiesText: {fileID: 464879459}
+  lobbyNameText: {fileID: 804223784}
+  lobbyCodeText: {fileID: 824285092}
+  copyCodeButton: {fileID: 756583435}
+  playerListContent: {fileID: 708920068}
+  playerListItemPrefab: {fileID: 7079619013811101624, guid: 513705e989af6d94d966ac15440e8453, type: 3}
+  leaveButton: {fileID: 1376961313}
+  startGameButton: {fileID: 2030143869}
+  waitingForHostText: {fileID: 669018046}
+  errorMessageText: {fileID: 2084393816}
+  closeErrorButton: {fileID: 486577877}
+  loadingText: {fileID: 2004392759}
 --- !u!1 &1970354000
 GameObject:
   m_ObjectHideFlags: 0
