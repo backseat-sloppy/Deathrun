@@ -39,8 +39,8 @@
   <Project Path="Oculus.Interaction.csproj" />
   <Project Path="Unity.VisualScripting.Core.csproj" />
   <Project Path="Unity.Services.Core.Environments.Editor.csproj" />
-  <Project Path="Oculus.Interaction.OVR.csproj" />
   <Project Path="UnityEditor.TestRunner.csproj" />
+  <Project Path="Oculus.Interaction.OVR.csproj" />
   <Project Path="Unity.RenderPipelines.Universal.Runtime.csproj" />
   <Project Path="unity-websocket-sharp.csproj" />
   <Project Path="Unity.Burst.CodeGen.csproj" />

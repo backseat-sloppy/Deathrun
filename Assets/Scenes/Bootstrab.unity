@@ -525,7 +525,7 @@ GameObject:
   - component: {fileID: 138195451}
   - component: {fileID: 138195450}
   - component: {fileID: 138195449}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Platform (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1433,7 +1433,7 @@ GameObject:
   - component: {fileID: 317705010}
   - component: {fileID: 317705009}
   - component: {fileID: 317705008}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2825,7 +2825,7 @@ GameObject:
   - component: {fileID: 547952910}
   - component: {fileID: 547952909}
   - component: {fileID: 547952908}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Platform (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3799,6 +3799,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 708920068}
+  - component: {fileID: 708920069}
   m_Layer: 0
   m_Name: Content
   m_TagString: Untagged
@@ -3822,9 +3823,35 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.00030517578, y: -0.0001335144}
+  m_AnchoredPosition: {x: 0.00030517578, y: -0.00016550522}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
+--- !u!114 &708920069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 708920067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_Spacing: 5
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &713807794
 GameObject:
   m_ObjectHideFlags: 0
@@ -4381,7 +4408,6 @@ GameObject:
   m_Component:
   - component: {fileID: 791754290}
   - component: {fileID: 791754289}
-  - component: {fileID: 791754288}
   - component: {fileID: 791754287}
   m_Layer: 0
   m_Name: Camera
@@ -4434,14 +4460,6 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
---- !u!81 &791754288
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 791754286}
-  m_Enabled: 1
 --- !u!20 &791754289
 Camera:
   m_ObjectHideFlags: 0
@@ -4478,7 +4496,7 @@ Camera:
   field of view: 60
   orthographic: 1
   orthographic size: 227.3
-  m_Depth: 0
+  m_Depth: -10
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -5523,7 +5541,7 @@ GameObject:
   - component: {fileID: 1015392533}
   - component: {fileID: 1015392532}
   - component: {fileID: 1015392531}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Platform (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6348,7 +6366,7 @@ GameObject:
   - component: {fileID: 1266545364}
   - component: {fileID: 1266545363}
   - component: {fileID: 1266545362}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Ground
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -6613,7 +6631,7 @@ GameObject:
   - component: {fileID: 1341860780}
   - component: {fileID: 1341860779}
   - component: {fileID: 1341860778}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Platform (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7014,7 +7032,7 @@ GameObject:
   - component: {fileID: 1410113227}
   - component: {fileID: 1410113226}
   - component: {fileID: 1410113225}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Platform (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7166,7 +7184,7 @@ Transform:
   m_GameObject: {fileID: 1438354659}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.7246857, y: 1.1999826, z: -1.3559456}
+  m_LocalPosition: {x: -3.7246857, y: 29.6, z: -1.3559456}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7188,7 +7206,7 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 1438354660}
-    PlayerPrefab: {fileID: 4639992981897814336, guid: 66547290c08ae4b17ba39c0496fbc53b, type: 3}
+    PlayerPrefab: {fileID: 309720986593380385, guid: d41bef0db68b07543bf45259774156d4, type: 3}
     Prefabs:
       NetworkPrefabsLists:
       - {fileID: 11400000, guid: acccfc1dc495e6346ae5fc4f01a2101c, type: 2}
@@ -7541,7 +7559,7 @@ GameObject:
   - component: {fileID: 1520941213}
   - component: {fileID: 1520941212}
   - component: {fileID: 1520941211}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Platform (9)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7826,7 +7844,7 @@ GameObject:
   - component: {fileID: 1535228307}
   - component: {fileID: 1535228306}
   - component: {fileID: 1535228305}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Platform (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8036,7 +8054,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1604538267}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.9999978
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -8199,7 +8217,7 @@ GameObject:
   - component: {fileID: 1588057177}
   - component: {fileID: 1588057176}
   - component: {fileID: 1588057175}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Platform (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8712,7 +8730,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1209263929}
   m_HandleRect: {fileID: 1209263928}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 0
   m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -8955,7 +8973,7 @@ GameObject:
   - component: {fileID: 1688668539}
   - component: {fileID: 1688668538}
   - component: {fileID: 1688668537}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Platform (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11326,7 +11344,7 @@ GameObject:
   - component: {fileID: 2133923395}
   - component: {fileID: 2133923394}
   - component: {fileID: 2133923393}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
