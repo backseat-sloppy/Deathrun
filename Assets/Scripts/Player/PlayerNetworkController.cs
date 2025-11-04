@@ -180,6 +180,8 @@ namespace DeathrunGame
         private readonly Queue<InputTick> inputHistory = new Queue<InputTick>();
         private readonly Queue<NetworkState> stateHistory = new Queue<NetworkState>();
         private float lastServerSnapshot = 0f;
+        private float lastInputSentTime = 0f;
+        private const float INPUT_SEND_RATE = 1f / 30f; // 30Hz input rate (more reasonable)
         
         // Network synchronization for remote clients
         private NetworkVariable<Vector3> networkPosition = new NetworkVariable<Vector3>(writePerm: NetworkVariableWritePermission.Server);
@@ -303,13 +305,6 @@ namespace DeathrunGame
                 
                 // Update animations based on current movement state
                 UpdateAnimations();
-                
-                // Debug current state
-                if (Time.fixedTime - lastDebugTime > 1f) // Debug every second
-                {
-                    Debug.Log($"FixedUpdate - Velocity: {velocity}, IsGrounded: {isGrounded}, CharacterController velocity: {characterController.velocity}");
-                    lastDebugTime = Time.fixedTime;
-                }
             }
             else if (IsServer)
             {
@@ -336,9 +331,6 @@ namespace DeathrunGame
             inputTick.Timestamp = Time.time;
             inputTick.WasGrounded = isGrounded;
             
-            // DEBUG: Check if this script is running
-            Debug.Log($"PlayerNetworkController running! Input: {inputTick.MoveDirection}, IsOwner: {IsOwner}");
-            
             // Store input for potential rollback
             inputHistory.Enqueue(inputTick);
             while (inputHistory.Count > maxPredictionFrames)
@@ -347,8 +339,12 @@ namespace DeathrunGame
             // Apply input immediately (client-side prediction)
             ApplyInput(inputTick);
             
-            // Send input to server
-            SendInputToServerRpc(inputTick);
+            // Throttled input sending: Only send to server if enough time has passed and we're not the host
+            if (!IsHost && (Time.time - lastInputSentTime) >= INPUT_SEND_RATE)
+            {
+                SendInputToServerRpc(inputTick);
+                lastInputSentTime = Time.time;
+            }
         }
 
         private void ProcessInput()
@@ -412,12 +408,6 @@ namespace DeathrunGame
                     {
                         Vector3 secondCounter = -ccVelAfter * 3f * Time.fixedDeltaTime;
                         characterController.Move(secondCounter);
-                        
-                        Debug.Log($"💀💀 DOUBLE MOMENTUM KILLER: {ccHorizontalVel.magnitude:F3} -> {ccVelAfter.magnitude:F3}");
-                    }
-                    else
-                    {
-                        Debug.Log($"💀 MOMENTUM KILLER: {ccHorizontalVel.magnitude:F3} -> STOPPED");
                     }
                 }
             }
@@ -459,8 +449,6 @@ namespace DeathrunGame
             {
                 // INSTANT STOP for immediate responsiveness
                 currentSpeed = 0f;
-                
-                Debug.Log($"⚡ INSTANT STOP: {currentHorizontalSpeed:F3} -> 0.000");
             }
             else if (currentHorizontalSpeed < targetSpeed - speedOffset || 
                      currentHorizontalSpeed > targetSpeed + speedOffset)
@@ -485,8 +473,6 @@ namespace DeathrunGame
                     // Moving: use input direction with calculated speed
                     velocity.x = inputDirection.x * currentSpeed;
                     velocity.z = inputDirection.z * currentSpeed;
-                    
-                    Debug.Log($"✅ MOVING: Input {inputDirection.magnitude:F2}, Speed {currentSpeed:F2}, Vel ({velocity.x:F2}, {velocity.z:F2})");
                 }
                 else
                 {
@@ -496,8 +482,6 @@ namespace DeathrunGame
                         Vector3 normalizedCurrent = currentHorizontalVelocity.normalized;
                         velocity.x = normalizedCurrent.x * currentSpeed;
                         velocity.z = normalizedCurrent.z * currentSpeed;
-                        
-                        Debug.Log($"🛑 STOPPING: CCVel {currentHorizontalVelocity.magnitude:F2}, Speed {currentSpeed:F2}, Vel ({velocity.x:F2}, {velocity.z:F2})");
                     }
                     else
                     {
@@ -942,8 +926,6 @@ namespace DeathrunGame
             
             // Apply the force
             hitRigidbody.AddForceAtPosition(finalForce, hit.point, ForceMode.Force);
-            
-            Debug.Log($"🏀 Pushing {hit.collider.name}: Force {finalForce.magnitude:F1}, Speed {playerSpeed:F1}, Mass {hitRigidbody.mass:F1}");
         }
 
         #endregion
@@ -980,15 +962,29 @@ namespace DeathrunGame
         
         private void ProcessServerUpdate()
         {
-            // Update NetworkVariables for remote clients
-            UpdateNetworkVariables();
+            // Only update NetworkVariables if there are actual changes (performance optimization)
+            if (HasSignificantMovement())
+            {
+                UpdateNetworkVariables();
+            }
             
-            // Send periodic snapshots to clients
-            if (Time.time - lastServerSnapshot >= 1f / serverSnapshotRate)
+            // Reduce snapshot rate for better performance (10Hz instead of 20Hz)
+            if (Time.time - lastServerSnapshot >= 1f / (serverSnapshotRate * 0.5f))
             {
                 SendCorrectionSnapshot();
                 lastServerSnapshot = Time.time;
             }
+        }
+
+        private bool HasSignificantMovement()
+        {
+            // Only update if there's meaningful movement or state change
+            Vector3 positionDelta = transform.position - networkPosition.Value;
+            Vector3 velocityDelta = (velocity + knockbackVelocity) - networkVelocity.Value;
+            
+            return positionDelta.magnitude > 0.01f || 
+                   velocityDelta.magnitude > 0.1f || 
+                   isGrounded != networkIsGrounded.Value;
         }
 
         private void ProcessClientInput(InputTick input)
@@ -1073,8 +1069,6 @@ namespace DeathrunGame
                 
                 // Re-apply unacknowledged inputs (rollback)
                 ReapplyInputsAfterCorrection(serverState.LastProcessedInput);
-                
-                Debug.Log($"Applied server correction - error: {positionError:F3}");
             }
         }
 
@@ -1126,9 +1120,9 @@ namespace DeathrunGame
             
             if (timeSinceUpdate < interpolationTime)
             {
-                // Interpolate position with velocity prediction
+                // Improved interpolation with velocity prediction
                 Vector3 targetPosition = lastNetworkPosition + lastNetworkVelocity * timeSinceUpdate;
-                Vector3 smoothPosition = Vector3.Lerp(transform.position, targetPosition, Time.fixedDeltaTime * 10f);
+                Vector3 smoothPosition = Vector3.Lerp(transform.position, targetPosition, Time.fixedDeltaTime * 15f); // Faster interpolation
                 
                 // Apply position via CharacterController to maintain collision
                 Vector3 movement = smoothPosition - transform.position;
@@ -1137,8 +1131,8 @@ namespace DeathrunGame
                     characterController.Move(movement);
                 }
                 
-                // Smoothly interpolate rotation
-                transform.rotation = Quaternion.Lerp(transform.rotation, lastNetworkRotation, Time.fixedDeltaTime * 10f);
+                // Faster rotation interpolation for responsiveness
+                transform.rotation = Quaternion.Lerp(transform.rotation, lastNetworkRotation, Time.fixedDeltaTime * 15f);
                 
                 // Update velocity for animation system
                 velocity = lastNetworkVelocity;
