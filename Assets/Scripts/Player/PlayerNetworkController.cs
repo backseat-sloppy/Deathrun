@@ -181,6 +181,19 @@ namespace DeathrunGame
         private readonly Queue<NetworkState> stateHistory = new Queue<NetworkState>();
         private float lastServerSnapshot = 0f;
         
+        // Network synchronization for remote clients
+        private NetworkVariable<Vector3> networkPosition = new NetworkVariable<Vector3>(writePerm: NetworkVariableWritePermission.Server);
+        private NetworkVariable<Vector3> networkVelocity = new NetworkVariable<Vector3>(writePerm: NetworkVariableWritePermission.Server);
+        private NetworkVariable<Quaternion> networkRotation = new NetworkVariable<Quaternion>(writePerm: NetworkVariableWritePermission.Server);
+        private NetworkVariable<bool> networkIsGrounded = new NetworkVariable<bool>(writePerm: NetworkVariableWritePermission.Server);
+        
+        // Interpolation for remote players
+        private Vector3 lastNetworkPosition;
+        private Vector3 lastNetworkVelocity;
+        private Quaternion lastNetworkRotation;
+        private float networkUpdateTime;
+        private float networkUpdateRate = 20f; // Match server snapshot rate
+        
         // Components cache
         private Camera playerCamera;
         
@@ -237,6 +250,24 @@ namespace DeathrunGame
             }
             
             Debug.Log($"Player spawned - IsOwner: {IsOwner}, IsServer: {IsServer}, PlayerInput enabled: {playerInput.enabled}");
+            
+            // Initialize NetworkVariables for server
+            if (IsServer)
+            {
+                networkPosition.Value = transform.position;
+                networkVelocity.Value = Vector3.zero;
+                networkRotation.Value = transform.rotation;
+                networkIsGrounded.Value = true;
+            }
+            
+            // Initialize interpolation values for remote clients
+            if (!IsOwner)
+            {
+                lastNetworkPosition = networkPosition.Value;
+                lastNetworkVelocity = networkVelocity.Value;
+                lastNetworkRotation = networkRotation.Value;
+                networkUpdateTime = Time.time;
+            }
             
             // Verify component setup
             if (characterController == null)
@@ -501,9 +532,48 @@ namespace DeathrunGame
             // Apply character rotation to face movement direction
             ApplyCharacterRotation(inputDirection);
             
+            // CLIENT PREDICTION SAFETY: Limit velocity to prevent runaway speeds
+            ValidateAndLimitVelocity(input);
+            
             // IMPORTANT: Force CharacterController to have no inherent velocity
             // CharacterController.Move() doesn't set velocity, it just moves the position
             // We need to ensure there's no momentum carried over
+        }
+
+        /// <summary>
+        /// Validates and limits velocity to prevent runaway client-side prediction
+        /// </summary>
+        private void ValidateAndLimitVelocity(InputTick input)
+        {
+            // Calculate maximum allowed speeds
+            float maxHorizontalSpeed = input.Sprint ? sprintSpeed * 1.1f : walkSpeed * 1.1f; // 10% tolerance
+            float maxVerticalSpeed = Mathf.Sqrt(2f * gravity * jumpHeight) * 1.2f; // Jump speed + tolerance
+            
+            // Limit horizontal velocity
+            Vector3 horizontalVelocity = new Vector3(velocity.x, 0f, velocity.z);
+            if (horizontalVelocity.magnitude > maxHorizontalSpeed)
+            {
+                Vector3 limitedHorizontal = horizontalVelocity.normalized * maxHorizontalSpeed;
+                velocity.x = limitedHorizontal.x;
+                velocity.z = limitedHorizontal.z;
+                
+                Debug.LogWarning($"⚠️ SPEED LIMITED: {horizontalVelocity.magnitude:F2} -> {maxHorizontalSpeed:F2}");
+            }
+            
+            // Limit vertical velocity (both up and down)
+            if (Mathf.Abs(velocity.y) > maxVerticalSpeed)
+            {
+                velocity.y = Mathf.Sign(velocity.y) * maxVerticalSpeed;
+                Debug.LogWarning($"⚠️ VERTICAL SPEED LIMITED: {velocity.y:F2}");
+            }
+            
+            // Additional safety: If we're not the server and velocity seems excessive, cap it more aggressively
+            if (!IsServer && horizontalVelocity.magnitude > maxHorizontalSpeed * 2f)
+            {
+                velocity.x = 0f;
+                velocity.z = 0f;
+                Debug.LogError($"🚨 RUNAWAY PREDICTION STOPPED: Speed was {horizontalVelocity.magnitude:F2}");
+            }
         }
 
         /// <summary>
@@ -910,6 +980,9 @@ namespace DeathrunGame
         
         private void ProcessServerUpdate()
         {
+            // Update NetworkVariables for remote clients
+            UpdateNetworkVariables();
+            
             // Send periodic snapshots to clients
             if (Time.time - lastServerSnapshot >= 1f / serverSnapshotRate)
             {
@@ -920,8 +993,17 @@ namespace DeathrunGame
 
         private void ProcessClientInput(InputTick input)
         {
+            // Early exit if CharacterController is not available (server-side safety)
+            if (characterController == null || !characterController.enabled || !gameObject.activeInHierarchy)
+            {
+                return;
+            }
+            
             // Server applies the same movement logic
             ApplyInput(input);
+            
+            // Update NetworkVariables immediately for responsive updates
+            UpdateNetworkVariables();
             
             // Store state for correction snapshots
             var state = new NetworkState
@@ -939,6 +1021,18 @@ namespace DeathrunGame
             stateHistory.Enqueue(state);
             while (stateHistory.Count > maxPredictionFrames)
                 stateHistory.Dequeue();
+        }
+
+        private void UpdateNetworkVariables()
+        {
+            // Only server can write to NetworkVariables
+            if (!IsServer) return;
+            
+            // Update network state for remote clients
+            networkPosition.Value = transform.position;
+            networkVelocity.Value = velocity + knockbackVelocity;
+            networkRotation.Value = transform.rotation;
+            networkIsGrounded.Value = isGrounded;
         }
 
         private void SendCorrectionSnapshot()
@@ -1007,9 +1101,48 @@ namespace DeathrunGame
 
         private void InterpolateRemotePlayer()
         {
-            // Non-owners smoothly interpolate to received positions
-            // This is handled by NetworkTransform as fallback
-            // Custom interpolation could be implemented here if needed
+            // Non-owners smoothly interpolate to received network positions
+            if (characterController == null || !characterController.enabled || !gameObject.activeInHierarchy)
+                return;
+                
+            // Check if we have new network data
+            if (networkPosition.Value != lastNetworkPosition || 
+                networkVelocity.Value != lastNetworkVelocity ||
+                networkRotation.Value != lastNetworkRotation)
+            {
+                // Update our interpolation targets
+                lastNetworkPosition = networkPosition.Value;
+                lastNetworkVelocity = networkVelocity.Value;
+                lastNetworkRotation = networkRotation.Value;
+                networkUpdateTime = Time.time;
+                
+                // Update grounded state immediately
+                isGrounded = networkIsGrounded.Value;
+            }
+            
+            // Smoothly interpolate to network position
+            float timeSinceUpdate = Time.time - networkUpdateTime;
+            float interpolationTime = 1f / networkUpdateRate;
+            
+            if (timeSinceUpdate < interpolationTime)
+            {
+                // Interpolate position with velocity prediction
+                Vector3 targetPosition = lastNetworkPosition + lastNetworkVelocity * timeSinceUpdate;
+                Vector3 smoothPosition = Vector3.Lerp(transform.position, targetPosition, Time.fixedDeltaTime * 10f);
+                
+                // Apply position via CharacterController to maintain collision
+                Vector3 movement = smoothPosition - transform.position;
+                if (movement.magnitude > 0.001f)
+                {
+                    characterController.Move(movement);
+                }
+                
+                // Smoothly interpolate rotation
+                transform.rotation = Quaternion.Lerp(transform.rotation, lastNetworkRotation, Time.fixedDeltaTime * 10f);
+                
+                // Update velocity for animation system
+                velocity = lastNetworkVelocity;
+            }
         }
 
         #endregion
