@@ -706,7 +706,7 @@ namespace DeathrunGame
             return canJump;
         }
 
-        private Vector3 GetCameraRelativeDirection(Vector2 inputDirection)
+        private Vector3 GetCameraRelativeDirection(Vector3 inputDirection)
         {
             // Professional approach: Only owners calculate camera-relative movement
             // Remote players get their movement from network interpolation
@@ -720,7 +720,10 @@ namespace DeathrunGame
             forward.Normalize();
             right.Normalize();
             
-            return (forward * inputDirection.y + right * inputDirection.x).normalized;
+            // inputDirection is Vector3(x, 0, z) where:
+            // x = left/right (A/D keys)
+            // z = forward/backward (W/S keys)
+            return (forward * inputDirection.z + right * inputDirection.x).normalized;
         }
 
         #endregion

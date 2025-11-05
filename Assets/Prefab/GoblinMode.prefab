@@ -783,20 +783,6 @@ MonoBehaviour:
   - IsCrossFadeExit: 0
     Layer: 0
     OriginatingState: -453240694
-    DestinationState: 1923976330
-    TransitionDuration: 0.049999952
-    TriggerNameHash: 125937960
-    TransitionIndex: 0
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: -453240694
-    DestinationState: 776885648
-    TransitionDuration: 0.25
-    TriggerNameHash: 1533177906
-    TransitionIndex: 1
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: -453240694
     DestinationState: -1729410577
     TransitionDuration: 0.1
     TriggerNameHash: 1755635423
@@ -815,27 +801,6 @@ MonoBehaviour:
     TransitionDuration: 0.1
     TriggerNameHash: -2035630093
     TransitionIndex: 4
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: 1923976330
-    DestinationState: 776885648
-    TransitionDuration: 0.1
-    TriggerNameHash: 1533177906
-    TransitionIndex: 0
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: 776885648
-    DestinationState: 2099142468
-    TransitionDuration: 0.05
-    TriggerNameHash: 137525990
-    TransitionIndex: 0
-  - IsCrossFadeExit: 0
-    Layer: 1
-    OriginatingState: 1538923768
-    DestinationState: 975439387
-    TransitionDuration: 0.05
-    TriggerNameHash: 551000158
-    TransitionIndex: 0
   m_Animator: {fileID: 5718142505306023859}
 --- !u!114 &5491912831929174354
 MonoBehaviour:
@@ -896,13 +861,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  walkSpeed: 2
+  walkSpeed: 3
   sprintSpeed: 4
   acceleration: 3
   deceleration: 50
   airAcceleration: 12
   airFriction: 5
-  jumpHeight: 2
+  jumpHeight: 3
   gravity: 10
   enableCharacterRotation: 1
   instantRotation: 0
@@ -966,12 +931,9 @@ MonoBehaviour:
   showCalibrationInfo: 1
   blendParameterName: Blend
   speedParameterName: Speed
-  jumpTriggerName: Jump
-  landTriggerName: Land
-  fallTriggerName: Fall
   jumpBoolName: IsJumping
   groundedBoolName: IsGrounded
-  swingTriggerName: Swing
+  swingBoolName: IsSwinging
   taunt1TriggerName: Taunt1
   taunt2TriggerName: Taunt2
   taunt3TriggerName: Taunt3
