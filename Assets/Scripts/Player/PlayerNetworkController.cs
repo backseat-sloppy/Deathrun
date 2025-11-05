@@ -143,43 +143,9 @@ namespace DeathrunGame
         [Header("References")]
         [SerializeField] private Transform cameraTransform;
         [SerializeField] private Transform groundCheckTransform;
-        [SerializeField] private Animator animator;
         
-        [Header("Animation")]
-        [SerializeField] private bool enableAnimations = true;
-        [SerializeField] private float animationSmoothTime = 0.1f;
-        [SerializeField] private float minSpeedForMovement = 0.1f;
-        
-        [Header("Animation Speed Sync")]
-        [SerializeField] private bool useAnimatorSpeed = true;        // Use Animator.speed for sync
-        [SerializeField] private bool useBlendTreeThresholds = false; // Use proper blend tree setup instead
-        
-        [Header("Animation Speed Calibration")]
-        [SerializeField] private float walkAnimationSpeed = 1.0f;     // How fast walk animation should play (calibrate this!)
-        [SerializeField] private float sprintAnimationSpeed = 1.0f;   // How fast sprint animation should play (calibrate this!)
-        [SerializeField] private float jumpAnimationSpeed = 1.0f;     // How fast jump animation should play
-        [SerializeField] private bool autoCalculateJumpSpeed = true;   // Auto-sync jump animation with physics
-        [SerializeField] private bool showCalibrationInfo = true;     // Debug info for calibration        // Animation parameter names (configured to match your animator)
-        [Header("Animation Parameters")]
-        [SerializeField] private string blendParameterName = "Blend";
-        [SerializeField] private string speedParameterName = "Speed";
-        [SerializeField] private string jumpTriggerName = "Jump";
-        [SerializeField] private string landTriggerName = "Land";
-        [SerializeField] private string fallTriggerName = "Fall";
-        [SerializeField] private string jumpBoolName = "IsJumping";     // Bool parameter for jump state
-        [SerializeField] private string groundedBoolName = "IsGrounded"; // Bool parameter for grounded state
-        [SerializeField] private string swingTriggerName = "Swing";
-        [SerializeField] private string taunt1TriggerName = "Taunt1";
-        [SerializeField] private string taunt2TriggerName = "Taunt2";
-        [SerializeField] private string taunt3TriggerName = "Taunt3";
-        
-        [Header("Combat Settings")]
-        [SerializeField] private float swingCooldown = 1.5f; // Cooldown in seconds between swings
-        
-        // Optional parameters (add these to your animator if needed)
-        [SerializeField] private string isGroundedParameterName = "IsGrounded";
-        [SerializeField] private string isMovingParameterName = "IsMoving";
-        [SerializeField] private string isSprintingParameterName = "IsSprinting";
+        [Header("Animation System")]
+        [SerializeField] private PlayerAnimationController animationController;
         
         #endregion
 
@@ -198,27 +164,9 @@ namespace DeathrunGame
         private float stunEndTime = 0f;
         private float currentSpeed = 0f;  // Unity's approach for smooth movement
         
-        // Animation state tracking
-        private bool wasGrounded = true;
-        private bool wasMoving = false;
-        
-        // Combat state tracking
-        private float lastSwingTime = -10f; // Initialize to allow immediate first swing
-        private bool wasSprinting = false;
-        private float smoothedAnimSpeed = 0f;
-        private Vector3 smoothAnimVelocity = Vector3.zero;
-        
         // Character rotation smoothing
         private Vector3 smoothedRotationDirection = Vector3.forward;
         private Vector3 rotationVelocity = Vector3.zero;
-        
-        // Jump animation tracking
-        private float jumpStartTime = 0f;
-        private float calculatedJumpDuration = 0f;
-        private bool isJumpAnimationActive = false;
-        private bool isFalling = false;
-        private float fallStartTime = 0f;
-        private float lastVerticalVelocity = 0f;
         
         // Platform tracking
         private IMovingPlatform currentPlatform;
@@ -232,6 +180,21 @@ namespace DeathrunGame
         private readonly Queue<InputTick> inputHistory = new Queue<InputTick>();
         private readonly Queue<NetworkState> stateHistory = new Queue<NetworkState>();
         private float lastServerSnapshot = 0f;
+        private float lastInputSentTime = 0f;
+        private const float INPUT_SEND_RATE = 1f / 30f; // 30Hz input rate (more reasonable)
+        
+        // Network synchronization for remote clients
+        private NetworkVariable<Vector3> networkPosition = new NetworkVariable<Vector3>(writePerm: NetworkVariableWritePermission.Server);
+        private NetworkVariable<Vector3> networkVelocity = new NetworkVariable<Vector3>(writePerm: NetworkVariableWritePermission.Server);
+        private NetworkVariable<Quaternion> networkRotation = new NetworkVariable<Quaternion>(writePerm: NetworkVariableWritePermission.Server);
+        private NetworkVariable<bool> networkIsGrounded = new NetworkVariable<bool>(writePerm: NetworkVariableWritePermission.Server);
+        
+        // Interpolation for remote players
+        private Vector3 lastNetworkPosition;
+        private Vector3 lastNetworkVelocity;
+        private Quaternion lastNetworkRotation;
+        private float networkUpdateTime;
+        private float networkUpdateRate = 20f; // Match server snapshot rate
         
         // Components cache
         private Camera playerCamera;
@@ -254,9 +217,9 @@ namespace DeathrunGame
             characterController = GetComponent<CharacterController>();
             playerInput = GetComponent<PlayerInput>();
             
-            // Get animator component (try to find it if not assigned)
-            if (animator == null)
-                animator = GetComponent<Animator>();
+            // Get animation controller component (try to find it if not assigned)
+            if (animationController == null)
+                animationController = GetComponent<PlayerAnimationController>();
             
             // Configure CharacterController for responsive movement
             characterController.stepOffset = stepOffset;
@@ -271,24 +234,47 @@ namespace DeathrunGame
                 
             Debug.Log($"CharacterController configured - stepOffset: {characterController.stepOffset}, slopeLimit: {characterController.slopeLimit}, minMoveDistance: {characterController.minMoveDistance}, skinWidth: {characterController.skinWidth}");
             
-            // Validate animator setup
-            if (enableAnimations && animator == null)
+            // Validate animation controller setup
+            if (animationController == null)
             {
-                Debug.LogWarning("Animations enabled but no Animator component found!");
+                Debug.LogWarning("PlayerAnimationController component not found! Animation system will be disabled.");
             }
         }
 
         public override void OnNetworkSpawn()
         {
-            // Only owner controls input
+            // CRITICAL FIX: Only owner should process input and use camera
             if (!IsOwner)
             {
                 playerInput.enabled = false;
+                
+                // Disable camera for non-owners AND clear the reference to prevent interference
                 if (playerCamera != null)
                     playerCamera.enabled = false;
+                    
+                // IMPORTANT: Clear camera transform reference for non-owners to prevent shared camera issues
+                cameraTransform = null;
             }
             
             Debug.Log($"Player spawned - IsOwner: {IsOwner}, IsServer: {IsServer}, PlayerInput enabled: {playerInput.enabled}");
+            
+            // Initialize NetworkVariables for server
+            if (IsServer)
+            {
+                networkPosition.Value = transform.position;
+                networkVelocity.Value = Vector3.zero;
+                networkRotation.Value = transform.rotation;
+                networkIsGrounded.Value = true;
+            }
+            
+            // Initialize interpolation values for remote clients
+            if (!IsOwner)
+            {
+                lastNetworkPosition = networkPosition.Value;
+                lastNetworkVelocity = networkVelocity.Value;
+                lastNetworkRotation = networkRotation.Value;
+                networkUpdateTime = Time.time;
+            }
             
             // Verify component setup
             if (characterController == null)
@@ -322,19 +308,15 @@ namespace DeathrunGame
                 // Owner processes input and applies movement in FixedUpdate for consistent physics
                 ProcessInputAndMovement();
                 
-                // Debug current state
-                if (Time.fixedTime - lastDebugTime > 1f) // Debug every second
-                {
-                    Debug.Log($"FixedUpdate - Velocity: {velocity}, IsGrounded: {isGrounded}, CharacterController velocity: {characterController.velocity}");
-                    lastDebugTime = Time.fixedTime;
-                }
+                // Update animations based on current movement state
+                UpdateAnimations();
             }
-            else if (IsServer)
+            else if (IsServer && !IsOwner)
             {
-                // Server processes all clients' inputs
+                // Server only processes updates for NON-OWNER objects (remote players)
                 ProcessServerUpdate();
             }
-            else
+            else if (!IsOwner)
             {
                 // Non-owners interpolate received states
                 InterpolateRemotePlayer();
@@ -354,9 +336,6 @@ namespace DeathrunGame
             inputTick.Timestamp = Time.time;
             inputTick.WasGrounded = isGrounded;
             
-            // DEBUG: Check if this script is running
-            Debug.Log($"PlayerNetworkController running! Input: {inputTick.MoveDirection}, IsOwner: {IsOwner}");
-            
             // Store input for potential rollback
             inputHistory.Enqueue(inputTick);
             while (inputHistory.Count > maxPredictionFrames)
@@ -365,8 +344,12 @@ namespace DeathrunGame
             // Apply input immediately (client-side prediction)
             ApplyInput(inputTick);
             
-            // Send input to server
-            SendInputToServerRpc(inputTick);
+            // Send input to server (but not if we're the host to avoid double processing)
+            if (!IsHost && (Time.time - lastInputSentTime) >= INPUT_SEND_RATE)
+            {
+                SendInputToServerRpc(inputTick);
+                lastInputSentTime = Time.time;
+            }
         }
 
         private void ProcessInput()
@@ -430,12 +413,6 @@ namespace DeathrunGame
                     {
                         Vector3 secondCounter = -ccVelAfter * 3f * Time.fixedDeltaTime;
                         characterController.Move(secondCounter);
-                        
-                        Debug.Log($"💀💀 DOUBLE MOMENTUM KILLER: {ccHorizontalVel.magnitude:F3} -> {ccVelAfter.magnitude:F3}");
-                    }
-                    else
-                    {
-                        Debug.Log($"💀 MOMENTUM KILLER: {ccHorizontalVel.magnitude:F3} -> STOPPED");
                     }
                 }
             }
@@ -444,7 +421,7 @@ namespace DeathrunGame
             HandleKnockbackCollision();
             
             // Update animations
-            UpdateAnimations(input);
+            UpdateAnimations();
         }
 
         #endregion
@@ -453,6 +430,9 @@ namespace DeathrunGame
         
         private void ApplyMovement(InputTick input)
         {
+            // SAFETY: Only owner should apply input-based movement
+            if (!IsOwner) return;
+            
             Vector3 inputDirection = GetCameraRelativeDirection(input.MoveDirection);
             float targetSpeed = input.Sprint ? sprintSpeed : walkSpeed;
             
@@ -477,8 +457,6 @@ namespace DeathrunGame
             {
                 // INSTANT STOP for immediate responsiveness
                 currentSpeed = 0f;
-                
-                Debug.Log($"⚡ INSTANT STOP: {currentHorizontalSpeed:F3} -> 0.000");
             }
             else if (currentHorizontalSpeed < targetSpeed - speedOffset || 
                      currentHorizontalSpeed > targetSpeed + speedOffset)
@@ -503,8 +481,6 @@ namespace DeathrunGame
                     // Moving: use input direction with calculated speed
                     velocity.x = inputDirection.x * currentSpeed;
                     velocity.z = inputDirection.z * currentSpeed;
-                    
-                    Debug.Log($"✅ MOVING: Input {inputDirection.magnitude:F2}, Speed {currentSpeed:F2}, Vel ({velocity.x:F2}, {velocity.z:F2})");
                 }
                 else
                 {
@@ -514,8 +490,6 @@ namespace DeathrunGame
                         Vector3 normalizedCurrent = currentHorizontalVelocity.normalized;
                         velocity.x = normalizedCurrent.x * currentSpeed;
                         velocity.z = normalizedCurrent.z * currentSpeed;
-                        
-                        Debug.Log($"🛑 STOPPING: CCVel {currentHorizontalVelocity.magnitude:F2}, Speed {currentSpeed:F2}, Vel ({velocity.x:F2}, {velocity.z:F2})");
                     }
                     else
                     {
@@ -550,9 +524,48 @@ namespace DeathrunGame
             // Apply character rotation to face movement direction
             ApplyCharacterRotation(inputDirection);
             
+            // CLIENT PREDICTION SAFETY: Limit velocity to prevent runaway speeds
+            ValidateAndLimitVelocity(input);
+            
             // IMPORTANT: Force CharacterController to have no inherent velocity
             // CharacterController.Move() doesn't set velocity, it just moves the position
             // We need to ensure there's no momentum carried over
+        }
+
+        /// <summary>
+        /// Validates and limits velocity to prevent runaway client-side prediction
+        /// </summary>
+        private void ValidateAndLimitVelocity(InputTick input)
+        {
+            // Calculate maximum allowed speeds
+            float maxHorizontalSpeed = input.Sprint ? sprintSpeed * 1.1f : walkSpeed * 1.1f; // 10% tolerance
+            float maxVerticalSpeed = Mathf.Sqrt(2f * gravity * jumpHeight) * 1.2f; // Jump speed + tolerance
+            
+            // Limit horizontal velocity
+            Vector3 horizontalVelocity = new Vector3(velocity.x, 0f, velocity.z);
+            if (horizontalVelocity.magnitude > maxHorizontalSpeed)
+            {
+                Vector3 limitedHorizontal = horizontalVelocity.normalized * maxHorizontalSpeed;
+                velocity.x = limitedHorizontal.x;
+                velocity.z = limitedHorizontal.z;
+                
+                Debug.LogWarning($"⚠️ SPEED LIMITED: {horizontalVelocity.magnitude:F2} -> {maxHorizontalSpeed:F2}");
+            }
+            
+            // Limit vertical velocity (both up and down)
+            if (Mathf.Abs(velocity.y) > maxVerticalSpeed)
+            {
+                velocity.y = Mathf.Sign(velocity.y) * maxVerticalSpeed;
+                Debug.LogWarning($"⚠️ VERTICAL SPEED LIMITED: {velocity.y:F2}");
+            }
+            
+            // Additional safety: If we're not the server and velocity seems excessive, cap it more aggressively
+            if (!IsServer && horizontalVelocity.magnitude > maxHorizontalSpeed * 2f)
+            {
+                velocity.x = 0f;
+                velocity.z = 0f;
+                Debug.LogError($"🚨 RUNAWAY PREDICTION STOPPED: Speed was {horizontalVelocity.magnitude:F2}");
+            }
         }
 
         /// <summary>
@@ -652,7 +665,8 @@ namespace DeathrunGame
 
         private Vector3 GetCameraRelativeDirection(Vector3 inputDirection)
         {
-            if (cameraTransform == null || inputDirection.magnitude < 0.01f)
+            // CRITICAL FIX: Only owner should use camera-relative movement
+            if (!IsOwner || cameraTransform == null || inputDirection.magnitude < 0.01f)
                 return Vector3.zero;
             
             Vector3 forward = cameraTransform.forward;
@@ -921,8 +935,6 @@ namespace DeathrunGame
             
             // Apply the force
             hitRigidbody.AddForceAtPosition(finalForce, hit.point, ForceMode.Force);
-            
-            Debug.Log($"🏀 Pushing {hit.collider.name}: Force {finalForce.magnitude:F1}, Speed {playerSpeed:F1}, Mass {hitRigidbody.mass:F1}");
         }
 
         #endregion
@@ -932,7 +944,7 @@ namespace DeathrunGame
         [ServerRpc]
         private void SendInputToServerRpc(InputTick input)
         {
-            // Server processes client input
+            // Server processes input and updates authoritative state
             ProcessClientInput(input);
         }
 
@@ -947,10 +959,9 @@ namespace DeathrunGame
         [ClientRpc]
         private void SendCorrectionSnapshotClientRpc(NetworkState state)
         {
-            if (!IsOwner) return;
-            
-            // Client receives authoritative state from server
-            ProcessServerCorrection(state);
+            // DISABLED: Temporarily disable server corrections to test client autonomy
+            // if (!IsOwner) return;
+            // ProcessServerCorrection(state);
         }
 
         #endregion
@@ -959,18 +970,44 @@ namespace DeathrunGame
         
         private void ProcessServerUpdate()
         {
-            // Send periodic snapshots to clients
-            if (Time.time - lastServerSnapshot >= 1f / serverSnapshotRate)
+            // Only update NetworkVariables if there are actual changes (performance optimization)
+            if (HasSignificantMovement())
+            {
+                UpdateNetworkVariables();
+            }
+            
+            // Reduce snapshot rate for better performance (10Hz instead of 20Hz)
+            if (Time.time - lastServerSnapshot >= 1f / (serverSnapshotRate * 0.5f))
             {
                 SendCorrectionSnapshot();
                 lastServerSnapshot = Time.time;
             }
         }
 
+        private bool HasSignificantMovement()
+        {
+            // Only update if there's meaningful movement or state change
+            Vector3 positionDelta = transform.position - networkPosition.Value;
+            Vector3 velocityDelta = (velocity + knockbackVelocity) - networkVelocity.Value;
+            
+            return positionDelta.magnitude > 0.01f || 
+                   velocityDelta.magnitude > 0.1f || 
+                   isGrounded != networkIsGrounded.Value;
+        }
+
         private void ProcessClientInput(InputTick input)
         {
+            // Early exit if CharacterController is not available (server-side safety)
+            if (characterController == null || !characterController.enabled || !gameObject.activeInHierarchy)
+            {
+                return;
+            }
+            
             // Server applies the same movement logic
             ApplyInput(input);
+            
+            // Update NetworkVariables immediately for responsive updates
+            UpdateNetworkVariables();
             
             // Store state for correction snapshots
             var state = new NetworkState
@@ -988,6 +1025,18 @@ namespace DeathrunGame
             stateHistory.Enqueue(state);
             while (stateHistory.Count > maxPredictionFrames)
                 stateHistory.Dequeue();
+        }
+
+        private void UpdateNetworkVariables()
+        {
+            // Only server can write to NetworkVariables
+            if (!IsServer) return;
+            
+            // Update network state for remote clients
+            networkPosition.Value = transform.position;
+            networkVelocity.Value = velocity + knockbackVelocity;
+            networkRotation.Value = transform.rotation;
+            networkIsGrounded.Value = isGrounded;
         }
 
         private void SendCorrectionSnapshot()
@@ -1028,8 +1077,6 @@ namespace DeathrunGame
                 
                 // Re-apply unacknowledged inputs (rollback)
                 ReapplyInputsAfterCorrection(serverState.LastProcessedInput);
-                
-                Debug.Log($"Applied server correction - error: {positionError:F3}");
             }
         }
 
@@ -1056,9 +1103,48 @@ namespace DeathrunGame
 
         private void InterpolateRemotePlayer()
         {
-            // Non-owners smoothly interpolate to received positions
-            // This is handled by NetworkTransform as fallback
-            // Custom interpolation could be implemented here if needed
+            // Non-owners smoothly interpolate to received network positions
+            if (characterController == null || !characterController.enabled || !gameObject.activeInHierarchy)
+                return;
+                
+            // Check if we have new network data
+            if (networkPosition.Value != lastNetworkPosition || 
+                networkVelocity.Value != lastNetworkVelocity ||
+                networkRotation.Value != lastNetworkRotation)
+            {
+                // Update our interpolation targets
+                lastNetworkPosition = networkPosition.Value;
+                lastNetworkVelocity = networkVelocity.Value;
+                lastNetworkRotation = networkRotation.Value;
+                networkUpdateTime = Time.time;
+                
+                // Update grounded state immediately
+                isGrounded = networkIsGrounded.Value;
+            }
+            
+            // Smoothly interpolate to network position
+            float timeSinceUpdate = Time.time - networkUpdateTime;
+            float interpolationTime = 1f / networkUpdateRate;
+            
+            if (timeSinceUpdate < interpolationTime)
+            {
+                // Improved interpolation with velocity prediction
+                Vector3 targetPosition = lastNetworkPosition + lastNetworkVelocity * timeSinceUpdate;
+                Vector3 smoothPosition = Vector3.Lerp(transform.position, targetPosition, Time.fixedDeltaTime * 15f); // Faster interpolation
+                
+                // Apply position via CharacterController to maintain collision
+                Vector3 movement = smoothPosition - transform.position;
+                if (movement.magnitude > 0.001f)
+                {
+                    characterController.Move(movement);
+                }
+                
+                // Faster rotation interpolation for responsiveness
+                transform.rotation = Quaternion.Lerp(transform.rotation, lastNetworkRotation, Time.fixedDeltaTime * 15f);
+                
+                // Update velocity for animation system
+                velocity = lastNetworkVelocity;
+            }
         }
 
         #endregion
@@ -1132,237 +1218,19 @@ namespace DeathrunGame
         
         #endregion
         
-        #region Animation System
+        #region Animation Interface
         
         /// <summary>
-        /// Updates all animation parameters based on current movement state
+        /// Update animation system with current movement state
         /// </summary>
-        private void UpdateAnimations(InputTick input)
+        private void UpdateAnimations()
         {
-            if (!enableAnimations || animator == null)
+            if (animationController == null)
                 return;
-            
-            // Calculate current movement values
-            Vector3 horizontalVelocity = new Vector3(velocity.x, 0f, velocity.z);
-            float currentMovementSpeed = horizontalVelocity.magnitude;
-            bool isMoving = currentMovementSpeed > minSpeedForMovement;
-            bool isSprinting = input.Sprint && isMoving;
-            
-            // Smooth the speed for animation
-            smoothedAnimSpeed = Mathf.SmoothDamp(smoothedAnimSpeed, currentMovementSpeed, 
-                ref smoothAnimVelocity.x, animationSmoothTime);
-            
-            // BETTER APPROACH: Use Animator.speed with proper calibration
-            if (useAnimatorSpeed)
-            {
-                if (isJumpAnimationActive)
-                {
-                    // Jump animation speed synchronization
-                    HandleJumpAnimationSpeed();
-                }
-                else if (isMoving)
-                {
-                    // Movement animation speed synchronization
-                    float targetSpeed = isSprinting ? sprintSpeed : walkSpeed;
-                    float targetAnimSpeed = isSprinting ? sprintAnimationSpeed : walkAnimationSpeed;
-                    
-                    // Calculate actual speed ratio and apply calibration
-                    float speedRatio = smoothedAnimSpeed / targetSpeed;
-                    float calibratedAnimSpeed = speedRatio * targetAnimSpeed;
-                    
-                    animator.speed = Mathf.Clamp(calibratedAnimSpeed, 0.1f, 3f);
-                    
-                    if (showCalibrationInfo && Time.time % 1f < 0.1f) // Log every second
-                    {
-                        Debug.Log($"🎬 Move Calibration: ActualSpeed={smoothedAnimSpeed:F1}, TargetSpeed={targetSpeed:F1}, AnimSpeed={animator.speed:F2} {(isSprinting ? "(Sprint)" : "(Walk)")}");
-                    }
-                }
-                else
-                {
-                    animator.speed = 1f; // Normal speed when not moving
-                }
-            }
-            else
-            {
-                animator.speed = 1f; // Normal speed when not using speed sync
-            }
-            
-            // ALTERNATIVE: Set raw speed for blend tree (if using proper thresholds)
-            if (useBlendTreeThresholds)
-            {
-                // Send actual speed values - your blend tree should have thresholds at:
-                // 0 = Idle, 6 = Walk, 10 = Sprint
-                animator.SetFloat(blendParameterName, smoothedAnimSpeed);
-                animator.SetFloat(speedParameterName, smoothedAnimSpeed);
-            }
-            else
-            {
-                // Send normalized values (0=idle, 0.5=walk, 1=sprint)
-                float normalizedSpeed = 0f;
-                if (isMoving)
-                {
-                    normalizedSpeed = isSprinting ? 1f : 0.5f;
-                }
-                animator.SetFloat(blendParameterName, normalizedSpeed);
-                animator.SetFloat(speedParameterName, smoothedAnimSpeed); // Keep raw speed too
-            }
-            
-            // Set optional parameters (only if they exist in your animator)
-            if (HasParameter(isMovingParameterName))
-                animator.SetBool(isMovingParameterName, isMoving);
-            if (HasParameter(isGroundedParameterName))
-                animator.SetBool(isGroundedParameterName, isGrounded);
-            if (HasParameter(isSprintingParameterName))
-                animator.SetBool(isSprintingParameterName, isSprinting);
-            
-            // Handle state change triggers
-            HandleAnimationTriggers();
-            
-            // Update previous states for next frame
-            wasGrounded = isGrounded;
-            wasMoving = isMoving;
-            wasSprinting = isSprinting;
-        }
-        
-        /// <summary>
-        /// Handles one-time animation triggers (jump, fall, land, etc.)
-        /// </summary>
-        private void HandleAnimationTriggers()
-        {
-            // Jump trigger - when we leave the ground with upward velocity
-            if (wasGrounded && !isGrounded && velocity.y > 0.1f)
-            {
-                // Calculate jump duration based on physics
-                if (autoCalculateJumpSpeed)
-                {
-                    CalculateJumpDuration();
-                }
                 
-                jumpStartTime = Time.time;
-                isJumpAnimationActive = true;
-                isFalling = false; // Reset fall state
-                
-                animator.SetTrigger(jumpTriggerName);
-                // Set jump bool to true if it exists
-                if (!string.IsNullOrEmpty(jumpBoolName))
-                {
-                    animator.SetBool(jumpBoolName, true);
-                }
-                Debug.Log($"🦘 Jump animation triggered - Duration: {calculatedJumpDuration:F2}s, AnimSpeed: {jumpAnimationSpeed:F2}");
-            }
-            
-            // Fall trigger - when we're in air with downward velocity (but not from a jump)
-            if (!isGrounded && velocity.y < -0.5f && !isFalling && !isJumpAnimationActive)
-            {
-                isFalling = true;
-                fallStartTime = Time.time;
-                
-                animator.SetTrigger(fallTriggerName);
-                Debug.Log($"🪂 Fall animation triggered - Velocity: {velocity.y:F2}");
-            }
-            
-            // Fall trigger - when jump reaches peak and starts falling
-            if (isJumpAnimationActive && velocity.y < -0.1f && lastVerticalVelocity >= -0.1f)
-            {
-                isJumpAnimationActive = false;
-                isFalling = true;
-                fallStartTime = Time.time;
-                
-                // Reset jump trigger and bool when transitioning to fall
-                animator.ResetTrigger(jumpTriggerName);
-                if (!string.IsNullOrEmpty(jumpBoolName))
-                {
-                    animator.SetBool(jumpBoolName, false);
-                }
-                
-                animator.SetTrigger(fallTriggerName);
-                Debug.Log($"🪂 Fall animation triggered from jump peak - Velocity: {velocity.y:F2}");
-            }
-            
-            // Land trigger - when we touch the ground from air
-            if (!wasGrounded && isGrounded)
-            {
-                float airTime = isFalling ? (Time.time - fallStartTime) : (Time.time - jumpStartTime);
-                
-                isJumpAnimationActive = false;
-                isFalling = false;
-                
-                animator.SetTrigger(landTriggerName);
-                // Reset jump bool to false when we land
-                if (!string.IsNullOrEmpty(jumpBoolName))
-                {
-                    animator.SetBool(jumpBoolName, false);
-                }
-                
-                // Force reset jump trigger to prevent it staying active
-                animator.ResetTrigger(jumpTriggerName);
-                
-                Debug.Log($"🛬 Land animation triggered - Air time: {airTime:F2}s, Impact velocity: {lastVerticalVelocity:F2}");
-            }
-            
-            // Update grounded bool parameter
-            if (!string.IsNullOrEmpty(groundedBoolName))
-            {
-                animator.SetBool(groundedBoolName, isGrounded);
-            }
-            
-            // Debug animator state every few frames
-            if (Time.frameCount % 60 == 0) // Every 60 frames (about once per second at 60fps)
-            {
-                DebugAnimatorParameters();
-            }
-            
-            // Store vertical velocity for next frame
-            lastVerticalVelocity = velocity.y;
-        }
-        
-        /// <summary>
-        /// Calculate how long the jump should take based on physics
-        /// </summary>
-        private void CalculateJumpDuration()
-        {
-            // Physics formula: time = 2 * sqrt(2 * height / gravity)
-            // This calculates total jump time (up + down)
-            calculatedJumpDuration = 2f * Mathf.Sqrt(2f * jumpHeight / gravity);
-            
-            if (showCalibrationInfo)
-            {
-                Debug.Log($"🧮 Calculated jump duration: {calculatedJumpDuration:F2}s (Height: {jumpHeight}, Gravity: {gravity})");
-            }
-        }
-        
-        /// <summary>
-        /// Handle jump animation speed to match physics timing
-        /// </summary>
-        private void HandleJumpAnimationSpeed()
-        {
-            if (autoCalculateJumpSpeed && calculatedJumpDuration > 0f)
-            {
-                // Get the length of the jump animation clip (you might need to adjust this)
-                // For now, assume jump animation is 1 second long at normal speed
-                float jumpAnimationLength = 1.0f; // TODO: Get this from actual animation clip
-                
-                // Calculate speed to make animation match physics duration
-                float calculatedAnimSpeed = jumpAnimationLength / calculatedJumpDuration;
-                animator.speed = calculatedAnimSpeed * jumpAnimationSpeed; // Apply user calibration
-                
-                if (showCalibrationInfo && Time.time - jumpStartTime < 0.2f) // Show for first 0.2s of jump
-                {
-                    Debug.Log($"🎬 Jump Calibration: PhysicsDuration={calculatedJumpDuration:F2}s, AnimSpeed={animator.speed:F2}");
-                }
-            }
-            else
-            {
-                // Manual jump animation speed
-                animator.speed = jumpAnimationSpeed;
-            }
-            
-            // Check if jump animation should end (safety check)
-            if (Time.time - jumpStartTime > calculatedJumpDuration * 1.5f) // 1.5x buffer
-            {
-                isJumpAnimationActive = false;
-                Debug.Log("🛬 Jump animation ended (timeout)");
-            }
+            // Pass raw movement data to animation controller - let it do all the calculations
+            bool isSprinting = playerInput != null && playerInput.GetCurrentInput().Sprint;
+            animationController.UpdateAnimations(velocity, isGrounded, isSprinting);
         }
         
         /// <summary>
@@ -1370,51 +1238,8 @@ namespace DeathrunGame
         /// </summary>
         public void TriggerSwing()
         {
-            if (!enableAnimations || animator == null)
-                return;
-                
-            // Check cooldown
-            float timeSinceLastSwing = Time.time - lastSwingTime;
-            if (timeSinceLastSwing < swingCooldown)
-            {
-                Debug.Log($"⚔️ Swing on cooldown! {(swingCooldown - timeSinceLastSwing):F1}s remaining");
-                return;
-            }
-                
-            animator.SetTrigger(swingTriggerName);
-            lastSwingTime = Time.time;
-            Debug.Log("⚔️ Swing animation triggered");
-        }
-        
-        /// <summary>
-        /// Check if swing is currently on cooldown
-        /// </summary>
-        /// <returns>True if swing is on cooldown, false if ready to use</returns>
-        public bool IsSwingOnCooldown()
-        {
-            return (Time.time - lastSwingTime) < swingCooldown;
-        }
-        
-        /// <summary>
-        /// Get remaining cooldown time for swing
-        /// </summary>
-        /// <returns>Remaining cooldown time in seconds, 0 if ready</returns>
-        public float GetSwingCooldownRemaining()
-        {
-            float remaining = swingCooldown - (Time.time - lastSwingTime);
-            return Mathf.Max(0f, remaining);
-        }
-        
-        /// <summary>
-        /// Trigger random taunt animation
-        /// </summary>
-        public void TriggerRandomTaunt()
-        {
-            if (!enableAnimations || animator == null)
-                return;
-            
-            int randomTaunt = Random.Range(1, 4); // 1, 2, or 3
-            TriggerTaunt(randomTaunt);
+            if (animationController != null)
+                animationController.TriggerSwing();
         }
         
         /// <summary>
@@ -1422,158 +1247,33 @@ namespace DeathrunGame
         /// </summary>
         public void TriggerTaunt(int tauntNumber)
         {
-            if (!enableAnimations || animator == null)
-                return;
-            
-            string triggerName = tauntNumber switch
-            {
-                1 => taunt1TriggerName,
-                2 => taunt2TriggerName,
-                3 => taunt3TriggerName,
-                _ => taunt1TriggerName
-            };
-            
-            animator.SetTrigger(triggerName);
-            Debug.Log($"🎭 Taunt{tauntNumber} animation triggered");
+            if (animationController != null)
+                animationController.TriggerTaunt(tauntNumber);
         }
         
         /// <summary>
-        /// Manually trigger a custom animation (for special moves, attacks, etc.)
+        /// Trigger random taunt animation
         /// </summary>
-        public void TriggerAnimation(string triggerName)
+        public void TriggerRandomTaunt()
         {
-            if (!enableAnimations || animator == null)
-                return;
-                
-            animator.SetTrigger(triggerName);
-            Debug.Log($"🎭 Custom animation triggered: {triggerName}");
+            if (animationController != null)
+                animationController.TriggerRandomTaunt();
         }
         
         /// <summary>
-        /// Set a custom animation parameter
+        /// Check if swing is currently on cooldown
         /// </summary>
-        public void SetAnimationParameter(string parameterName, float value)
+        public bool IsSwingOnCooldown()
         {
-            if (!enableAnimations || animator == null)
-                return;
-                
-            animator.SetFloat(parameterName, value);
+            return animationController != null ? animationController.IsSwingOnCooldown() : false;
         }
         
         /// <summary>
-        /// Set a custom animation parameter
+        /// Get remaining cooldown time for swing
         /// </summary>
-        public void SetAnimationParameter(string parameterName, bool value)
+        public float GetSwingCooldownRemaining()
         {
-            if (!enableAnimations || animator == null)
-                return;
-                
-            animator.SetBool(parameterName, value);
-        }
-        
-        /// <summary>
-        /// Set a custom animation parameter
-        /// </summary>
-        public void SetAnimationParameter(string parameterName, int value)
-        {
-            if (!enableAnimations || animator == null)
-                return;
-                
-            animator.SetInteger(parameterName, value);
-        }
-        
-        /// <summary>
-        /// Check if animator has a specific parameter (prevents errors)
-        /// </summary>
-        private bool HasParameter(string parameterName)
-        {
-            if (animator == null) return false;
-            
-            foreach (AnimatorControllerParameter param in animator.parameters)
-            {
-                if (param.name == parameterName)
-                    return true;
-            }
-            return false;
-        }
-        
-        /// <summary>
-        /// Debug method to check animator parameter states
-        /// </summary>
-        private void DebugAnimatorParameters()
-        {
-            if (animator == null) return;
-            
-            // Check trigger states
-            bool jumpTriggerActive = false;
-            bool fallTriggerActive = false;
-            bool landTriggerActive = false;
-            
-            // Check bool states
-            bool isJumpingBool = false;
-            bool isGroundedBool = false;
-            
-            foreach (AnimatorControllerParameter param in animator.parameters)
-            {
-                switch (param.name)
-                {
-                    case var name when name == jumpTriggerName:
-                        if (param.type == AnimatorControllerParameterType.Trigger)
-                            jumpTriggerActive = animator.GetBool(param.name);
-                        break;
-                    case var name when name == fallTriggerName:
-                        if (param.type == AnimatorControllerParameterType.Trigger)
-                            fallTriggerActive = animator.GetBool(param.name);
-                        break;
-                    case var name when name == landTriggerName:
-                        if (param.type == AnimatorControllerParameterType.Trigger)
-                            landTriggerActive = animator.GetBool(param.name);
-                        break;
-                    case var name when name == jumpBoolName:
-                        if (param.type == AnimatorControllerParameterType.Bool)
-                            isJumpingBool = animator.GetBool(param.name);
-                        break;
-                    case var name when name == groundedBoolName:
-                        if (param.type == AnimatorControllerParameterType.Bool)
-                            isGroundedBool = animator.GetBool(param.name);
-                        break;
-                }
-            }
-            
-            Debug.Log($"🎭 Animator State - Jump Trigger: {jumpTriggerActive}, Fall Trigger: {fallTriggerActive}, Land Trigger: {landTriggerActive}");
-            Debug.Log($"🎭 Animator Bools - IsJumping: {isJumpingBool}, IsGrounded: {isGroundedBool}, Actually Grounded: {isGrounded}");
-        }
-        
-        #endregion
-        
-        #region Input Handling for Animations
-        
-        /// <summary>
-        /// Add this to your input processing if you want automatic swing/taunt triggers
-        /// Call this from Update() or wherever you handle input
-        /// </summary>
-        private void HandleAnimationInput()
-        {
-            if (!IsOwner) return;
-            
-            // Example input bindings - customize as needed
-            if (Input.GetMouseButtonDown(0)) // Left click for swing
-            {
-                TriggerSwing();
-            }
-            
-            if (Input.GetKeyDown(KeyCode.T)) // T for random taunt
-            {
-                TriggerRandomTaunt();
-            }
-            
-            // Number keys for specific taunts
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-                TriggerTaunt(1);
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-                TriggerTaunt(2);
-            if (Input.GetKeyDown(KeyCode.Alpha3))
-                TriggerTaunt(3);
+            return animationController != null ? animationController.GetSwingCooldownRemaining() : 0f;
         }
         
         #endregion
