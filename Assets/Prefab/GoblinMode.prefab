@@ -129,7 +129,7 @@ Transform:
   m_GameObject: {fileID: 6007207353778601676}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.89, z: 0}
+  m_LocalPosition: {x: 0, y: 1.07, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -597,6 +597,9 @@ PrefabInstance:
       addedObject: {fileID: 6960825457426609296}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ac0e6d6de4903954186a3cd8c0e5691c, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 3147860131333448006}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ac0e6d6de4903954186a3cd8c0e5691c, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 5419449510803162830}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ac0e6d6de4903954186a3cd8c0e5691c, type: 3}
       insertIndex: -1
@@ -609,13 +612,16 @@ PrefabInstance:
       addedObject: {fileID: 789377850668950549}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ac0e6d6de4903954186a3cd8c0e5691c, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 35442470440139780}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ac0e6d6de4903954186a3cd8c0e5691c, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 3171551241515988888}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ac0e6d6de4903954186a3cd8c0e5691c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5225298580269726338}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ac0e6d6de4903954186a3cd8c0e5691c, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3147860131333448006}
+      addedObject: {fileID: 7495306498992352935}
     - targetCorrespondingSourceObject: {fileID: 7036213049465896255, guid: ac0e6d6de4903954186a3cd8c0e5691c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4359674533881457809}
@@ -706,6 +712,23 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
+--- !u!114 &3147860131333448006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4639992981897814336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkRigidbodyBaseExpanded: 0
+  UseRigidBodyForMotion: 1
+  AutoUpdateKinematicState: 1
+  AutoSetKinematicOnDespawn: 1
 --- !u!114 &5419449510803162830
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -824,6 +847,31 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 1
+--- !u!114 &35442470440139780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4639992981897814336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81e00a7001addd7458a90b50582b3481, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  IsGrounded:
+    m_InternalValue: 0
+  IsJumping:
+    m_InternalValue: 0
+  IsFalling:
+    m_InternalValue: 0
+  IsMoving:
+    m_InternalValue: 0
+  CurrentSpeed:
+    m_InternalValue: 0
+  IsDead:
+    m_InternalValue: 0
 --- !u!114 &3171551241515988888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -867,7 +915,7 @@ MonoBehaviour:
   offsetTransitionEndAngle: -110
   characterBody: {fileID: 4008085981596527460}
   rotationSmoothTime: 0.12
---- !u!114 &3147860131333448006
+--- !u!114 &7495306498992352935
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -876,14 +924,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 4639992981897814336}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
+  m_Script: {fileID: 11500000, guid: dd907d06bc056f54aa7d610a4ec419fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  NetworkRigidbodyBaseExpanded: 0
-  UseRigidBodyForMotion: 1
-  AutoUpdateKinematicState: 1
-  AutoSetKinematicOnDespawn: 1
+  groundCheckDistance: 0.47
+  groundLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  groundCheckOrigin: {fileID: 766523200413736913}
+  raycastSpread: 0.3
+  useMultipleRays: 1
+  coyoteTime: 0.1
+  showDebugRays: 1
 --- !u!4 &5417621049865108474 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ac0e6d6de4903954186a3cd8c0e5691c, type: 3}
