@@ -36,8 +36,8 @@
   <Project Path="Unity.Searcher.Editor.csproj" />
   <Project Path="meta.xr.mrutilitykit.csproj" />
   <Project Path="Unity.ProBuilder.Editor.csproj" />
-  <Project Path="Oculus.Interaction.Samples.csproj" />
   <Project Path="Unity.Multiplayer.Tools.MetricTypes.csproj" />
+  <Project Path="Oculus.Interaction.Samples.csproj" />
   <Project Path="Unity.Multiplayer.Tools.Adapters.csproj" />
   <Project Path="Unity.Services.Wire.Internal.csproj" />
   <Project Path="Oculus.Interaction.csproj" />
