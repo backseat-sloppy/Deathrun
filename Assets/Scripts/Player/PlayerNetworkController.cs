@@ -243,12 +243,17 @@ namespace DeathrunGame
 
         public override void OnNetworkSpawn()
         {
-            // Only owner controls input
+            // CRITICAL FIX: Only owner should process input and use camera
             if (!IsOwner)
             {
                 playerInput.enabled = false;
+                
+                // Disable camera for non-owners AND clear the reference to prevent interference
                 if (playerCamera != null)
                     playerCamera.enabled = false;
+                    
+                // IMPORTANT: Clear camera transform reference for non-owners to prevent shared camera issues
+                cameraTransform = null;
             }
             
             Debug.Log($"Player spawned - IsOwner: {IsOwner}, IsServer: {IsServer}, PlayerInput enabled: {playerInput.enabled}");
@@ -306,12 +311,12 @@ namespace DeathrunGame
                 // Update animations based on current movement state
                 UpdateAnimations();
             }
-            else if (IsServer)
+            else if (IsServer && !IsOwner)
             {
-                // Server processes all clients' inputs
+                // Server only processes updates for NON-OWNER objects (remote players)
                 ProcessServerUpdate();
             }
-            else
+            else if (!IsOwner)
             {
                 // Non-owners interpolate received states
                 InterpolateRemotePlayer();
@@ -339,7 +344,7 @@ namespace DeathrunGame
             // Apply input immediately (client-side prediction)
             ApplyInput(inputTick);
             
-            // Throttled input sending: Only send to server if enough time has passed and we're not the host
+            // Send input to server (but not if we're the host to avoid double processing)
             if (!IsHost && (Time.time - lastInputSentTime) >= INPUT_SEND_RATE)
             {
                 SendInputToServerRpc(inputTick);
@@ -425,6 +430,9 @@ namespace DeathrunGame
         
         private void ApplyMovement(InputTick input)
         {
+            // SAFETY: Only owner should apply input-based movement
+            if (!IsOwner) return;
+            
             Vector3 inputDirection = GetCameraRelativeDirection(input.MoveDirection);
             float targetSpeed = input.Sprint ? sprintSpeed : walkSpeed;
             
@@ -657,7 +665,8 @@ namespace DeathrunGame
 
         private Vector3 GetCameraRelativeDirection(Vector3 inputDirection)
         {
-            if (cameraTransform == null || inputDirection.magnitude < 0.01f)
+            // CRITICAL FIX: Only owner should use camera-relative movement
+            if (!IsOwner || cameraTransform == null || inputDirection.magnitude < 0.01f)
                 return Vector3.zero;
             
             Vector3 forward = cameraTransform.forward;
@@ -935,7 +944,7 @@ namespace DeathrunGame
         [ServerRpc]
         private void SendInputToServerRpc(InputTick input)
         {
-            // Server processes client input
+            // Server processes input and updates authoritative state
             ProcessClientInput(input);
         }
 
@@ -950,10 +959,9 @@ namespace DeathrunGame
         [ClientRpc]
         private void SendCorrectionSnapshotClientRpc(NetworkState state)
         {
-            if (!IsOwner) return;
-            
-            // Client receives authoritative state from server
-            ProcessServerCorrection(state);
+            // DISABLED: Temporarily disable server corrections to test client autonomy
+            // if (!IsOwner) return;
+            // ProcessServerCorrection(state);
         }
 
         #endregion
