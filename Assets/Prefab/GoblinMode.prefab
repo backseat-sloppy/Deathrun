@@ -931,7 +931,7 @@ MonoBehaviour:
   groundCheckDistance: 0.47
   groundLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   groundCheckOrigin: {fileID: 766523200413736913}
   raycastSpread: 0.3
   useMultipleRays: 1

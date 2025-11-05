@@ -8,13 +8,19 @@ namespace DeathrunGame
     /// Owner-only input with physics-based movement.
     /// </summary>
     [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(PlayerStateStatus))]
     public class PlayerMovementController : NetworkBehaviour
     {
         [Header("Movement Settings")]
         [SerializeField] private float moveSpeed = 5f;
+        [SerializeField] private float airMoveSpeed = 3f; // Reduced air control
+
+        [Header("Jump Settings")]
+        [SerializeField] private float jumpForce = 5f;
 
         [Header("References")]
         [SerializeField] private PlayerCameraController cameraController;
+        [SerializeField] private PlayerStateStatus stateStatus;
 
         private Rigidbody rb;
         private Vector3 moveInput;
@@ -22,6 +28,7 @@ namespace DeathrunGame
         private void Awake()
         {
             rb = GetComponent<Rigidbody>();
+            stateStatus = GetComponent<PlayerStateStatus>();
 
             // Configure Rigidbody for character movement
             rb.constraints = RigidbodyConstraints.FreezeRotation;
@@ -31,9 +38,6 @@ namespace DeathrunGame
 
         public override void OnNetworkSpawn()
         {
-            // DEBUG: Log ownership information
-            Debug.Log($"🎮 PlayerMovementController.OnNetworkSpawn() - IsOwner: {IsOwner}, OwnerClientId: {OwnerClientId}, LocalClientId: {NetworkManager.LocalClientId}, IsClient: {IsClient}, IsServer: {IsServer}");
-
             // Auto-find camera controller if owner
             if (IsOwner && cameraController == null)
             {
@@ -44,17 +48,14 @@ namespace DeathrunGame
         private void Update()
         {
             // Owner-only input capture
-            if (!IsOwner) return;
+            if (!IsOwner && stateStatus.IsGrounded.Value) return;
+
+            // Don't process input if dead
+            if (stateStatus.IsDead.Value) return;
 
             // Get WASD input
-            float horizontal = Input.GetAxisRaw("Horizontal"); // A/D
-            float vertical = Input.GetAxisRaw("Vertical");     // W/S
-
-            // DEBUG: Log input once to verify it's being captured
-            if (horizontal != 0 || vertical != 0)
-            {
-                Debug.Log($"🕹️ Input detected - H: {horizontal}, V: {vertical}, IsOwner: {IsOwner}");
-            }
+            float horizontal = Input.GetAxisRaw("Horizontal");
+            float vertical = Input.GetAxisRaw("Vertical");
 
             // Calculate movement direction relative to camera
             if (cameraController != null)
@@ -66,35 +67,86 @@ namespace DeathrunGame
             }
             else
             {
-                // Fallback to world-space movement if no camera
                 moveInput = new Vector3(horizontal, 0f, vertical).normalized;
-                
-                // DEBUG: Warn if camera controller is missing
-                if (horizontal != 0 || vertical != 0)
-                {
-                    Debug.LogWarning("⚠️ Camera controller is null, using world-space movement");
-                }
+            }
+
+            // Update movement state
+            stateStatus.SetMoving(moveInput.magnitude > 0.1f);
+
+            // DEBUG: Check jump state
+            if (Input.GetButtonDown("Jump"))
+            {
+                Debug.Log($"🎮 Jump pressed! IsGrounded: {stateStatus.IsGrounded.Value}");
+            }
+
+            // Jump input
+            if (Input.GetButtonDown("Jump") && stateStatus.IsGrounded.Value)
+            {
+                Jump();
             }
         }
 
         private void FixedUpdate()
         {
             // Apply movement in FixedUpdate for physics
-            if (!IsOwner) return;
+            if (!IsOwner && stateStatus.IsGrounded.Value) return;
 
+            // Don't move if dead
+            if (stateStatus.IsDead.Value) return;
+
+            ApplyMovement();
+            UpdateFallingState();
+        }
+
+        private void ApplyMovement()
+        {
             if (moveInput.magnitude > 0.1f)
             {
-                // Move the rigidbody (preserve vertical velocity for gravity)
-                Vector3 movement = moveInput * moveSpeed;
+                // Use different speed based on grounded state
+                float currentMoveSpeed = stateStatus.IsGrounded.Value ? moveSpeed : airMoveSpeed;
+
+                Vector3 movement = moveInput * currentMoveSpeed;
                 rb.linearVelocity = new Vector3(movement.x, rb.linearVelocity.y, movement.z);
-                
-                // DEBUG: Log movement application
-                Debug.Log($"🏃 Applying movement - Velocity: {rb.linearVelocity}");
+
+                // Update speed for animations
+                stateStatus.SetCurrentSpeed(movement.magnitude);
             }
             else
             {
-                // Stop horizontal movement when no input
-                rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
+                // Stop horizontal movement when no input (only if grounded)
+                if (stateStatus.IsGrounded.Value)
+                {
+                    rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
+                }
+
+                stateStatus.SetCurrentSpeed(0f);
+            }
+        }
+
+        private void Jump()
+        {
+            // Apply upward force
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
+            
+            // Update state
+            stateStatus.SetJumping(true);
+            stateStatus.SetFalling(false);
+
+            Debug.Log("🦘 Jump initiated");
+        }
+
+        private void UpdateFallingState()
+        {
+            // Reset jumping state when grounded
+            if (stateStatus.IsGrounded.Value)
+            {
+                stateStatus.SetJumping(false);
+                stateStatus.SetFalling(false);
+            }
+            // Set falling if moving downward and not jumping
+            else if (rb.linearVelocity.y < -0.1f && !stateStatus.IsJumping.Value)
+            {
+                stateStatus.SetFalling(true);
             }
         }
     }
