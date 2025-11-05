@@ -4,15 +4,17 @@ using UnityEngine;
 namespace DeathrunGame
 {
     /// <summary>
-    /// Minimal rigidbody-based movement controller for network testing.
-    /// Owner-only input with Rigidbody physics.
+    /// Camera-relative rigidbody movement controller.
+    /// Owner-only input with physics-based movement.
     /// </summary>
     [RequireComponent(typeof(Rigidbody))]
     public class PlayerMovementController : NetworkBehaviour
     {
         [Header("Movement Settings")]
         [SerializeField] private float moveSpeed = 5f;
-        [SerializeField] private float rotationSpeed = 10f;
+
+        [Header("References")]
+        [SerializeField] private PlayerCameraController cameraController;
 
         private Rigidbody rb;
         private Vector3 moveInput;
@@ -35,6 +37,12 @@ namespace DeathrunGame
                 enabled = false;
                 return;
             }
+
+            // Auto-find camera controller if not set
+            if (cameraController == null)
+            {
+                cameraController = GetComponent<PlayerCameraController>();
+            }
         }
 
         private void Update()
@@ -46,7 +54,19 @@ namespace DeathrunGame
             float horizontal = Input.GetAxisRaw("Horizontal"); // A/D
             float vertical = Input.GetAxisRaw("Vertical");     // W/S
 
-            moveInput = new Vector3(horizontal, 0f, vertical).normalized;
+            // Calculate movement direction relative to camera
+            if (cameraController != null)
+            {
+                Vector3 forward = cameraController.GetCameraForward();
+                Vector3 right = cameraController.GetCameraRight();
+
+                moveInput = (forward * vertical + right * horizontal).normalized;
+            }
+            else
+            {
+                // Fallback to world-space movement if no camera
+                moveInput = new Vector3(horizontal, 0f, vertical).normalized;
+            }
         }
 
         private void FixedUpdate()
@@ -56,13 +76,9 @@ namespace DeathrunGame
 
             if (moveInput.magnitude > 0.1f)
             {
-                // Move the rigidbody
+                // Move the rigidbody (preserve vertical velocity for gravity)
                 Vector3 movement = moveInput * moveSpeed;
                 rb.linearVelocity = new Vector3(movement.x, rb.linearVelocity.y, movement.z);
-
-                // Rotate to face movement direction
-                Quaternion targetRotation = Quaternion.LookRotation(moveInput);
-                rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
             }
             else
             {

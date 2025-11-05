@@ -1397,7 +1397,7 @@ GameObject:
   - component: {fileID: 317705010}
   - component: {fileID: 317705009}
   - component: {fileID: 317705008}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3224,7 +3224,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 371102010}
   m_HandleRect: {fileID: 371102009}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -3971,7 +3971,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2086443719}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.9999999
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4447,8 +4447,9 @@ GameObject:
   - component: {fileID: 791754287}
   - component: {fileID: 791754292}
   - component: {fileID: 791754291}
+  - component: {fileID: 791754293}
   m_Layer: 0
-  m_Name: Camera
+  m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4534,7 +4535,7 @@ Camera:
   field of view: 60
   orthographic: 1
   orthographic size: 227.3
-  m_Depth: -10
+  m_Depth: -100
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -4557,8 +4558,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 791754286}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -1, z: 0, w: 0}
-  m_LocalPosition: {x: 1.16, y: 59.6, z: -42.2}
+  m_LocalRotation: {x: -0.1784248, y: 0.0000000043530095, z: 7.8935114e-10, w: 0.98395354}
+  m_LocalPosition: {x: 0, y: 6.0070286, z: -4}
   m_LocalScale: {x: 2.024463, y: 0.93812, z: 0.93812}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4604,6 +4605,40 @@ MonoBehaviour:
   scalingFactor: 1
   m_posOffsetData: {fileID: 0}
   listenerMask: 1
+--- !u!114 &791754293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 791754286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShowDebugText: 0
+  m_ShowCameraFrustum: 1
+  m_IgnoreTimeScale: 0
+  m_WorldUpOverride: {fileID: 0}
+  m_UpdateMethod: 2
+  m_BlendUpdateMethod: 1
+  m_DefaultBlend:
+    m_Style: 1
+    m_Time: 2
+    m_CustomCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  m_CustomBlends: {fileID: 0}
+  m_CameraCutEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_CameraActivatedEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &804223782
 GameObject:
   m_ObjectHideFlags: 0
@@ -6368,7 +6403,7 @@ GameObject:
   - component: {fileID: 1266545364}
   - component: {fileID: 1266545363}
   - component: {fileID: 1266545362}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Ground
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -7846,7 +7881,7 @@ GameObject:
   - component: {fileID: 1535228307}
   - component: {fileID: 1535228306}
   - component: {fileID: 1535228305}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Platform (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8978,7 +9013,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.00018310547, y: 0.00013863885}
+  m_AnchoredPosition: {x: 0.00018310547, y: -0.0003263522}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1699987646
@@ -9987,6 +10022,8 @@ MonoBehaviour:
   lobbyRoomPanel: {fileID: 149781999}
   errorPanel: {fileID: 628964781}
   loadingPanel: {fileID: 1305875236}
+  UIVisual: {fileID: 1586270715}
+  mainCamera: {fileID: 791754289}
   createLobbyButton: {fileID: 2112703523}
   joinLobbyButton: {fileID: 303662243}
   quickJoinButton: {fileID: 1775799180}
