@@ -1,4 +1,4 @@
-using Unity.Netcode;
+﻿using Unity.Netcode;
 using UnityEngine;
 
 namespace DeathrunGame
@@ -31,15 +31,11 @@ namespace DeathrunGame
 
         public override void OnNetworkSpawn()
         {
-            // Only enable input for the owner
-            if (!IsOwner)
-            {
-                enabled = false;
-                return;
-            }
+            // DEBUG: Log ownership information
+            Debug.Log($"🎮 PlayerMovementController.OnNetworkSpawn() - IsOwner: {IsOwner}, OwnerClientId: {OwnerClientId}, LocalClientId: {NetworkManager.LocalClientId}, IsClient: {IsClient}, IsServer: {IsServer}");
 
-            // Auto-find camera controller if not set
-            if (cameraController == null)
+            // Auto-find camera controller if owner
+            if (IsOwner && cameraController == null)
             {
                 cameraController = GetComponent<PlayerCameraController>();
             }
@@ -54,6 +50,12 @@ namespace DeathrunGame
             float horizontal = Input.GetAxisRaw("Horizontal"); // A/D
             float vertical = Input.GetAxisRaw("Vertical");     // W/S
 
+            // DEBUG: Log input once to verify it's being captured
+            if (horizontal != 0 || vertical != 0)
+            {
+                Debug.Log($"🕹️ Input detected - H: {horizontal}, V: {vertical}, IsOwner: {IsOwner}");
+            }
+
             // Calculate movement direction relative to camera
             if (cameraController != null)
             {
@@ -66,6 +68,12 @@ namespace DeathrunGame
             {
                 // Fallback to world-space movement if no camera
                 moveInput = new Vector3(horizontal, 0f, vertical).normalized;
+                
+                // DEBUG: Warn if camera controller is missing
+                if (horizontal != 0 || vertical != 0)
+                {
+                    Debug.LogWarning("⚠️ Camera controller is null, using world-space movement");
+                }
             }
         }
 
@@ -79,6 +87,9 @@ namespace DeathrunGame
                 // Move the rigidbody (preserve vertical velocity for gravity)
                 Vector3 movement = moveInput * moveSpeed;
                 rb.linearVelocity = new Vector3(movement.x, rb.linearVelocity.y, movement.z);
+                
+                // DEBUG: Log movement application
+                Debug.Log($"🏃 Applying movement - Velocity: {rb.linearVelocity}");
             }
             else
             {
