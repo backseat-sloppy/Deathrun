@@ -291,8 +291,9 @@ namespace DeathrunGame
 
         private void SetupRemotePlayer()
         {
-            // Remote players are purely visual representations
-            playerInput.enabled = false;
+            // Remote players should still have input enabled for their own control
+            // Only disable input if this is truly a remote player (not owned by this client)
+            // NOTE: In proper multiplayer, each client owns their own player
             
             // Disable camera to prevent multiple active cameras
             if (playerCamera != null)
@@ -300,10 +301,27 @@ namespace DeathrunGame
                 playerCamera.enabled = false;
             }
             
-            // Clear camera reference - remote players don't need camera for movement
+            // Clear the assigned camera reference to prevent sharing
+            // But non-owners should find their own camera for movement
             cameraTransform = null;
+            FindLocalMainCamera();
             
-            Debug.Log("Remote player setup complete - Input disabled, camera disabled");
+            Debug.Log("Remote player setup complete - Input enabled, local camera found");
+        }
+
+        private void FindLocalMainCamera()
+        {
+            // Find the main camera for this client to use for movement direction
+            Camera mainCamera = Camera.main;
+            if (mainCamera != null)
+            {
+                cameraTransform = mainCamera.transform;
+                Debug.Log($"Non-owner using main camera: {mainCamera.name}");
+            }
+            else
+            {
+                Debug.LogWarning("No main camera found for non-owner movement direction");
+            }
         }
 
         private void InitializeServerState()
@@ -473,10 +491,22 @@ namespace DeathrunGame
         
         private void ApplyMovement(InputTick input)
         {
-            // SAFETY: Only owner should apply input-based movement
-            if (!IsOwner) return;
+            // Debug to understand ownership and input
+            if (input.MoveDirection.magnitude > 0.01f)
+            {
+                Debug.Log($"ApplyMovement: IsOwner={IsOwner}, MoveDirection={input.MoveDirection}, Camera={cameraTransform?.name}");
+            }
             
+            // All players can process movement locally, but only owners send to server
             Vector3 inputDirection = GetCameraRelativeDirection(input.MoveDirection);
+            
+            // If not owner and no camera direction, try world space as fallback
+            if (inputDirection == Vector3.zero && input.MoveDirection.magnitude > 0.01f)
+            {
+                inputDirection = input.MoveDirection.normalized;
+                Debug.Log($"Using world space movement for non-owner: {inputDirection}");
+            }
+            
             float targetSpeed = input.Sprint ? sprintSpeed : walkSpeed;
             
             // THE UNITY SOLUTION: Work WITH CharacterController, not against it
@@ -708,9 +738,8 @@ namespace DeathrunGame
 
         private Vector3 GetCameraRelativeDirection(Vector3 inputDirection)
         {
-            // Professional approach: Only owners calculate camera-relative movement
-            // Remote players get their movement from network interpolation
-            if (!IsOwner || cameraTransform == null || inputDirection.magnitude < 0.01f)
+            // Try to get camera-relative movement for all players
+            if (cameraTransform == null || inputDirection.magnitude < 0.01f)
                 return Vector3.zero;
 
             Vector3 forward = cameraTransform.forward;
