@@ -466,6 +466,16 @@ namespace DeathrunGame
                     itemUI.Setup(playerName, role);
                 }
             }
+
+            // Force layout rebuild after a frame to ensure proper layout calculation
+            StartCoroutine(RebuildLayoutNextFrame());
+        }
+
+        private System.Collections.IEnumerator RebuildLayoutNextFrame()
+        {
+            yield return null; // Wait one frame
+            Canvas.ForceUpdateCanvases();
+            UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(playerListContent.GetComponent<RectTransform>());
         }
 
         private void OnGameStarted()
