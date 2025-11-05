@@ -243,61 +243,106 @@ namespace DeathrunGame
 
         public override void OnNetworkSpawn()
         {
-            // CRITICAL FIX: Only owner should process input and use camera
-            if (!IsOwner)
+            // Professional multiplayer setup: Clear authority separation
+            if (IsOwner)
             {
-                playerInput.enabled = false;
-                
-                // Disable camera for non-owners AND clear the reference to prevent interference
-                if (playerCamera != null)
-                    playerCamera.enabled = false;
-                    
-                // IMPORTANT: Clear camera transform reference for non-owners to prevent shared camera issues
-                cameraTransform = null;
+                // Owner: Full input control and camera setup
+                SetupOwnerPlayer();
             }
-            
-            Debug.Log($"Player spawned - IsOwner: {IsOwner}, IsServer: {IsServer}, PlayerInput enabled: {playerInput.enabled}");
-            
-            // Initialize NetworkVariables for server
+            else
+            {
+                // Non-owner: Pure network client, no input processing
+                SetupRemotePlayer();
+            }
+
+            // Server initialization
             if (IsServer)
             {
-                networkPosition.Value = transform.position;
-                networkVelocity.Value = Vector3.zero;
-                networkRotation.Value = transform.rotation;
-                networkIsGrounded.Value = true;
+                InitializeServerState();
             }
-            
-            // Initialize interpolation values for remote clients
+
+            // Client initialization  
             if (!IsOwner)
             {
-                lastNetworkPosition = networkPosition.Value;
-                lastNetworkVelocity = networkVelocity.Value;
-                lastNetworkRotation = networkRotation.Value;
-                networkUpdateTime = Time.time;
+                InitializeRemotePlayerState();
+            }
+
+            ValidateComponentSetup();
+        }
+
+        private void SetupOwnerPlayer()
+        {
+            // Owner has full control
+            playerInput.enabled = true;
+            
+            if (playerCamera != null)
+            {
+                playerCamera.enabled = true;
             }
             
-            // Verify component setup
+            // Ensure camera reference is set
+            if (cameraTransform == null && playerCamera != null)
+            {
+                cameraTransform = playerCamera.transform;
+            }
+            
+            Debug.Log($"Owner player setup complete - Camera: {cameraTransform?.name}");
+        }
+
+        private void SetupRemotePlayer()
+        {
+            // Remote players are purely visual representations
+            playerInput.enabled = false;
+            
+            // Disable camera to prevent multiple active cameras
+            if (playerCamera != null)
+            {
+                playerCamera.enabled = false;
+            }
+            
+            // Clear camera reference - remote players don't need camera for movement
+            cameraTransform = null;
+            
+            Debug.Log("Remote player setup complete - Input disabled, camera disabled");
+        }
+
+        private void InitializeServerState()
+        {
+            networkPosition.Value = transform.position;
+            networkVelocity.Value = Vector3.zero;
+            networkRotation.Value = transform.rotation;
+            networkIsGrounded.Value = true;
+        }
+
+        private void InitializeRemotePlayerState()
+        {
+            lastNetworkPosition = networkPosition.Value;
+            lastNetworkVelocity = networkVelocity.Value;
+            lastNetworkRotation = networkRotation.Value;
+            networkUpdateTime = Time.time;
+        }
+
+        private void ValidateComponentSetup()
+        {
             if (characterController == null)
             {
                 Debug.LogError("CharacterController is missing! PlayerNetworkController requires a CharacterController component.");
             }
-            
+
             if (playerInput == null)
             {
                 Debug.LogError("PlayerInput is missing! PlayerNetworkController requires a PlayerInput component.");
             }
-            
-            if (IsOwner && playerInput != null && !playerInput.enabled)
+
+            if (IsOwner && cameraTransform == null)
             {
-                Debug.LogError("PlayerInput is disabled for owner! This will prevent movement.");
+                Debug.LogWarning("Owner player has no camera reference! Movement will be world-relative.");
             }
         }
 
         private void Update()
         {
-            if (!IsOwner) return;
-            
-            // Update timers
+            // Update timers for all players
             UpdateTimers();
         }
 
@@ -305,20 +350,18 @@ namespace DeathrunGame
         {
             if (IsOwner)
             {
-                // Owner processes input and applies movement in FixedUpdate for consistent physics
+                // OWNER AUTHORITY: Process input and send to server
                 ProcessInputAndMovement();
-                
-                // Update animations based on current movement state
                 UpdateAnimations();
             }
             else if (IsServer && !IsOwner)
             {
-                // Server only processes updates for NON-OWNER objects (remote players)
+                // SERVER AUTHORITY: Process remote player updates
                 ProcessServerUpdate();
             }
-            else if (!IsOwner)
+            else
             {
-                // Non-owners interpolate received states
+                // CLIENT AUTHORITY: Pure interpolation to server state
                 InterpolateRemotePlayer();
             }
         }
@@ -665,19 +708,21 @@ namespace DeathrunGame
 
         private Vector3 GetCameraRelativeDirection(Vector3 inputDirection)
         {
-            // CRITICAL FIX: Only owner should use camera-relative movement
+            // Professional approach: Only owners calculate camera-relative movement
+            // Remote players get their movement from network interpolation
             if (!IsOwner || cameraTransform == null || inputDirection.magnitude < 0.01f)
                 return Vector3.zero;
-            
+
             Vector3 forward = cameraTransform.forward;
-            Vector3 right = cameraTransform.right;
-            
-            // Remove vertical component
+            Vector3 right = cameraTransform.right;            // Remove vertical component
             forward.y = 0f;
             right.y = 0f;
             forward.Normalize();
             right.Normalize();
             
+            // inputDirection is Vector3(x, 0, z) where:
+            // x = left/right (A/D keys)
+            // z = forward/backward (W/S keys)
             return (forward * inputDirection.z + right * inputDirection.x).normalized;
         }
 
