@@ -368,18 +368,32 @@ namespace DeathrunGame
         {
             if (IsOwner)
             {
-                // OWNER AUTHORITY: Process input and send to server
+                // OWNER: Process input, apply movement, and send to server
                 ProcessInputAndMovement();
                 UpdateAnimations();
             }
             else if (IsServer && !IsOwner)
             {
-                // SERVER AUTHORITY: Process remote player updates
+                // SERVER: Process remote player updates
                 ProcessServerUpdate();
             }
             else
             {
-                // CLIENT AUTHORITY: Pure interpolation to server state
+                // NON-OWNER: Process input locally but don't send to server
+                // This gives immediate responsiveness while server maintains authority
+                if (playerInput != null)
+                {
+                    var inputTick = playerInput.GetCurrentInput();
+                    inputTick.SequenceId = ++localSequenceId;
+                    inputTick.Timestamp = Time.time;
+                    inputTick.WasGrounded = isGrounded;
+                    
+                    // Apply input locally for immediate response
+                    ApplyInput(inputTick);
+                    UpdateAnimations();
+                }
+                
+                // Also lightly interpolate toward server position for corrections
                 InterpolateRemotePlayer();
             }
         }
@@ -491,20 +505,13 @@ namespace DeathrunGame
         
         private void ApplyMovement(InputTick input)
         {
-            // Debug to understand ownership and input
-            if (input.MoveDirection.magnitude > 0.01f)
-            {
-                Debug.Log($"ApplyMovement: IsOwner={IsOwner}, MoveDirection={input.MoveDirection}, Camera={cameraTransform?.name}");
-            }
-            
-            // All players can process movement locally, but only owners send to server
+            // All players can process movement locally for immediate responsiveness
             Vector3 inputDirection = GetCameraRelativeDirection(input.MoveDirection);
             
-            // If not owner and no camera direction, try world space as fallback
+            // If no camera direction, try world space as fallback
             if (inputDirection == Vector3.zero && input.MoveDirection.magnitude > 0.01f)
             {
                 inputDirection = input.MoveDirection.normalized;
-                Debug.Log($"Using world space movement for non-owner: {inputDirection}");
             }
             
             float targetSpeed = input.Sprint ? sprintSpeed : walkSpeed;
@@ -648,6 +655,9 @@ namespace DeathrunGame
         {
             if (!enableCharacterRotation)
                 return;
+                
+            // All players apply rotation based on their local input for immediate response
+            // Network sync handles authority later
                 
             // Use actual movement velocity direction for more accurate rotation
             Vector3 horizontalVelocity = new Vector3(velocity.x, 0f, velocity.z);
