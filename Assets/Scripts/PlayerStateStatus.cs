@@ -50,52 +50,87 @@ namespace DeathrunGame
             NetworkVariableWritePermission.Owner
         );
 
+        [Header("Action State")]
+        public NetworkVariable<bool> IsSwinging = new NetworkVariable<bool>(
+            false,
+            NetworkVariableReadPermission.Everyone,
+            NetworkVariableWritePermission.Owner
+        );
+
+        public NetworkVariable<bool> IsTaunting = new NetworkVariable<bool>(
+            false,
+            NetworkVariableReadPermission.Everyone,
+            NetworkVariableWritePermission.Owner
+        );
+
         // Events for state changes (other systems can subscribe)
         public event System.Action OnLanded;
         public event System.Action OnLeftGround;
         public event System.Action OnStartedJumping;
         public event System.Action OnStartedFalling;
+        public event System.Action OnStartedMoving;
+        public event System.Action OnStoppedMoving;
+        public event System.Action OnSwingStarted;
+        public event System.Action OnSwingEnded;
+        public event System.Action OnTauntStarted;
+        public event System.Action OnTauntEnded;
         public event System.Action OnDied;
         public event System.Action OnRespawned;
 
         public override void OnNetworkSpawn()
         {
-            if (IsOwner)
-            {
-                IsGrounded.OnValueChanged += OnGroundedChanged;
-                IsJumping.OnValueChanged += OnJumpingChanged;
-                IsFalling.OnValueChanged += OnFallingChanged;
-                IsDead.OnValueChanged += OnDeadChanged;
-            }
+            // ✅ FIXED: All clients subscribe to state changes for animations/sounds
+            IsGrounded.OnValueChanged += OnGroundedChanged;
+            IsJumping.OnValueChanged += OnJumpingChanged;
+            IsFalling.OnValueChanged += OnFallingChanged;
+            IsMoving.OnValueChanged += OnMovingChanged;
+            IsSwinging.OnValueChanged += OnSwingingChanged;
+            IsTaunting.OnValueChanged += OnTauntingChanged;
+            IsDead.OnValueChanged += OnDeadChanged;
         }
 
         public override void OnNetworkDespawn()
         {
-            if (IsOwner)
-            {
-                IsGrounded.OnValueChanged -= OnGroundedChanged;
-                IsJumping.OnValueChanged -= OnJumpingChanged;
-                IsFalling.OnValueChanged -= OnFallingChanged;
-                IsDead.OnValueChanged -= OnDeadChanged;
-            }
+            // ✅ FIXED: Unsubscribe for all clients
+            IsGrounded.OnValueChanged -= OnGroundedChanged;
+            IsJumping.OnValueChanged -= OnJumpingChanged;
+            IsFalling.OnValueChanged -= OnFallingChanged;
+            IsMoving.OnValueChanged -= OnMovingChanged;
+            IsSwinging.OnValueChanged -= OnSwingingChanged;
+            IsTaunting.OnValueChanged -= OnTauntingChanged;
+            IsDead.OnValueChanged -= OnDeadChanged;
         }
 
         // Setter methods (only owner can call these)
         public void SetGrounded(bool grounded)
         {
             if (!IsOwner) return;
+            
+            // State validation: Can't be grounded while dead
+            if (IsDead.Value && grounded) return;
+            
             IsGrounded.Value = grounded;
         }
 
         public void SetJumping(bool jumping)
         {
             if (!IsOwner) return;
+            
+            // State validation: Can't jump while dead, swinging, or taunting
+            if (IsDead.Value) return;
+            if (IsTaunting.Value) return;
+            if (jumping && IsJumping.Value) return; // Prevent spam
+            
             IsJumping.Value = jumping;
         }
 
         public void SetFalling(bool falling)
         {
             if (!IsOwner) return;
+            
+            // State validation: Can't fall while dead
+            if (IsDead.Value) return;
+            
             IsFalling.Value = falling;
         }
 
@@ -103,18 +138,57 @@ namespace DeathrunGame
         {
             if (!IsOwner) return;
             IsDead.Value = dead;
+            
+            // Clear all states when dying
+            if (dead)
+            {
+                IsJumping.Value = false;
+                IsFalling.Value = false;
+                IsMoving.Value = false;
+                IsSwinging.Value = false;
+                IsTaunting.Value = false;
+                CurrentSpeed.Value = 0f;
+            }
         }
 
         public void SetCurrentSpeed(float speed)
         {
             if (!IsOwner) return;
-            CurrentSpeed.Value = speed;
+            
+            // Clamp to valid range
+            CurrentSpeed.Value = Mathf.Max(0f, speed);
         }
 
         public void SetMoving(bool moving)
         {
             if (!IsOwner) return;
+            
+            // State validation: Can't move while dead
+            if (IsDead.Value && moving) return;
+            
             IsMoving.Value = moving;
+        }
+
+        public void SetSwinging(bool swinging)
+        {
+            if (!IsOwner) return;
+            
+            // State validation: Can't swing while dead or taunting
+            if (IsDead.Value) return;
+            if (IsTaunting.Value && swinging) return;
+            
+            IsSwinging.Value = swinging;
+        }
+
+        public void SetTaunting(bool taunting)
+        {
+            if (!IsOwner) return;
+            
+            // State validation: Can't taunt while dead or swinging
+            if (IsDead.Value) return;
+            if (IsSwinging.Value && taunting) return;
+            
+            IsTaunting.Value = taunting;
         }
 
         // Event callbacks
@@ -123,12 +197,12 @@ namespace DeathrunGame
             if (current && !previous)
             {
                 OnLanded?.Invoke();
-                Debug.Log("🟢 Landed on ground");
+                if (IsOwner) Debug.Log("🟢 Landed on ground");
             }
             else if (!current && previous)
             {
                 OnLeftGround?.Invoke();
-                Debug.Log("🔵 Left ground");
+                if (IsOwner) Debug.Log("🔵 Left ground");
             }
         }
 
@@ -137,7 +211,7 @@ namespace DeathrunGame
             if (current && !previous)
             {
                 OnStartedJumping?.Invoke();
-                Debug.Log("⬆️ Started jumping");
+                if (IsOwner) Debug.Log("⬆️ Started jumping");
             }
         }
 
@@ -146,7 +220,49 @@ namespace DeathrunGame
             if (current && !previous)
             {
                 OnStartedFalling?.Invoke();
-                Debug.Log("⬇️ Started falling");
+                if (IsOwner) Debug.Log("⬇️ Started falling");
+            }
+        }
+
+        private void OnMovingChanged(bool previous, bool current)
+        {
+            if (current && !previous)
+            {
+                OnStartedMoving?.Invoke();
+                if (IsOwner) Debug.Log("🏃 Started moving");
+            }
+            else if (!current && previous)
+            {
+                OnStoppedMoving?.Invoke();
+                if (IsOwner) Debug.Log("🛑 Stopped moving");
+            }
+        }
+
+        private void OnSwingingChanged(bool previous, bool current)
+        {
+            if (current && !previous)
+            {
+                OnSwingStarted?.Invoke();
+                if (IsOwner) Debug.Log("⚾ Started swinging");
+            }
+            else if (!current && previous)
+            {
+                OnSwingEnded?.Invoke();
+                if (IsOwner) Debug.Log("⚾ Swing ended");
+            }
+        }
+
+        private void OnTauntingChanged(bool previous, bool current)
+        {
+            if (current && !previous)
+            {
+                OnTauntStarted?.Invoke();
+                if (IsOwner) Debug.Log("🎭 Started taunting");
+            }
+            else if (!current && previous)
+            {
+                OnTauntEnded?.Invoke();
+                if (IsOwner) Debug.Log("🎭 Taunt ended");
             }
         }
 
@@ -155,12 +271,12 @@ namespace DeathrunGame
             if (current && !previous)
             {
                 OnDied?.Invoke();
-                Debug.Log("💀 Player died");
+                if (IsOwner) Debug.Log("💀 Player died");
             }
             else if (!current && previous)
             {
                 OnRespawned?.Invoke();
-                Debug.Log("✨ Player respawned");
+                if (IsOwner) Debug.Log("✨ Player respawned");
             }
         }
     }

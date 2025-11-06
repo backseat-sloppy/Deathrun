@@ -622,6 +622,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ac0e6d6de4903954186a3cd8c0e5691c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7495306498992352935}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ac0e6d6de4903954186a3cd8c0e5691c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4278172025655017367}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ac0e6d6de4903954186a3cd8c0e5691c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7653470262410290320}
     - targetCorrespondingSourceObject: {fileID: 7036213049465896255, guid: ac0e6d6de4903954186a3cd8c0e5691c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4359674533881457809}
@@ -872,6 +878,10 @@ MonoBehaviour:
     m_InternalValue: 0
   IsDead:
     m_InternalValue: 0
+  IsSwinging:
+    m_InternalValue: 0
+  IsTaunting:
+    m_InternalValue: 0
 --- !u!114 &3171551241515988888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -940,6 +950,48 @@ MonoBehaviour:
   useMultipleRays: 1
   coyoteTime: 0.1
   showDebugRays: 1
+--- !u!114 &4278172025655017367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4639992981897814336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f52d296544662140b2de8f2777dabfd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  jumpForce: 5
+  jumpCooldown: 0.1
+  airMoveSpeed: 3
+  airAcceleration: 10
+  gravityMultiplier: 1
+  maxFallSpeed: -20
+  cameraController: {fileID: 0}
+  stateStatus: {fileID: 0}
+--- !u!114 &7653470262410290320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4639992981897814336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ab226bfda74064499c1683fd13cf123, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  animator: {fileID: 0}
+  stateStatus: {fileID: 0}
+  blendSpeed: 10
+  minSpeedThreshold: 0.01
+  taunt1Key: 49
+  taunt2Key: 50
+  taunt3Key: 51
+  swingKey: 323
 --- !u!4 &5417621049865108474 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ac0e6d6de4903954186a3cd8c0e5691c, type: 3}
