@@ -804,7 +804,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4639992981897814336}
-  m_Material: {fileID: 13400000, guid: d8fd10111388aaa44a2cbee24fb5dc6b, type: 2}
+  m_Material: {fileID: 13400000, guid: c610803eeb78af14c9daee6713ef491e, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -886,7 +886,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   moveSpeed: 5
+  airMoveSpeed: 3
+  jumpForce: 5
   cameraController: {fileID: 0}
+  stateStatus: {fileID: 0}
 --- !u!114 &5225298580269726338
 MonoBehaviour:
   m_ObjectHideFlags: 0
