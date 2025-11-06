@@ -20,6 +20,12 @@ namespace DeathrunGame
         [SerializeField] private GameObject errorPanel;
         [SerializeField] private GameObject loadingPanel;
 
+        [Header("UI Visual")]
+        [SerializeField] private GameObject UIVisual;
+        
+        [Header("Camera")]
+        [SerializeField] private Camera mainCamera; // Reference to Main Camera
+
         [Header("Main Menu")]
         [SerializeField] private Button createLobbyButton;
         [SerializeField] private Button joinLobbyButton;
@@ -68,6 +74,12 @@ namespace DeathrunGame
             SubscribeToLobbyEvents();
             LoadPlayerName();
             ShowMainMenu();
+            
+            // Ensure camera is orthographic for UI at start
+            if (mainCamera != null)
+            {
+                mainCamera.orthographic = true;
+            }
         }
 
         private void OnDestroy()
@@ -150,6 +162,18 @@ namespace DeathrunGame
             // Enable cursor for menu interaction
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            
+            // Switch back to orthographic for UI
+            if (mainCamera != null)
+            {
+                mainCamera.orthographic = true;
+            }
+            
+            // Show UI visual
+            if (UIVisual != null)
+            {
+                UIVisual.SetActive(true);
+            }
         }
 
         private void ShowCreateLobby()
@@ -214,6 +238,8 @@ namespace DeathrunGame
             lobbyRoomPanel.SetActive(false);
             errorPanel.SetActive(false);
             HideLoading();
+            
+          
         }
 
         #endregion
@@ -481,6 +507,20 @@ namespace DeathrunGame
         private void OnGameStarted()
         {
             HideAllPanels();
+            
+            // Hide UI visual
+            if (UIVisual != null)
+            {
+                UIVisual.SetActive(false);
+                // Switch to perspective camera (already done in HideAllPanels)
+                if (mainCamera != null)
+                {
+                    mainCamera.orthographic = false;
+                    Debug.Log("🎥 Switched to Perspective camera!");
+                }
+
+            }
+             
             // Disable the entire lobby UI GameObject
             gameObject.SetActive(false);
             Debug.Log("🎮 Game started! Hiding UI...");
