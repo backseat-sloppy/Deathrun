@@ -45,9 +45,8 @@ namespace DeathrunGame
         private int isSprintingHash;
         private int isJumpingHash;
         private int isSwingingHash;
-        private int taunt1Hash; // Keep triggers for taunt selection
-        private int taunt2Hash;
-        private int taunt3Hash;
+        private int isTauntingHash;
+        private int tauntIDHash;
 
         private float currentBlend;
         private bool isPerformingAction;
@@ -75,11 +74,10 @@ namespace DeathrunGame
             isSprintingHash = Animator.StringToHash("IsSprinting");
             isJumpingHash = Animator.StringToHash("IsJumping");
             isSwingingHash = Animator.StringToHash("IsSwinging");
+            isTauntingHash = Animator.StringToHash("IsTaunting");
             
-            // Triggers for taunt selection (optional)
-            taunt1Hash = Animator.StringToHash("Taunt1");
-            taunt2Hash = Animator.StringToHash("Taunt2");
-            taunt3Hash = Animator.StringToHash("Taunt3");
+            // ✅ Int parameter for taunt selection
+            tauntIDHash = Animator.StringToHash("TauntID");
         }
 
         public override void OnNetworkSpawn()
@@ -160,22 +158,7 @@ namespace DeathrunGame
 
         private void TriggerTaunt(int tauntNumber)
         {
-            stateStatus.SetTaunting(true);
-
-            // Use triggers to select which taunt to play
-            switch (tauntNumber)
-            {
-                case 1:
-                    animator.SetTrigger(taunt1Hash);
-                    break;
-                case 2:
-                    animator.SetTrigger(taunt2Hash);
-                    break;
-                case 3:
-                    animator.SetTrigger(taunt3Hash);
-                    break;
-            }
-
+            stateStatus.SetTaunting(true, tauntNumber); // ✅ Pass taunt number
             isPerformingAction = true;
         }
 
@@ -217,6 +200,10 @@ namespace DeathrunGame
             animator.SetBool(isMovingHash, stateStatus.IsMoving.Value);
             animator.SetBool(isJumpingHash, stateStatus.IsJumping.Value);
             animator.SetBool(isSwingingHash, stateStatus.IsSwinging.Value);
+            animator.SetBool(isTauntingHash, stateStatus.IsTaunting.Value);
+            
+            // ✅ Set TauntID int parameter - FIXED: Use SetInteger instead of SetInt
+            animator.SetInteger(tauntIDHash, stateStatus.TauntID.Value);
 
             bool isSprinting = stateStatus.CurrentSpeed.Value >= sprintThreshold;
             animator.SetBool(isSprintingHash, isSprinting);
@@ -278,7 +265,7 @@ namespace DeathrunGame
         {
             if (IsOwner)
             {
-                stateStatus.SetTaunting(false);
+                stateStatus.SetTaunting(false, 0);
             }
         }
 

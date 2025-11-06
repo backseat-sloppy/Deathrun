@@ -63,6 +63,13 @@ namespace DeathrunGame
             NetworkVariableWritePermission.Owner
         );
 
+        [Header("Action Timers")]
+        [SerializeField] private float swingDuration = 1.5f; // How long swing stays active
+        [SerializeField] private float tauntDuration = 3f; // How long taunt stays active
+
+        private float swingTimer;
+        private float tauntTimer;
+
         // Events for state changes (other systems can subscribe)
         public event System.Action OnLanded;
         public event System.Action OnLeftGround;
@@ -99,6 +106,34 @@ namespace DeathrunGame
             IsSwinging.OnValueChanged -= OnSwingingChanged;
             IsTaunting.OnValueChanged -= OnTauntingChanged;
             IsDead.OnValueChanged -= OnDeadChanged;
+        }
+
+        private void Update()
+        {
+            // ✅ Only owner updates timers
+            if (!IsOwner) return;
+
+            // ✅ Auto-reset swing after duration
+            if (IsSwinging.Value && swingTimer > 0f)
+            {
+                swingTimer -= Time.deltaTime;
+                if (swingTimer <= 0f)
+                {
+                    SetSwinging(false);
+                    Debug.Log("⚾ Swing auto-ended after timer");
+                }
+            }
+
+            // ✅ Auto-reset taunt after duration
+            if (IsTaunting.Value && tauntTimer > 0f)
+            {
+                tauntTimer -= Time.deltaTime;
+                if (tauntTimer <= 0f)
+                {
+                    SetTaunting(false);
+                    Debug.Log("🎭 Taunt auto-ended after timer");
+                }
+            }
         }
 
         // Setter methods (only owner can call these)
@@ -148,6 +183,10 @@ namespace DeathrunGame
                 IsSwinging.Value = false;
                 IsTaunting.Value = false;
                 CurrentSpeed.Value = 0f;
+                
+                // ✅ Reset timers
+                swingTimer = 0f;
+                tauntTimer = 0f;
             }
         }
 
@@ -178,6 +217,12 @@ namespace DeathrunGame
             if (IsTaunting.Value && swinging) return;
             
             IsSwinging.Value = swinging;
+            
+            // ✅ Start timer when swing begins
+            if (swinging)
+            {
+                swingTimer = swingDuration;
+            }
         }
 
         public void SetTaunting(bool taunting)
@@ -189,6 +234,12 @@ namespace DeathrunGame
             if (IsSwinging.Value && taunting) return;
             
             IsTaunting.Value = taunting;
+            
+            // ✅ Start timer when taunt begins
+            if (taunting)
+            {
+                tauntTimer = tauntDuration;
+            }
         }
 
         // Event callbacks
