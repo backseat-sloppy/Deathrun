@@ -628,6 +628,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ac0e6d6de4903954186a3cd8c0e5691c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7653470262410290320}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ac0e6d6de4903954186a3cd8c0e5691c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8743761352852536697}
     - targetCorrespondingSourceObject: {fileID: 7036213049465896255, guid: ac0e6d6de4903954186a3cd8c0e5691c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4359674533881457809}
@@ -880,8 +883,14 @@ MonoBehaviour:
     m_InternalValue: 0
   IsSwinging:
     m_InternalValue: 0
-  IsTaunting:
+  IsTaunt1:
     m_InternalValue: 0
+  IsTaunt2:
+    m_InternalValue: 0
+  IsTaunt3:
+    m_InternalValue: 0
+  swingDuration: 1.5
+  tauntDuration: 3
 --- !u!114 &3171551241515988888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -898,6 +907,8 @@ MonoBehaviour:
   moveSpeed: 5
   airMoveSpeed: 3
   jumpForce: 5
+  jumpStateDuration: 0.2
+  fallVelocityThreshold: -0.5
   cameraController: {fileID: 0}
   stateStatus: {fileID: 0}
 --- !u!114 &5225298580269726338
@@ -988,10 +999,30 @@ MonoBehaviour:
   stateStatus: {fileID: 0}
   blendSpeed: 10
   minSpeedThreshold: 0.01
+  walkSpeed: 2.5
+  sprintSpeed: 5
+  sprintThreshold: 4
   taunt1Key: 49
   taunt2Key: 50
   taunt3Key: 51
+  tauntDuration: 0.1
   swingKey: 323
+  showDebugLogs: 1
+--- !u!114 &8743761352852536697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4639992981897814336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  TransitionStateInfoList: []
+  m_Animator: {fileID: 5718142505306023859}
 --- !u!4 &5417621049865108474 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ac0e6d6de4903954186a3cd8c0e5691c, type: 3}

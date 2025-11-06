@@ -32,6 +32,7 @@ namespace DeathrunGame
         [SerializeField] private KeyCode taunt1Key = KeyCode.Alpha1;
         [SerializeField] private KeyCode taunt2Key = KeyCode.Alpha2;
         [SerializeField] private KeyCode taunt3Key = KeyCode.Alpha3;
+        [SerializeField] private float tauntDuration = 0.5f; // ✅ Changed from 3f to 0.5f
 
         [Header("Attack Settings")]
         [SerializeField] private KeyCode swingKey = KeyCode.Mouse0;
