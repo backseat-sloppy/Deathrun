@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WwiseDocument Type="WorkUnit" ID="{BD84B4A7-6EC2-46C8-B901-1261F2CB616C}" SchemaVersion="123">
 	<GameParameters>
-		<WorkUnit Name="Default Work Unit" ID="{BD84B4A7-6EC2-46C8-B901-1261F2CB616C}" PersistMode="Standalone"/>
+		<WorkUnit Name="Default Work Unit" ID="{BD84B4A7-6EC2-46C8-B901-1261F2CB616C}" PersistMode="Standalone">
+			<ChildrenList>
+				<GameParameter Name="GP_PlayerSpeed" ID="{F4C21EA2-90E9-4DBE-8ACD-C3935C1CA91E}">
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="0"/>
+					</PropertyList>
+				</GameParameter>
+				<GameParameter Name="GP_DangerProximity" ID="{F96F54A8-8727-42A1-81AA-416691453223}">
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="0"/>
+					</PropertyList>
+				</GameParameter>
+				<GameParameter Name="GP_Height" ID="{80E48801-9890-486F-8EDE-3BE41B0F026D}">
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="0"/>
+					</PropertyList>
+				</GameParameter>
+			</ChildrenList>
+		</WorkUnit>
 	</GameParameters>
 </WwiseDocument>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{775030FA-E2E1-4BD1-AF71-A4817D9A5A92}" SchemaVersion="123" RootDocumentID="{8E6EA1D5-401E-4826-BEE8-A6AD2C79B3C9}" ParentDocumentID="{8E6EA1D5-401E-4826-BEE8-A6AD2C79B3C9}">
+	<AudioObjects>
+		<WorkUnit Name="Actors_Mixer_Traps" ID="{775030FA-E2E1-4BD1-AF71-A4817D9A5A92}" OwnerID="{8E6EA1D5-401E-4826-BEE8-A6AD2C79B3C9}" PersistMode="Nested"/>
+	</AudioObjects>
+</WwiseDocument>

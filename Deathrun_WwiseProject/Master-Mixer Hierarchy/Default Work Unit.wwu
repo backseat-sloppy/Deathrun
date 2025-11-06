@@ -9,6 +9,45 @@
 							<ObjectRef Name="System" ID="{CDA86703-49C9-462E-BE96-8DAE0C30233B}" WorkUnitID="{DFAC4959-AB6C-4BC1-9565-0CEED86C3576}"/>
 						</Reference>
 					</ReferenceList>
+					<ChildrenList>
+						<Bus Name="SFX" ID="{7F5108DB-7FAD-4E91-983A-262F30089BBB}">
+							<PropertyList>
+								<Property Name="3DSpatialization" Type="int16" Value="2"/>
+							</PropertyList>
+							<ChildrenList>
+								<Bus Name="SFX_Player" ID="{4FD67903-5A59-466B-9255-B4B9683B3F2E}">
+									<PropertyList>
+										<Property Name="3DSpatialization" Type="int16" Value="2"/>
+										<Property Name="ListenerRelativeRouting" Type="bool" Value="True"/>
+										<Property Name="UseGameAuxSends" Type="bool" Value="True"/>
+									</PropertyList>
+								</Bus>
+								<Bus Name="SFX_Traps" ID="{149C65F2-BB91-4CD5-8D3C-87190E735723}">
+									<PropertyList>
+										<Property Name="UseGameAuxSends" Type="bool" Value="True"/>
+									</PropertyList>
+								</Bus>
+								<Bus Name="SFX_Environment" ID="{11BB460F-F4B5-4D23-82A5-10B13244DFBA}">
+									<PropertyList>
+										<Property Name="UseGameAuxSends" Type="bool" Value="True"/>
+									</PropertyList>
+								</Bus>
+							</ChildrenList>
+						</Bus>
+						<Bus Name="Ambience" ID="{2CDF729F-B91A-4100-89C5-6C7675172E08}">
+							<ChildrenList>
+								<Bus Name="Amb_Outdoor" ID="{55E402F7-D783-4412-8930-E09FC5ABA2A0}"/>
+								<Bus Name="Amb_Indoor" ID="{3ED40E08-F03A-4D40-AA8F-215E408C6B04}"/>
+							</ChildrenList>
+						</Bus>
+						<Bus Name="Music" ID="{80E25E81-45C9-4CB1-A018-B6EC96D96982}"/>
+						<Bus Name="UI" ID="{138C3928-08D9-402C-B6E4-15682B942D4D}"/>
+						<Bus Name="Aux Busses" ID="{259ABAFC-7A1F-4436-A886-1DEB1F40D509}">
+							<ChildrenList>
+								<AuxBus Name="Reverb_Outdoor" ID="{A1FF96F8-3F43-4C9B-8745-E48609DCE092}"/>
+							</ChildrenList>
+						</Bus>
+					</ChildrenList>
 				</Bus>
 			</ChildrenList>
 		</WorkUnit>

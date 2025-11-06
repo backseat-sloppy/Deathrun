@@ -1,5 +1,33 @@
+State Group	ID	Name			Wwise Object Path	Notes
+	249970651	Focus			\Default Work Unit\Focus	
+	768929368	GamePhase			\Default Work Unit\GamePhase	
+
+State	ID	Name	State Group			Notes
+	319258907	Paused	Focus			
+	748895195	None	Focus			
+	1160234136	Normal	Focus			
+	94054856	Completed	GamePhase			
+	748895195	None	GamePhase			
+	1505888634	Countdown	GamePhase			
+	1655200910	Failed	GamePhase			
+	1852808225	Playing	GamePhase			
+	2607556080	Menu	GamePhase			
+
 Audio Bus	ID	Name			Wwise Object Path	Notes
+	85412153	Ambience			\Default Work Unit\Master Audio Bus\Ambience	
+	136159466	Aux Busses			\Default Work Unit\Master Audio Bus\Aux Busses	
+	217780010	SFX_Player			\Default Work Unit\Master Audio Bus\SFX\SFX_Player	
+	393239870	SFX			\Default Work Unit\Master Audio Bus\SFX	
+	573128568	SFX_Environment			\Default Work Unit\Master Audio Bus\SFX\SFX_Environment	
+	1551306167	UI			\Default Work Unit\Master Audio Bus\UI	
+	1734347146	Amb_Outdoor			\Default Work Unit\Master Audio Bus\Ambience\Amb_Outdoor	
+	3795829403	SFX_Traps			\Default Work Unit\Master Audio Bus\SFX\SFX_Traps	
 	3803692087	Master Audio Bus			\Default Work Unit\Master Audio Bus	
+	3991942870	Music			\Default Work Unit\Master Audio Bus\Music	
+	3997975935	Amb_Indoor			\Default Work Unit\Master Audio Bus\Ambience\Amb_Indoor	
+
+Auxiliary Bus	ID	Name			Wwise Object Path	Notes
+	1578973140	Reverb_Outdoor			\Default Work Unit\Master Audio Bus\Aux Busses\Reverb_Outdoor	
 
 Audio Devices	ID	Name	Type				Notes
 	2317455096	No_Output	No Output			

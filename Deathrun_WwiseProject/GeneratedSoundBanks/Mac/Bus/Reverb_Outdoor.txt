@@ -1,0 +1,3 @@
+Auxiliary Bus	ID	Name			Wwise Object Path	Notes
+	1578973140	Reverb_Outdoor			\Default Work Unit\Master Audio Bus\Aux Busses\Reverb_Outdoor	
+

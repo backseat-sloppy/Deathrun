@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WwiseDocument Type="WorkUnit" ID="{0866020F-53C3-465F-9E29-0EA0237F75D0}" SchemaVersion="123">
 	<Switches>
-		<WorkUnit Name="Default Work Unit" ID="{0866020F-53C3-465F-9E29-0EA0237F75D0}" PersistMode="Standalone"/>
+		<WorkUnit Name="Default Work Unit" ID="{0866020F-53C3-465F-9E29-0EA0237F75D0}" PersistMode="Standalone">
+			<ChildrenList>
+				<SwitchGroup Name="SurfaceType" ID="{4D0D6FEB-46E7-445D-9043-E73D5691F1B1}">
+					<ChildrenList>
+						<Switch Name="Concrete" ID="{EFEF36D0-5135-4AFE-BB15-2F8EB476E3EC}"/>
+						<Switch Name="Metal" ID="{3CD96B02-BA21-4A00-9ADE-C63315674A4F}"/>
+						<Switch Name="Wood" ID="{E7CFD945-2C7C-4505-9F53-4EEDFEE9F452}"/>
+						<Switch Name="Dirt" ID="{9B6C4047-5877-4BF8-A2BD-30738D1D6E56}"/>
+						<Switch Name="Water" ID="{5B198863-8159-4936-AB35-99B82FB3E828}"/>
+					</ChildrenList>
+				</SwitchGroup>
+				<SwitchGroup Name="MovementState" ID="{3329E36E-5917-40CE-BDED-7A63CBFCE019}">
+					<ChildrenList>
+						<Switch Name="Run" ID="{DED3B1C1-FF03-4C81-B420-63232F1A9447}"/>
+						<Switch Name="Walk" ID="{B173BE1F-7947-4B26-8503-8C779B60C41B}"/>
+						<Switch Name="Jump" ID="{8BB90B13-7CD2-4260-A440-B233BB483D1A}"/>
+						<Switch Name="Airborne" ID="{4F977A18-65FB-4F02-B95D-2092204A7C02}"/>
+					</ChildrenList>
+				</SwitchGroup>
+			</ChildrenList>
+		</WorkUnit>
 	</Switches>
 </WwiseDocument>

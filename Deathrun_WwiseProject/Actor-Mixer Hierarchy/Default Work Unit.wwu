@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WwiseDocument Type="WorkUnit" ID="{8E6EA1D5-401E-4826-BEE8-A6AD2C79B3C9}" SchemaVersion="123">
 	<AudioObjects>
-		<WorkUnit Name="Default Work Unit" ID="{8E6EA1D5-401E-4826-BEE8-A6AD2C79B3C9}" PersistMode="Standalone"/>
+		<WorkUnit Name="Default Work Unit" ID="{8E6EA1D5-401E-4826-BEE8-A6AD2C79B3C9}" PersistMode="Standalone">
+			<ChildrenList>
+				<WorkUnit Name="AM_Player" ID="{C98302B0-235D-4AB5-97B0-FB2F4499216E}" PersistMode="Reference"/>
+				<WorkUnit Name="Actors_Mixer_Traps" ID="{775030FA-E2E1-4BD1-AF71-A4817D9A5A92}" PersistMode="Reference"/>
+				<WorkUnit Name="Actors_Mixer_Ambience" ID="{ED81304D-AA39-4D93-96CD-BB037E88EC7C}" PersistMode="Reference"/>
+				<WorkUnit Name="Actors_Mixer_UI" ID="{98F52C03-BDFF-45AD-A0B1-E2319CF7088B}" PersistMode="Reference"/>
+			</ChildrenList>
+		</WorkUnit>
 	</AudioObjects>
 </WwiseDocument>

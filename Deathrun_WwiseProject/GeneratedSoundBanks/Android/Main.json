@@ -1,0 +1,666 @@
+{
+ "SoundBanksInfo": {
+  "Platform": "Android",
+  "BasePlatform": "Android",
+  "SchemaVersion": "16",
+  "SoundBankVersion": "154",
+  "SoundBanks": [
+   {
+    "Id": "3161908922",
+    "Type": "User",
+    "GUID": "{48ECDC84-9414-46B5-A45D-DDD3B044C237}",
+    "Language": "SFX",
+    "Hash": "{647ECF02-5BF7-88F3-1133-16F113B46B0E}",
+    "ObjectPath": "\\SoundBanks\\Default Work Unit\\Main",
+    "ShortName": "Main",
+    "Path": "Main.bnk",
+    "Media": [
+     {
+      "Id": "88692015",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Boots, Walking, Metal, Resonance, Hard, Irregular Rhythm SND85371 S01.wav",
+      "CachePath": "1B/{1B65A465-103F-76BA-B9BD-2C8B3CB2039E}.wem"
+     },
+     {
+      "Id": "91187362",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Barefoot, Dirt, Walk, Close SND125409 S02.wav",
+      "CachePath": "60/{60BFBAF9-31C6-6553-4FBD-9B9BB1574271}.wem"
+     },
+     {
+      "Id": "101746309",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Grass, Jump, Start SND62075 S02.wav",
+      "CachePath": "B9/{B9AEEAE2-2528-5059-029A-AD4086549684}.wem"
+     },
+     {
+      "Id": "110534185",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Dirty Ground, Jump, Land SND62080 S01.wav",
+      "CachePath": "CA/{CAAE4BF5-7363-DC49-B619-5AC4695A122C}.wem"
+     },
+     {
+      "Id": "147905027",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Grass, Jump, Start SND62075 S05.wav",
+      "CachePath": "1E/{1E818E97-7E08-16C4-BD04-1B4373513CE6}.wem"
+     },
+     {
+      "Id": "148657429",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Walking, Wet Forest Floor SND17453 S04.wav",
+      "CachePath": "95/{9595FD4A-5ECF-7522-DA45-628C1FE4D6E1}.wem"
+     },
+     {
+      "Id": "167271439",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Asphalt, Male, Walk SND11513 S04 1.wav",
+      "CachePath": "31/{31FD658A-6818-E8BE-A845-FA250B891161}.wem"
+     },
+     {
+      "Id": "196562215",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Dirty Ground, Jump, Land SND62080 S10.wav",
+      "CachePath": "76/{76C883A5-12CB-E823-F07C-7AB260AC42CD}.wem"
+     },
+     {
+      "Id": "215977708",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Walking, Wet Forest Floor SND17453 S03.wav",
+      "CachePath": "17/{1739206C-8DBC-33E7-E992-8E9F8A90E03F}.wem"
+     },
+     {
+      "Id": "229036891",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Grass, Jump, Start SND62075 S04.wav",
+      "CachePath": "DF/{DFE15E2A-89B1-558C-369C-CD910E547A57}.wem"
+     },
+     {
+      "Id": "233637986",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Asphalt, Male, Walk SND11513 S05 1.wav",
+      "CachePath": "30/{30481FB8-80CA-9852-AFE8-6ABB2CE5CA4B}.wem"
+     },
+     {
+      "Id": "289830924",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Walking, Wet Forest Floor SND17453 S02.wav",
+      "CachePath": "F1/{F1B8F00A-8C9F-8A0F-F1C1-292F751A458C}.wem"
+     },
+     {
+      "Id": "347108839",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Wood, Sneakers Fast SND1971 S01.wav",
+      "CachePath": "37/{37FB0B0A-563A-5E62-812D-0A126A5E5185}.wem"
+     },
+     {
+      "Id": "390818541",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Asphalt, Male, Walk SND11513 S00 1.wav",
+      "CachePath": "EE/{EEAC3DF9-06BD-FE06-4777-0C0F25CC4D38}.wem"
+     },
+     {
+      "Id": "395752802",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Grass, Jump, Start SND62075 S01.wav",
+      "CachePath": "93/{93AB31CF-8373-20A2-DABD-804B48501E02}.wem"
+     },
+     {
+      "Id": "407310046",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Grass, Jump, Start SND62075 S03.wav",
+      "CachePath": "F8/{F8574925-1D12-5DF1-75AA-FE630FDD5378}.wem"
+     },
+     {
+      "Id": "421926065",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Barefoot, Dirt, Walk, Close SND125409 S01.wav",
+      "CachePath": "97/{976B1BB0-7B47-C970-4BC7-9B73262A124D}.wem"
+     },
+     {
+      "Id": "477819183",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Barefoot, Dirt, Walk, Close SND125409 S05.wav",
+      "CachePath": "FB/{FBA1E660-34E7-1E0E-1B0D-E2314F271AFF}.wem"
+     },
+     {
+      "Id": "498417438",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Boots, Walking, Metal, Resonance, Hard, Irregular Rhythm SND85371 S02.wav",
+      "CachePath": "00/{00975CD3-649C-B91B-673F-0C0514686089}.wem"
+     },
+     {
+      "Id": "503759618",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "dying-sound-363801.wav",
+      "CachePath": "93/{9338B83B-B443-0332-D533-6D9C601FA9C4}.wem"
+     },
+     {
+      "Id": "508616013",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Asphalt, Male, Walk SND11513 S01 1.wav",
+      "CachePath": "18/{18492286-6ED2-149A-DA50-D351CA030D61}.wem"
+     },
+     {
+      "Id": "557391674",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Wood, Sneakers Fast SND1971 S02.wav",
+      "CachePath": "F1/{F10F60F5-C0C0-7752-166F-8073E2EF9BA1}.wem"
+     },
+     {
+      "Id": "593101991",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Wood, Sneakers Fast SND1971 S00.wav",
+      "CachePath": "02/{02C7801B-8A63-EE67-2D7D-9869E65D2333}.wem"
+     },
+     {
+      "Id": "599274694",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Barefoot, Dirt, Walk, Close SND125409 S04.wav",
+      "CachePath": "98/{98F0F5C4-A5A0-728F-B984-F70AF96204EE}.wem"
+     },
+     {
+      "Id": "606342628",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Boots, Walking, Metal, Resonance, Hard, Irregular Rhythm SND85371 S05.wav",
+      "CachePath": "4E/{4E6F8424-5B2A-08FB-E84D-E1C361B69AC1}.wem"
+     },
+     {
+      "Id": "632498025",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Barefoot, Dirt, Walk, Close SND125409 S03.wav",
+      "CachePath": "D6/{D69C6A96-F816-BE63-F52F-711D7D4B2BF0}.wem"
+     },
+     {
+      "Id": "682736560",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Boots, Walking, Metal, Resonance, Hard, Irregular Rhythm SND85371 S03.wav",
+      "CachePath": "74/{7488CF6A-6315-0794-33A1-713ED3794EFE}.wem"
+     },
+     {
+      "Id": "684671655",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Walking, Wet Forest Floor SND17453 S05.wav",
+      "CachePath": "B3/{B332869C-85F1-7459-42C2-15EBD793F16C}.wem"
+     },
+     {
+      "Id": "759070456",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Walking, Wet Forest Floor SND17453 S01.wav",
+      "CachePath": "4C/{4C225D3F-F016-CAE8-B8BB-2D9CE6315069}.wem"
+     },
+     {
+      "Id": "785368206",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Barefoot, Dirt, Walk, Close SND125409 S00.wav",
+      "CachePath": "AC/{AC40CF4D-D661-7C8F-FC05-670E93A641FB}.wem"
+     },
+     {
+      "Id": "791179261",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Asphalt, Male, Walk SND11513 S03 1.wav",
+      "CachePath": "71/{71FCD413-C1A0-2DD3-B753-64EB8140C268}.wem"
+     },
+     {
+      "Id": "831451358",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Boots, Walking, Metal, Resonance, Hard, Irregular Rhythm SND85371 S00.wav",
+      "CachePath": "7F/{7F3E8713-43DC-3CBA-98EB-F31E846F00C3}.wem"
+     },
+     {
+      "Id": "844379254",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Grass, Jump, Start SND62075 S00.wav",
+      "CachePath": "2F/{2F0097CB-8311-2B67-ED24-4876A0D69F1C}.wem"
+     },
+     {
+      "Id": "857705025",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Wood, Sneakers Fast SND1971 S03.wav",
+      "CachePath": "C6/{C6806F68-06E7-C5B2-9945-00B62F882D2B}.wem"
+     },
+     {
+      "Id": "872668966",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Dirty Ground, Jump, Land SND62080 S05.wav",
+      "CachePath": "EA/{EA940403-6262-D4D6-5144-B255F2BC4829}.wem"
+     },
+     {
+      "Id": "893765486",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Dirty Ground, Jump, Land SND62080 S06.wav",
+      "CachePath": "FB/{FB0D8074-4B4B-F8BC-9F77-B76F6A3864B2}.wem"
+     },
+     {
+      "Id": "914565934",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Boots, Walking, Metal, Resonance, Hard, Irregular Rhythm SND85371 S04.wav",
+      "CachePath": "78/{7879FDE7-9813-5620-5208-D41383CB4602}.wem"
+     },
+     {
+      "Id": "933198621",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Wood, Sneakers Fast SND1971 S05.wav",
+      "CachePath": "4B/{4B350ECF-D4BC-80C2-CC02-AD1FEAB22832}.wem"
+     },
+     {
+      "Id": "950761957",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Walking, Wet Forest Floor SND17453 S00.wav",
+      "CachePath": "92/{926734CE-1D90-2815-6401-4C411CFE3F50}.wem"
+     },
+     {
+      "Id": "966348724",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Grass, Jump, Start SND62075 S08.wav",
+      "CachePath": "3B/{3BF2A1F6-4148-D272-E042-1730874731AB}.wem"
+     },
+     {
+      "Id": "974617205",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Dirty Ground, Jump, Land SND62080 S07.wav",
+      "CachePath": "3E/{3E1197A4-06CF-DAA5-C6EC-CF50B78A3B0E}.wem"
+     },
+     {
+      "Id": "975674277",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Wood, Sneakers Fast SND1971 S04.wav",
+      "CachePath": "37/{37C6B4E0-B957-8A74-67E1-EDE4912E9DAD}.wem"
+     },
+     {
+      "Id": "985822078",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Dirty Ground, Jump, Land SND62080 S00.wav",
+      "CachePath": "0B/{0B513560-99DF-25BC-3A23-8E9CE515742B}.wem"
+     },
+     {
+      "Id": "1007989378",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Grass, Jump, Start SND62075 S06.wav",
+      "CachePath": "C9/{C9095F66-7406-24A2-D1FD-1688BE172A4E}.wem"
+     },
+     {
+      "Id": "1035193959",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Grass, Jump, Start SND62075 S07.wav",
+      "CachePath": "83/{835A03F5-E25B-A5F0-B11F-2909AC03A358}.wem"
+     },
+     {
+      "Id": "1041147164",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Footsteps, Human, Asphalt, Male, Walk SND11513 S02 1.wav",
+      "CachePath": "7F/{7F31200C-C498-4C40-B781-F08F9914EE9A}.wem"
+     }
+    ],
+    "Events": [
+     {
+      "Id": "2348472398",
+      "Name": "Player_Death_Play",
+      "ObjectPath": "\\Events\\Default Work Unit\\EV_Player\\Player_Death_Play",
+      "GUID": "{2832C753-2D57-4F86-8DCA-F87A3E308FDD}",
+      "DurationType": "OneShot",
+      "DurationMin": "1.1607866",
+      "DurationMax": "1.1607866",
+      "MediaRefs": [
+       {
+        "Id": "503759618"
+       }
+      ]
+     },
+     {
+      "Id": "2241160260",
+      "Name": "Player_Footstep_Play",
+      "ObjectPath": "\\Events\\Default Work Unit\\EV_Player\\Player_Footstep_Play",
+      "GUID": "{07413B5B-81DB-4E7A-97D8-1B908224E077}",
+      "DurationType": "OneShot",
+      "DurationMin": "0.46091667",
+      "DurationMax": "0.6779375",
+      "SwitchContainers": [
+       {
+        "SwitchValue": {
+         "GroupType": "Switch",
+         "GroupId": "63790334",
+         "Id": "2473969246",
+         "GUID": "{3CD96B02-BA21-4A00-9ADE-C63315674A4F}"
+        },
+        "MediaRefs": [
+         {
+          "Id": "88692015"
+         },
+         {
+          "Id": "498417438"
+         },
+         {
+          "Id": "606342628"
+         },
+         {
+          "Id": "682736560"
+         },
+         {
+          "Id": "831451358"
+         },
+         {
+          "Id": "914565934"
+         }
+        ]
+       },
+       {
+        "SwitchValue": {
+         "GroupType": "Switch",
+         "GroupId": "63790334",
+         "Id": "2058049674",
+         "GUID": "{E7CFD945-2C7C-4505-9F53-4EEDFEE9F452}"
+        },
+        "MediaRefs": [
+         {
+          "Id": "347108839"
+         },
+         {
+          "Id": "557391674"
+         },
+         {
+          "Id": "593101991"
+         },
+         {
+          "Id": "857705025"
+         },
+         {
+          "Id": "933198621"
+         },
+         {
+          "Id": "975674277"
+         }
+        ]
+       },
+       {
+        "SwitchValue": {
+         "GroupType": "Switch",
+         "GroupId": "63790334",
+         "Id": "2195636714",
+         "GUID": "{9B6C4047-5877-4BF8-A2BD-30738D1D6E56}"
+        },
+        "MediaRefs": [
+         {
+          "Id": "91187362"
+         },
+         {
+          "Id": "421926065"
+         },
+         {
+          "Id": "477819183"
+         },
+         {
+          "Id": "599274694"
+         },
+         {
+          "Id": "632498025"
+         },
+         {
+          "Id": "785368206"
+         }
+        ]
+       },
+       {
+        "SwitchValue": {
+         "GroupType": "Switch",
+         "GroupId": "63790334",
+         "Id": "2654748154",
+         "GUID": "{5B198863-8159-4936-AB35-99B82FB3E828}"
+        },
+        "MediaRefs": [
+         {
+          "Id": "148657429"
+         },
+         {
+          "Id": "215977708"
+         },
+         {
+          "Id": "289830924"
+         },
+         {
+          "Id": "684671655"
+         },
+         {
+          "Id": "759070456"
+         },
+         {
+          "Id": "950761957"
+         }
+        ]
+       },
+       {
+        "SwitchValue": {
+         "GroupType": "Switch",
+         "GroupId": "63790334",
+         "Id": "841620460",
+         "GUID": "{EFEF36D0-5135-4AFE-BB15-2F8EB476E3EC}",
+         "Default": "true"
+        },
+        "MediaRefs": [
+         {
+          "Id": "167271439"
+         },
+         {
+          "Id": "233637986"
+         },
+         {
+          "Id": "390818541"
+         },
+         {
+          "Id": "508616013"
+         },
+         {
+          "Id": "791179261"
+         },
+         {
+          "Id": "1041147164"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "Id": "391280646",
+      "Name": "Player_Jump_Play",
+      "ObjectPath": "\\Events\\Default Work Unit\\EV_Player\\Player_Jump_Play",
+      "GUID": "{B2854A96-5F81-4B32-BE05-FCB85CC18DF7}",
+      "DurationType": "OneShot",
+      "DurationMin": "0.3713125",
+      "DurationMax": "0.949",
+      "MediaRefs": [
+       {
+        "Id": "101746309"
+       },
+       {
+        "Id": "147905027"
+       },
+       {
+        "Id": "229036891"
+       },
+       {
+        "Id": "395752802"
+       },
+       {
+        "Id": "407310046"
+       },
+       {
+        "Id": "844379254"
+       },
+       {
+        "Id": "966348724"
+       },
+       {
+        "Id": "1007989378"
+       },
+       {
+        "Id": "1035193959"
+       }
+      ]
+     },
+     {
+      "Id": "581954083",
+      "Name": "Player_Land_Play",
+      "ObjectPath": "\\Events\\Default Work Unit\\EV_Player\\Player_Land_Play",
+      "GUID": "{3263436D-E3D1-46EE-B133-5A70A8A043F1}",
+      "DurationType": "OneShot",
+      "DurationMin": "0.21602394",
+      "DurationMax": "0.31327224",
+      "MediaRefs": [
+       {
+        "Id": "110534185"
+       },
+       {
+        "Id": "196562215"
+       },
+       {
+        "Id": "872668966"
+       },
+       {
+        "Id": "893765486"
+       },
+       {
+        "Id": "974617205"
+       },
+       {
+        "Id": "985822078"
+       }
+      ]
+     }
+    ],
+    "SwitchGroups": [
+     {
+      "Id": "63790334",
+      "Name": "SurfaceType",
+      "ObjectPath": "\\Switches\\Default Work Unit\\SurfaceType",
+      "GUID": "{4D0D6FEB-46E7-445D-9043-E73D5691F1B1}",
+      "Switches": [
+       {
+        "Id": "841620460",
+        "Name": "Concrete",
+        "ObjectPath": "\\Switches\\Default Work Unit\\SurfaceType\\Concrete",
+        "GUID": "{EFEF36D0-5135-4AFE-BB15-2F8EB476E3EC}"
+       },
+       {
+        "Id": "2058049674",
+        "Name": "Wood",
+        "ObjectPath": "\\Switches\\Default Work Unit\\SurfaceType\\Wood",
+        "GUID": "{E7CFD945-2C7C-4505-9F53-4EEDFEE9F452}"
+       },
+       {
+        "Id": "2195636714",
+        "Name": "Dirt",
+        "ObjectPath": "\\Switches\\Default Work Unit\\SurfaceType\\Dirt",
+        "GUID": "{9B6C4047-5877-4BF8-A2BD-30738D1D6E56}"
+       },
+       {
+        "Id": "2473969246",
+        "Name": "Metal",
+        "ObjectPath": "\\Switches\\Default Work Unit\\SurfaceType\\Metal",
+        "GUID": "{3CD96B02-BA21-4A00-9ADE-C63315674A4F}"
+       },
+       {
+        "Id": "2654748154",
+        "Name": "Water",
+        "ObjectPath": "\\Switches\\Default Work Unit\\SurfaceType\\Water",
+        "GUID": "{5B198863-8159-4936-AB35-99B82FB3E828}"
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "FileHash": "{C8D7B827-D353-04C4-60D6-0E5F07918CFB}"
+ }
+}
