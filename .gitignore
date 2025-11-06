@@ -114,6 +114,10 @@ crashlytics-build.properties
 !*.wproj
 !/Originals/**
 
+# Ignore local Wwise editor paths
+Assets/Wwise/Editor/WwiseSettings.xml
+
+
 # =========================
 # OS-specific ignores
 # =========================

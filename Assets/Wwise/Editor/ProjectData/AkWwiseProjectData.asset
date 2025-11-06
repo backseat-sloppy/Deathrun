@@ -857,7 +857,7 @@ MonoBehaviour:
     List: []
   ExpandedFileSystemItemIds: 0200000003000000040000000a000000220000002300000024000000
   ExpandedWaapiItemIds: 0200000004000000050000000600000007000000080000000a000000220000002300000024000000
-  AutoSyncSelection: 0
+  AutoSyncSelection: 1
   autoPopulateEnabled: 1
   currentDataSource: 0
   CurrentPluginConfig: 
