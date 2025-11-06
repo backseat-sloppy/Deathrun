@@ -17,13 +17,18 @@ namespace DeathrunGame
 
         [Header("Jump Settings")]
         [SerializeField] private float jumpForce = 5f;
-
+        [SerializeField] private float jumpStateDuration = 0.2f; // How long to keep IsJumping true
+        
+        [Header("Fall Detection")]
+        [SerializeField] private float fallVelocityThreshold = -0.5f; // Y velocity below this triggers falling
+        
         [Header("References")]
         [SerializeField] private PlayerCameraController cameraController;
         [SerializeField] private PlayerStateStatus stateStatus;
 
         private Rigidbody rb;
         private Vector3 moveInput;
+        private float jumpStateTimer; // Tracks time since jump started
 
         private void Awake()
         {
@@ -48,7 +53,7 @@ namespace DeathrunGame
         private void Update()
         {
             // Owner-only input capture
-            if (!IsOwner) return; // ✅ FIXED - just check IsOwner
+            if (!IsOwner) return;
 
             // Don't process input if dead
             if (stateStatus.IsDead.Value) return;
@@ -73,14 +78,8 @@ namespace DeathrunGame
             // Update movement state
             stateStatus.SetMoving(moveInput.magnitude > 0.1f);
 
-            // DEBUG: Check jump state
-            if (Input.GetButtonDown("Jump"))
-            {
-                Debug.Log($"🎮 Jump pressed! IsGrounded: {stateStatus.IsGrounded.Value}");
-            }
-
-            // Jump input
-            if (Input.GetButtonDown("Jump") && stateStatus.IsGrounded.Value)
+            // Jump input (only when grounded and not currently jumping)
+            if (Input.GetButtonDown("Jump") && stateStatus.IsGrounded.Value && !stateStatus.IsJumping.Value)
             {
                 Jump();
             }
@@ -89,13 +88,13 @@ namespace DeathrunGame
         private void FixedUpdate()
         {
             // Apply movement in FixedUpdate for physics
-            if (!IsOwner) return; // ✅ FIXED - just check IsOwner
+            if (!IsOwner) return;
 
             // Don't move if dead
             if (stateStatus.IsDead.Value) return;
 
             ApplyMovement();
-            UpdateFallingState();
+            UpdateAirState();
         }
 
         private void ApplyMovement()
@@ -125,28 +124,63 @@ namespace DeathrunGame
 
         private void Jump()
         {
-            // Apply upward force
+            // Apply upward force   
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
             
-            // Update state
+            // ✅ Set jumping state
             stateStatus.SetJumping(true);
+            stateStatus.SetGrounded(false); // Immediately unground
             stateStatus.SetFalling(false);
+            
+            // Start jump timer
+            jumpStateTimer = jumpStateDuration;
 
             Debug.Log("🦘 Jump initiated");
         }
 
-        private void UpdateFallingState()
+        private void UpdateAirState()
         {
-            // Reset jumping state when grounded
+            // ✅ Get current Y velocity
+            float yVelocity = rb.linearVelocity.y;
+
+            // ✅ Handle jump state timer
+            if (stateStatus.IsJumping.Value)
+            {
+                jumpStateTimer -= Time.fixedDeltaTime;
+                
+                // End jump state after duration OR if moving downward
+                if (jumpStateTimer <= 0f || yVelocity < 0f)
+                {
+                    stateStatus.SetJumping(false);
+                    Debug.Log("⬇️ Jump state ended");
+                }
+            }
+
+            // ✅ Reset states when grounded
             if (stateStatus.IsGrounded.Value)
             {
-                stateStatus.SetJumping(false);
-                stateStatus.SetFalling(false);
+                // Only reset if we were in the air
+                if (stateStatus.IsFalling.Value || stateStatus.IsJumping.Value)
+                {
+                    stateStatus.SetJumping(false);
+                    stateStatus.SetFalling(false);
+                    Debug.Log("🟢 Landed - reset air states");
+                }
             }
-            // Set falling if moving downward and not jumping
-            else if (rb.linearVelocity.y < -0.1f && !stateStatus.IsJumping.Value)
+            // ✅ Set falling ONLY if Y velocity is negative and not jumping
+            else if (yVelocity < fallVelocityThreshold && !stateStatus.IsJumping.Value)
             {
-                stateStatus.SetFalling(true);
+                if (!stateStatus.IsFalling.Value)
+                {
+                    stateStatus.SetFalling(true);
+                    Debug.Log($"⬇️ Started falling (Y velocity: {yVelocity:F2})");
+                }
+            }
+            // ✅ Clear falling if moving upward (edge case: bounced or hit from below)
+            else if (yVelocity >= 0f && stateStatus.IsFalling.Value && !stateStatus.IsJumping.Value)
+            {
+                stateStatus.SetFalling(false);
+                Debug.Log($"⬆️ Stopped falling (Y velocity: {yVelocity:F2})");
             }
         }
     }
