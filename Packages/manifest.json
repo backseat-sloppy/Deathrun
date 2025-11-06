@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.audiokinetic.wwise.addressables": "https://github.com/audiokinetic/WwiseUnityAddressables.git#v24.1.9",
     "com.meta.xr.mrutilitykit": "78.0.0",
     "com.meta.xr.sdk.core": "78.0.0",
     "com.meta.xr.sdk.interaction.ovr": "78.0.0",
