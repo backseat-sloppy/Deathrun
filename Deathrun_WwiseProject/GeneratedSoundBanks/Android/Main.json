@@ -10,7 +10,7 @@
     "Type": "User",
     "GUID": "{48ECDC84-9414-46B5-A45D-DDD3B044C237}",
     "Language": "SFX",
-    "Hash": "{647ECF02-5BF7-88F3-1133-16F113B46B0E}",
+    "Hash": "{C10D8B64-4E3B-A09C-23EF-AB6A071BADCD}",
     "ObjectPath": "\\SoundBanks\\Default Work Unit\\Main",
     "ShortName": "Main",
     "Path": "Main.bnk",
@@ -173,7 +173,7 @@
       "Streaming": "false",
       "Location": "Memory",
       "ShortName": "dying-sound-363801.wav",
-      "CachePath": "93/{9338B83B-B443-0332-D533-6D9C601FA9C4}.wem"
+      "CachePath": "96/{96556015-8B97-F22C-C349-069EBA24FFC6}.wem"
      },
      {
       "Id": "508616013",
@@ -661,6 +661,6 @@
     ]
    }
   ],
-  "FileHash": "{C8D7B827-D353-04C4-60D6-0E5F07918CFB}"
+  "FileHash": "{EE8AFC13-2F0C-2BB3-90C3-FD1BD6D41C7D}"
  }
 }
