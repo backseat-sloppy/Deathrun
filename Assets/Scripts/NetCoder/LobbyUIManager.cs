@@ -239,11 +239,7 @@ namespace DeathrunGame
             errorPanel.SetActive(false);
             HideLoading();
             
-            // Switch to perspective when all panels are hidden
-            if (mainCamera != null)
-            {
-                mainCamera.orthographic = false;
-            }
+          
         }
 
         #endregion
@@ -516,15 +512,15 @@ namespace DeathrunGame
             if (UIVisual != null)
             {
                 UIVisual.SetActive(false);
+                // Switch to perspective camera (already done in HideAllPanels)
+                if (mainCamera != null)
+                {
+                    mainCamera.orthographic = false;
+                    Debug.Log("🎥 Switched to Perspective camera!");
+                }
+
             }
-            
-            // Switch to perspective camera (already done in HideAllPanels)
-            if (mainCamera != null)
-            {
-                mainCamera.orthographic = false;
-                Debug.Log("🎥 Switched to Perspective camera!");
-            }
-            
+             
             // Disable the entire lobby UI GameObject
             gameObject.SetActive(false);
             Debug.Log("🎮 Game started! Hiding UI...");

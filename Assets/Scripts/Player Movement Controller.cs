@@ -48,7 +48,7 @@ namespace DeathrunGame
         private void Update()
         {
             // Owner-only input capture
-            if (!IsOwner && stateStatus.IsGrounded.Value) return;
+            if (!IsOwner) return; // ✅ FIXED - just check IsOwner
 
             // Don't process input if dead
             if (stateStatus.IsDead.Value) return;
@@ -89,7 +89,7 @@ namespace DeathrunGame
         private void FixedUpdate()
         {
             // Apply movement in FixedUpdate for physics
-            if (!IsOwner && stateStatus.IsGrounded.Value) return;
+            if (!IsOwner) return; // ✅ FIXED - just check IsOwner
 
             // Don't move if dead
             if (stateStatus.IsDead.Value) return;
