@@ -4,7 +4,7 @@ public class SpikeTrap : MonoBehaviour
 {
     [Header("Spike Movement Settings")]
     [SerializeField] private Transform spikesTransform;
-    [SerializeField] private float moveDistance = 2f;
+    [SerializeField] private float moveDistance = 0.4f;
     [SerializeField] private float moveSpeed = 2f;
 
     private Vector3 startPosition;

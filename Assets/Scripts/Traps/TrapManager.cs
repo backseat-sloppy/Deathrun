@@ -2,15 +2,20 @@ using UnityEngine;
 
 public class TrapManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    //trapmanager to handle all traps in the game
+    
+
+    public void activateTrap(GameObject trap)
     {
-        
+        //activate trap logic
+        Debug.Log($"Activating trap: {trap.name}");
+        // Example: Enable trap components or play animations
     }
 
-    // Update is called once per frame
-    void Update()
+    public void deactivateTrap(GameObject trap)
     {
-        
+        //deactivate trap logic
+        Debug.Log($"Deactivating trap: {trap.name}");
+        // Example: Disable trap components or stop animations
     }
 }
