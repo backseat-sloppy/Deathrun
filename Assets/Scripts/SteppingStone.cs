@@ -6,84 +6,54 @@ public class SteppingStone : MonoBehaviour
     // The final desired Y position (read from its initial position)
     private float targetY; 
 
-    // The starting Y position (submerged in the water)
-    private float startY; 
+    // The submerged Y position (where it rests)
+    private float submergedY; 
     
     [Header("Movement Settings")]
     [Tooltip("How far below the surface the stone starts/returns to")]
     public float submergedDepth = 0.5f; 
 
-    [Tooltip("The range for rise duration (lower value is faster)")]
-    public Vector2 durationRange = new Vector2(1.5f, 3.0f); 
-
-    [Tooltip("Time in seconds the stone remains up before falling.")]
-    public float activeTime = 1.0f; 
+    [Tooltip("The range for movement duration (lower value is faster)")]
+    public Vector2 durationRange = new Vector2(0.8f, 1.5f); // Adjusted duration for faster fall/rise
 
     private Coroutine movementCoroutine;
 
     private void Awake()
     {
-        // 1. Save the stone's current Y position as its target final position.
+        // 1. Save the stone's current Y position (where it starts).
         targetY = transform.position.y; 
 
-        // 2. Calculate the submerged starting/resting position.
-        startY = targetY - submergedDepth; 
-
-        // 3. Set the stone to its initial submerged position immediately.
-        Vector3 startPosition = transform.position;
-        startPosition.y = startY;
-        transform.position = startPosition;
+        // 2. Calculate the submerged position.
+        submergedY = targetY - submergedDepth; 
+        
+        // **IMPORTANT:** The stone remains at targetY (UP) when the game starts.
     }
 
     /// <summary>
-    /// Called when the player steps on the stone.
+    /// Starts the movement of the stone, moving it DOWN to the water.
+    /// This is triggered in sequence by the ButtonActivator.
     /// </summary>
-    public void OnPlayerStep()
+    public void ActivateStoneFall()
     {
-        // If the player steps on it, we start the timer for it to fall.
-        // First, stop any existing fall timer.
-        StopCoroutine(nameof(StartFallTimer)); 
-        StartCoroutine(nameof(StartFallTimer));
+        // Stop any previous movement
+        if (movementCoroutine != null) StopCoroutine(movementCoroutine); 
+        movementCoroutine = StartCoroutine(MoveStone(submergedY));
     }
 
     /// <summary>
-    /// Starts the movement of the stone from the water to its target height.
+    /// Starts the movement of the stone, moving it UP from the water.
+    /// This is triggered by the ButtonActivator for the 5-second reset.
     /// </summary>
     public void ActivateStoneRise()
     {
-        // Stop any previous movement (rising or falling)
+        // Stop any previous movement
         if (movementCoroutine != null) StopCoroutine(movementCoroutine); 
-
-        // Stop the fall timer if it was running (e.g., if the button is pressed quickly again)
-        StopCoroutine(nameof(StartFallTimer)); 
-
-        movementCoroutine = StartCoroutine(MoveStone(targetY, true));
+        movementCoroutine = StartCoroutine(MoveStone(targetY));
     }
 
-    /// <summary>
-    /// Initiates the stone falling back into the water.
-    /// </summary>
-    public void FallBackToWater()
+    private IEnumerator MoveStone(float endY)
     {
-        // Stop any current rising movement
-        if (movementCoroutine != null) StopCoroutine(movementCoroutine); 
-        
-        movementCoroutine = StartCoroutine(MoveStone(startY, false));
-    }
-
-    private IEnumerator StartFallTimer()
-    {
-        // Wait for the defined active time
-        yield return new WaitForSeconds(activeTime); 
-        
-        // After the time is up, trigger the fall
-        FallBackToWater();
-    }
-
-    private IEnumerator MoveStone(float endY, bool isRising)
-    {
-        // If rising, choose a random duration. If falling, you might want a fixed duration 
-        // or a different random range for consistency. Here, we'll use the same range.
+        // Random speed variation still applies
         float duration = Random.Range(durationRange.x, durationRange.y); 
         float elapsedTime = 0f;
 
@@ -105,21 +75,6 @@ public class SteppingStone : MonoBehaviour
         transform.position = endPos;
     }
     
-   
-    private void OnCollisionEnter(Collision collision)
-    {
-        // Check if the collision object is your Player (e.g., by Tag or Layer)
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            // Check if the player is landing on top of the stone (optional but recommended)
-            if (collision.contacts.Length > 0 && Vector3.Dot(collision.contacts[0].normal, Vector3.up) < -0.9f)
-            {
-                // Only start the fall timer if the stone is currently above the water
-                if (transform.position.y > startY + 0.05f) 
-                {
-                    OnPlayerStep();
-                }
-            }
-        }
-    }
+    // NOTE: The OnPlayerStep/OnCollisionEnter logic is REMOVED 
+    // as the fall is now sequence-based, not player-step-based.
 }
