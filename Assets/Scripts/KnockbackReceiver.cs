@@ -28,13 +28,13 @@ namespace DeathrunGame
             if (rb == null) return;
 
             // Get current velocity
-            Vector3 currentVelocity = rb.velocity;
+            Vector3 currentVelocity = rb.linearVelocity;
 
             // Combine current velocity with knockback
             Vector3 newVelocity = (currentVelocity + knockbackForce) * velocityMultiplier;
 
             // Apply the multiplied velocity
-            rb.velocity = newVelocity;
+            rb.linearVelocity = newVelocity;
 
             if (showDebugLogs)
             {
