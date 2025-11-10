@@ -1,6 +1,7 @@
 using UnityEngine;
 using Meta.XR.MRUtilityKit;
 using System.Collections;
+using System.Linq;
 
 public class AutoplaceOnTable : MonoBehaviour
 {
@@ -33,8 +34,26 @@ public class AutoplaceOnTable : MonoBehaviour
     [Tooltip("Vertical spacing (meters) between the platform top and the deathrun content.")]
     public float deathrunHeightOffset = 0.03f;
 
+    [Tooltip("If true, disables all automatic scaling and uses original prefab size.")]
+    public bool disableAutoScaling = false;
+
+    [Tooltip("When auto-scaling is enabled, use simple uniform scaling instead of complex table fitting.")]
+    public bool useSimpleScaling = true;
+
+    [Tooltip("Maximum scale factor to apply when using simple scaling (prevents extreme sizes).")]
+    [Range(0.01f, 2.0f)]
+    public float maxScaleFactor = 0.3f;
+
+    [Tooltip("If greater than 0, ignores automatic scaling and uses this fixed scale factor instead.")]
+    [Range(0f, 1f)]
+    public float manualScaleOverride = 0f;
+
     bool placed;
     private Coroutine waitForMRUKCoroutine;
+
+    [Header("Debug")]
+    [Tooltip("Click to reset placement for testing")]
+    public bool resetPlacement = false;
 
     void OnEnable()
     {
@@ -49,6 +68,38 @@ public class AutoplaceOnTable : MonoBehaviour
             Debug.LogWarning("[AutoplaceOnTable] MRUK.Instance is null. Waiting for MRUK initialization.");
             waitForMRUKCoroutine = StartCoroutine(WaitForMRUK());
         }
+    }
+
+    void Update()
+    {
+        // Debug helper for testing
+        if (resetPlacement)
+        {
+            resetPlacement = false;
+            ResetPlacement();
+        }
+    }
+
+    /// <summary>
+    /// Reset the placement state and try placing again. Useful for testing.
+    /// </summary>
+    public void ResetPlacement()
+    {
+        placed = false;
+        
+        // Destroy any existing placement
+        var existingPlacements = GameObject.FindObjectsOfType<GameObject>()
+            .Where(go => go.name == "DeathrunPlacement")
+            .ToArray();
+        
+        foreach (var placement in existingPlacements)
+        {
+            if (Application.isPlaying)
+                DestroyImmediate(placement);
+        }
+        
+        Debug.Log("[AutoplaceOnTable] Placement reset. Will try placing again.");
+        TryPlace();
     }
 
     void OnDisable()
@@ -101,7 +152,23 @@ public class AutoplaceOnTable : MonoBehaviour
     void TryPlace()
     {
         // Only place once, and only if MRUK is initialized and prefab assigned
-        if (placed || MRUK.Instance == null || deathrunPrefab == null) return;
+        if (placed)
+        {
+            Debug.Log("[AutoplaceOnTable] Already placed, skipping.");
+            return;
+        }
+        
+        if (MRUK.Instance == null)
+        {
+            Debug.LogWarning("[AutoplaceOnTable] MRUK.Instance is null, cannot place.");
+            return;
+        }
+        
+        if (deathrunPrefab == null)
+        {
+            Debug.LogError("[AutoplaceOnTable] deathrunPrefab is null! Please assign the SCENETEST prefab to the 'Deathrun content prefab' field in the inspector.");
+            return;
+        }
 
         var room = MRUK.Instance.GetCurrentRoom();
         if (room == null) return;
@@ -157,12 +224,30 @@ public class AutoplaceOnTable : MonoBehaviour
         var deathrunTransform = Instantiate(deathrunPrefab, rootTransform).transform;
         ResetChildTransform(deathrunTransform);
 
-        if (targetIsTable)
+        if (targetIsTable && !disableAutoScaling)
         {
-            ApplyTableScaling(rootTransform, platformTransform, deathrunTransform, surfaceData);
+            if (useSimpleScaling)
+            {
+                Debug.Log($"[AutoplaceOnTable] Applying simple scaling. Surface size: {surfaceData.Size}");
+                ApplySimpleScaling(rootTransform, deathrunTransform, surfaceData);
+            }
+            else
+            {
+                Debug.Log($"[AutoplaceOnTable] Applying complex table scaling. Surface size: {surfaceData.Size}");
+                ApplyTableScaling(rootTransform, platformTransform, deathrunTransform, surfaceData);
+            }
+        }
+        else if (targetIsTable && disableAutoScaling)
+        {
+            Debug.Log("[AutoplaceOnTable] Auto-scaling disabled, using original prefab size.");
+        }
+        else
+        {
+            Debug.Log("[AutoplaceOnTable] Placing on floor, skipping table scaling.");
         }
 
         var adjustedBounds = CalculateLocalBounds(rootTransform);
+        Debug.Log($"[AutoplaceOnTable] Calculated bounds: {adjustedBounds}");
         AlignObjectToSurface(rootTransform, adjustedBounds, surfaceData.Center, surfaceData.Normal);
 
         if (deathrunTransform != null && !Mathf.Approximately(deathrunHeightOffset, 0f))
@@ -183,6 +268,48 @@ public class AutoplaceOnTable : MonoBehaviour
 
         child.localPosition = Vector3.zero;
         child.localRotation = Quaternion.identity;
+    }
+
+    private void ApplySimpleScaling(Transform root, Transform content, SurfaceData surfaceData)
+    {
+        if (content == null || surfaceData.Size.x <= 0 || surfaceData.Size.y <= 0)
+        {
+            Debug.LogWarning("[AutoplaceOnTable] Cannot apply simple scaling - invalid content or surface size.");
+            return;
+        }
+
+        // Calculate a simple scale factor based on the smaller dimension to ensure it fits
+        var contentBounds = CalculateLocalBounds(content);
+        if (contentBounds.size.x <= 0 || contentBounds.size.z <= 0)
+        {
+            Debug.LogWarning("[AutoplaceOnTable] Cannot calculate content bounds for simple scaling.");
+            return;
+        }
+
+        float uniformScale;
+        
+        if (manualScaleOverride > 0f)
+        {
+            // Use manual override
+            uniformScale = manualScaleOverride;
+            Debug.Log($"[AutoplaceOnTable] Using manual scale override: {uniformScale}");
+        }
+        else
+        {
+            // Calculate automatic scale
+            float scaleX = surfaceData.Size.x / contentBounds.size.x;
+            float scaleZ = surfaceData.Size.y / contentBounds.size.z;
+            
+            // Use the smaller scale to ensure it fits, and clamp to reasonable bounds
+            uniformScale = Mathf.Min(scaleX, scaleZ) * 0.2f; // 0.2f for much smaller size - use only 20% of available space
+            uniformScale = Mathf.Clamp(uniformScale, 0.01f, maxScaleFactor);
+            
+            Debug.Log($"[AutoplaceOnTable] Auto-calculated scale: content bounds {contentBounds.size}, surface {surfaceData.Size}, scale: {uniformScale}");
+        }
+
+        Vector3 newScale = content.localScale * uniformScale;
+        content.localScale = newScale;
+        Debug.Log($"[AutoplaceOnTable] Applied scale: {uniformScale}, final scale: {newScale}");
     }
 
     private void ApplyTableScaling(Transform root, Transform platform, Transform content, SurfaceData surfaceData)
@@ -225,10 +352,18 @@ public class AutoplaceOnTable : MonoBehaviour
                 contentSize = CalculateProjectedSize(content, surfaceData.Right, surfaceData.Forward);
             }
 
+            Debug.Log($"[AutoplaceOnTable] Content size calculated: {contentSize}, Surface size: {surfaceData.Size}");
+
             if (contentSize.x > Mathf.Epsilon && contentSize.y > Mathf.Epsilon)
             {
+                Vector3 originalScale = content.localScale;
                 ScaleDeathrunContent(content, surfaceData.Size, contentSize);
+                Debug.Log($"[AutoplaceOnTable] Content scaled from {originalScale} to {content.localScale}");
                 contentScaled = true;
+            }
+            else
+            {
+                Debug.LogWarning($"[AutoplaceOnTable] Content size is too small or zero: {contentSize}");
             }
         }
 
@@ -301,10 +436,16 @@ public class AutoplaceOnTable : MonoBehaviour
         if (maintainDeathrunAspect)
         {
             float uniform = Mathf.Min(availableX / baseSize.x, availableZ / baseSize.y);
+            Debug.Log($"[AutoplaceOnTable] Uniform scale factor: {uniform}, availableX: {availableX}, availableZ: {availableZ}, baseSize: {baseSize}");
+            
             if (uniform <= 0f)
             {
+                Debug.LogWarning("[AutoplaceOnTable] Uniform scale factor is zero or negative, skipping scaling.");
                 return;
             }
+
+            // Clamp scaling to reasonable bounds to prevent distortion
+            uniform = Mathf.Clamp(uniform, 0.1f, 10f);
 
             Vector3 scale = target.localScale;
             float originalY = scale.y;
@@ -312,15 +453,26 @@ public class AutoplaceOnTable : MonoBehaviour
             scale.z *= uniform;
             scale.y = originalY;
             target.localScale = scale;
+            Debug.Log($"[AutoplaceOnTable] Applied uniform scale: {uniform}, new scale: {scale}");
         }
         else
         {
+            float scaleX = availableX / baseSize.x;
+            float scaleZ = availableZ / baseSize.y;
+            
+            // Clamp scaling to reasonable bounds to prevent distortion
+            scaleX = Mathf.Clamp(scaleX, 0.1f, 10f);
+            scaleZ = Mathf.Clamp(scaleZ, 0.1f, 10f);
+            
+            Debug.Log($"[AutoplaceOnTable] Non-uniform scaling - X: {scaleX}, Z: {scaleZ}");
+
             Vector3 scale = target.localScale;
             float originalY = scale.y;
-            scale.x *= availableX / baseSize.x;
-            scale.z *= availableZ / baseSize.y;
+            scale.x *= scaleX;
+            scale.z *= scaleZ;
             scale.y = originalY;
             target.localScale = scale;
+            Debug.Log($"[AutoplaceOnTable] Applied non-uniform scale, new scale: {scale}");
         }
     }
 

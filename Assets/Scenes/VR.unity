@@ -148,15 +148,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46d67a12abc974c2a91bd6c0b887273b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  platformPrefab: {fileID: 6660897969352201240, guid: 30d797d7ef06540c49d88769e0cce23e, type: 3}
+  platformPrefab: {fileID: 3246820598644408902, guid: 1a247cb768935b7408beb5e862b92771, type: 3}
   platformFootprintOverride: {x: 0, y: 0}
-  deathrunPrefab: {fileID: 6660897969352201240, guid: ad3af79a4b7c84b3e860fa34d5295b96, type: 3}
+  deathrunPrefab: {fileID: 3246820598644408902, guid: 1a247cb768935b7408beb5e862b92771, type: 3}
   deathrunFootprintOverride: {x: 0, y: 0}
   lift: 0
   allowFloorFallback: 1
   deathrunEdgePadding: 0
-  maintainDeathrunAspect: 1
+  maintainDeathrunAspect: 0
   deathrunHeightOffset: 0.09
+  disableAutoScaling: 0
+  useSimpleScaling: 1
+  maxScaleFactor: 0.01
+  manualScaleOverride: 0.015
+  resetPlacement: 0
 --- !u!4 &11546507
 Transform:
   m_ObjectHideFlags: 0
@@ -166,7 +171,7 @@ Transform:
   m_GameObject: {fileID: 11546505}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.9123738, y: 1.3732185, z: 0.87053484}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -13137,7 +13142,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2296141232796561049, guid: 37c47f9928e3fef4bb9a9ffaafab5526, type: 3}
       propertyPath: Colliders
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5456522116536683058, guid: 37c47f9928e3fef4bb9a9ffaafab5526, type: 3}
       propertyPath: m_LocalPosition.x

@@ -16667,9 +16667,9 @@ Transform:
   m_GameObject: {fileID: 3246820598644408902}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -87.885124, y: 36.41828, z: -73.89423}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7036691536093074609}
   - {fileID: 291943947283544318}
@@ -17243,7 +17243,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8043160625359399630}
-  - component: {fileID: 1340855177738134508}
   m_Layer: 0
   m_Name: WwiseGlobal
   m_TagString: Untagged
@@ -17266,31 +17265,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8253204378839293616}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1340855177738134508
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3398695723994235842}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c694f73caa7c5443ba9c4e76e63ef39c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  InitializationSettings: {fileID: 11400000, guid: 75f1856347a5946edb3bb8773f2c9a4b, type: 2}
-  basePath: 
-  language: 
-  defaultPoolSize: 0
-  lowerPoolSize: 0
-  streamingPoolSize: 0
-  memoryCutoffThreshold: 0
-  monitorPoolSize: 0
-  monitorQueuePoolSize: 0
-  callbackManagerBufferSize: 0
-  spatialAudioPoolSize: 0
-  maxSoundPropagationDepth: 0
-  engineLogging: 0
 --- !u!1 &3426281263308758290
 GameObject:
   m_ObjectHideFlags: 0
@@ -42782,10 +42756,10 @@ MeshCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
+  m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -5495902117074765545, guid: ea417d97f3607504cb36633cd6b01bec, type: 3}
 --- !u!114 &101547100714251958
