@@ -690,7 +690,7 @@ MonoBehaviour:
   stateStatus: {fileID: 35442470440139780}
   collider: {fileID: 7628501636275585178}
   knockbackForce: 15
-  upwardForce: 5
+  upwardForce: 3
   hitCooldown: 0.2
   showDebugLogs: 1
   showGizmos: 1
@@ -1119,7 +1119,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fc19aac3e224fd45bc80c72aa30fb02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  knockbackDecay: 5
+  velocityMultiplier: 1.2
+  showDebugLogs: 1
 --- !u!4 &5417621049865108474 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ac0e6d6de4903954186a3cd8c0e5691c, type: 3}

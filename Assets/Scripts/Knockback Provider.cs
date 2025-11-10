@@ -16,10 +16,10 @@ namespace DeathrunGame
 
         [Header("Knockback Settings")]
         [Tooltip("Base knockback force applied horizontally")]
-        [SerializeField] private float knockbackForce = 15f;
+        [SerializeField] private float knockbackForce; // Reduced from 40f
         
         [Tooltip("Upward force component for better feel")]
-        [SerializeField] private float upwardForce = 5f;
+        [SerializeField] private float upwardForce; // Increased from 1f for more "pop"
 
         [Header("Cooldown")]
         [Tooltip("Cooldown between hits to prevent multiple knockbacks per swing")]
@@ -171,7 +171,7 @@ namespace DeathrunGame
 
             return knockback;
         }
-
+        
         [ServerRpc]
         private void ApplyKnockbackServerRpc(ulong targetNetworkObjectId, Vector3 knockbackForce)
         {
