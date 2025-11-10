@@ -9,7 +9,6 @@ namespace DeathrunGame
     /// <summary>
     /// Manages synchronized scene transitions for all players.
     /// Monitors a ready zone (BoxCollider trigger) and initiates scene change when all players are present.
-    /// Handles spawn points for players in the new scene.
     /// </summary>
     [RequireComponent(typeof(BoxCollider))]
     public class SynchronisedSceneChange : NetworkBehaviour
@@ -21,10 +20,6 @@ namespace DeathrunGame
         [SerializeField] private float readyDelay = 5f;
         [Tooltip("UI Text to show countdown (optional)")]
         [SerializeField] private TMPro.TextMeshProUGUI countdownText;
-
-        [Header("Spawn Points")]
-        [SerializeField] private Transform[] playerSpawnPoints;
-        [SerializeField] private float spawnPointRadius = 1f;
 
         [Header("Debug")]
         [SerializeField] private bool showDebugLogs = true;
@@ -53,29 +48,17 @@ namespace DeathrunGame
         {
             readyZone = GetComponent<BoxCollider>();
             readyZone.isTrigger = true;
-
-            // Validate spawn points
-            if (playerSpawnPoints == null || playerSpawnPoints.Length == 0)
-            {
-                LogWarning("No spawn points assigned! Creating default spawn point.");
-                GameObject defaultSpawn = new GameObject("DefaultSpawnPoint");
-                defaultSpawn.transform.position = transform.position + Vector3.up * 2f;
-                playerSpawnPoints = new Transform[] { defaultSpawn.transform };
-            }
         }
 
         public override void OnNetworkSpawn()
         {
             if (IsServer)
             {
-                // Subscribe to network events on server
                 NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
                 NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
-
                 Log("🎮 Server: SynchronisedSceneChange initialized");
             }
 
-            // Subscribe to network variable changes
             isReadyCountdownActive.OnValueChanged += OnCountdownStateChanged;
             countdownTimer.OnValueChanged += OnCountdownTimerChanged;
         }
@@ -95,7 +78,6 @@ namespace DeathrunGame
         private void OnClientConnected(ulong clientId)
         {
             Log($"🔌 Client {clientId} connected");
-            // Recheck ready status whenever player count changes
             CheckReadyStatus();
         }
 
@@ -103,14 +85,12 @@ namespace DeathrunGame
         {
             Log($"🔌 Client {clientId} disconnected");
 
-            // Remove from ready zone if they were in it
             if (playersInZone.Contains(clientId))
             {
                 playersInZone.Remove(clientId);
                 Log($"👋 Client {clientId} removed from ready zone");
             }
 
-            // Cancel countdown if active
             if (isCountingDown)
             {
                 CancelCountdown();
@@ -121,7 +101,6 @@ namespace DeathrunGame
         {
             if (!IsServer) return;
 
-            // Check if the object has a NetworkObject component
             var networkObject = other.GetComponentInParent<NetworkObject>();
             if (networkObject != null && networkObject.IsPlayerObject)
             {
@@ -148,7 +127,6 @@ namespace DeathrunGame
                 {
                     Log($"❌ Player {clientId} left ready zone ({playersInZone.Count}/{GetConnectedPlayerCount()})");
 
-                    // Cancel countdown if active
                     if (isCountingDown)
                     {
                         CancelCountdown();
@@ -164,7 +142,6 @@ namespace DeathrunGame
             int connectedPlayers = GetConnectedPlayerCount();
             int playersReady = playersInZone.Count;
 
-            // All players must be in the zone and at least 1 player must be connected
             if (connectedPlayers > 0 && playersReady == connectedPlayers && !isCountingDown)
             {
                 Log($"🎉 All {connectedPlayers} players are ready! Starting countdown...");
@@ -209,7 +186,6 @@ namespace DeathrunGame
                 countdownCoroutine = null;
             }
 
-            // Notify all clients
             NotifyCountdownCancelledClientRpc();
         }
 
@@ -221,7 +197,6 @@ namespace DeathrunGame
             {
                 countdownTimer.Value = timeRemaining;
 
-                // Check if all players are still in zone
                 if (playersInZone.Count != GetConnectedPlayerCount())
                 {
                     CancelCountdown();
@@ -233,8 +208,6 @@ namespace DeathrunGame
             }
 
             countdownTimer.Value = 0f;
-
-            // All players are ready and countdown finished - change scene!
             Log("🚀 Countdown complete! Loading game scene...");
             LoadGameScene();
         }
@@ -246,112 +219,10 @@ namespace DeathrunGame
             isCountingDown = false;
             isReadyCountdownActive.Value = false;
 
-            // Use Unity Netcode scene management
-            NetworkManager.SceneManager.LoadScene(gameSceneName, LoadSceneMode.Single);
-
             Log($"🎮 Loading scene: {gameSceneName}");
-
-            // Spawn players after scene loads
-            StartCoroutine(SpawnPlayersAfterSceneLoad());
-        }
-
-        private IEnumerator SpawnPlayersAfterSceneLoad()
-        {
-            // Wait for scene to fully load
-            yield return new WaitForSeconds(1f);
-
-            // Find spawn points in new scene (in case they're different)
-            FindSpawnPointsInScene();
-
-            // Spawn each connected player
-            int spawnIndex = 0;
-            foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
-            {
-                Vector3 spawnPosition = GetSpawnPosition(spawnIndex);
-                Quaternion spawnRotation = GetSpawnRotation(spawnIndex);
-
-                Log($"📍 Spawning player {client.ClientId} at position {spawnPosition}");
-
-                // Tell the client to reposition their player
-                RespawnPlayerClientRpc(spawnPosition, spawnRotation, client.ClientId);
-
-                spawnIndex = (spawnIndex + 1) % playerSpawnPoints.Length;
-            }
-        }
-
-        private void FindSpawnPointsInScene()
-        {
-            // Try to find spawn points tagged as "SpawnPoint"
-            GameObject[] spawnPointObjects = GameObject.FindGameObjectsWithTag("SpawnPoint");
-
-            if (spawnPointObjects.Length > 0)
-            {
-                playerSpawnPoints = new Transform[spawnPointObjects.Length];
-                for (int i = 0; i < spawnPointObjects.Length; i++)
-                {
-                    playerSpawnPoints[i] = spawnPointObjects[i].transform;
-                }
-                Log($"✅ Found {playerSpawnPoints.Length} spawn points in scene");
-            }
-            else
-            {
-                LogWarning("⚠️ No spawn points found with 'SpawnPoint' tag! Using default positions.");
-            }
-        }
-
-        private Vector3 GetSpawnPosition(int index)
-        {
-            if (playerSpawnPoints == null || playerSpawnPoints.Length == 0)
-            {
-                return Vector3.up * 2f;
-            }
-
-            Transform spawnPoint = playerSpawnPoints[index % playerSpawnPoints.Length];
-
-            // Add small random offset to prevent exact overlap
-            Vector3 randomOffset = Random.insideUnitSphere * spawnPointRadius;
-            randomOffset.y = 0; // Keep spawn on same height
-
-            return spawnPoint.position + randomOffset;
-        }
-
-        private Quaternion GetSpawnRotation(int index)
-        {
-            if (playerSpawnPoints == null || playerSpawnPoints.Length == 0)
-            {
-                return Quaternion.identity;
-            }
-
-            Transform spawnPoint = playerSpawnPoints[index % playerSpawnPoints.Length];
-            return spawnPoint.rotation;
-        }
-
-        [ClientRpc]
-        private void RespawnPlayerClientRpc(Vector3 position, Quaternion rotation, ulong targetClientId)
-        {
-            // Only execute on the target client
-            if (NetworkManager.Singleton.LocalClientId != targetClientId) return;
-
-            // Find the local player object
-            if (NetworkManager.Singleton.LocalClient.PlayerObject != null)
-            {
-                GameObject player = NetworkManager.Singleton.LocalClient.PlayerObject.gameObject;
-
-                // Disable character controller temporarily if it exists
-                var characterController = player.GetComponent<CharacterController>();
-                if (characterController != null)
-                {
-                    characterController.enabled = false;
-                    player.transform.SetPositionAndRotation(position, rotation);
-                    characterController.enabled = true;
-                }
-                else
-                {
-                    player.transform.SetPositionAndRotation(position, rotation);
-                }
-
-                Log($"✨ Respawned at {position}");
-            }
+            
+            // Just load the scene - repositioning is handled by PlayerRepositionManager in the new scene
+            NetworkManager.SceneManager.LoadScene(gameSceneName, LoadSceneMode.Single);
         }
 
         [ClientRpc]
@@ -378,7 +249,6 @@ namespace DeathrunGame
 
         private void OnCountdownTimerChanged(float previous, float current)
         {
-            // Update UI if countdown text is assigned
             if (countdownText != null && isReadyCountdownActive.Value)
             {
                 int seconds = Mathf.CeilToInt(current);
@@ -416,7 +286,6 @@ namespace DeathrunGame
 
         private void OnDrawGizmos()
         {
-            // Draw ready zone
             if (readyZone != null || TryGetComponent(out readyZone))
             {
                 Gizmos.color = new Color(0f, 1f, 0f, 0.3f);
@@ -425,20 +294,6 @@ namespace DeathrunGame
 
                 Gizmos.color = Color.green;
                 Gizmos.DrawWireCube(readyZone.center, readyZone.size);
-            }
-
-            // Draw spawn points
-            if (playerSpawnPoints != null)
-            {
-                foreach (var spawnPoint in playerSpawnPoints)
-                {
-                    if (spawnPoint != null)
-                    {
-                        Gizmos.color = Color.cyan;
-                        Gizmos.DrawWireSphere(spawnPoint.position, spawnPointRadius);
-                        Gizmos.DrawLine(spawnPoint.position, spawnPoint.position + spawnPoint.forward * 2f);
-                    }
-                }
             }
         }
 
