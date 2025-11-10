@@ -6485,7 +6485,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  gameSceneName: GameScene
+  gameSceneName: Simonas
   readyDelay: 5
   countdownText: {fileID: 0}
   playerSpawnPoints: []
