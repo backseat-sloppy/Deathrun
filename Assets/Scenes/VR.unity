@@ -162,6 +162,7 @@ MonoBehaviour:
   maxScaleFactor: 0.01
   manualScaleOverride: 0.015
   resetPlacement: 0
+  positionOffset: {x: -3.3, y: 0, z: -1.4}
 --- !u!4 &11546507
 Transform:
   m_ObjectHideFlags: 0

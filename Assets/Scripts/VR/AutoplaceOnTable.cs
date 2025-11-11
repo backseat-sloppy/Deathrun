@@ -55,6 +55,10 @@ public class AutoplaceOnTable : MonoBehaviour
     [Tooltip("Click to reset placement for testing")]
     public bool resetPlacement = false;
 
+    [Header("Position Adjustment")]
+    [Tooltip("Manual position offset in meters (X, Y, Z). Applied after automatic placement.")]
+    public Vector3 positionOffset = Vector3.zero;
+
     void OnEnable()
     {
         // If MRUK has already been initialized, subscribe immediately.
@@ -249,6 +253,8 @@ public class AutoplaceOnTable : MonoBehaviour
         var adjustedBounds = CalculateLocalBounds(rootTransform);
         Debug.Log($"[AutoplaceOnTable] Calculated bounds: {adjustedBounds}");
         AlignObjectToSurface(rootTransform, adjustedBounds, surfaceData.Center, surfaceData.Normal);
+
+        rootTransform.position += positionOffset;
 
         if (deathrunTransform != null && !Mathf.Approximately(deathrunHeightOffset, 0f))
         {
