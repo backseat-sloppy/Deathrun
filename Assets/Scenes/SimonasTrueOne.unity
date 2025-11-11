@@ -30371,7 +30371,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerTag: Player
   totalExpectedPlayers: 1
-  parentPlayersToBoat: 1
+  parentPlayersToBoat: 0
   boatDeck: {fileID: 595600553}
   showDebugMessages: 1
 --- !u!1 &595793922
@@ -89566,9 +89566,9 @@ MonoBehaviour:
   startWaypointIndex: 0
   endWaypointIndex: 4
   moveSpeed: 5
-  rotationSpeed: 0.91
-  waypointReachThreshold: 4.24
-  waitForPlayers: 1
+  rotationSpeed: 0.2
+  waypointReachThreshold: 7.52
+  waitForPlayers: 0
   autoStartOnLoad: 1
   passengerTracker: {fileID: 595600557}
   showDebugMessages: 1
