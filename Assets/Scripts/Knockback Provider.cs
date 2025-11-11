@@ -157,6 +157,7 @@ namespace DeathrunGame
 
             if (showDebugLogs)
                 Debug.Log($"💥 HIT PLAYER {hitPlayer.NetworkObjectId}! Knockback: {knockbackDirection}");
+            DisableCollider(); // Prevent multiple hits in one swing
         }
 
         private Vector3 CalculateKnockbackDirection(Transform hitTransform)
