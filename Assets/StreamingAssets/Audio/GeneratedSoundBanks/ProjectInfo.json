@@ -1,0 +1,43 @@
+{
+ "ProjectInfo": {
+  "Project": {
+   "Name": "Deathrun_WwiseProject",
+   "GUID": "{984D3746-9034-4DDD-8771-BA2550CC92FB}",
+   "Generator": "2024.1.9.8920"
+  },
+  "CacheRoot": "../../../../Deathrun_WwiseProject/.cache",
+  "Platforms": [
+   {
+    "Name": "Android",
+    "GUID": "{5D875E64-BAB9-4CC0-B07C-5CF1AF8DC884}",
+    "BasePlatform": "Android",
+    "BasePlatformGUID": "{A2D401DE-B8B6-4FEB-8142-137C34D507CA}",
+    "Path": "../../../../Deathrun_WwiseProject/GeneratedSoundBanks/Android"
+   },
+   {
+    "Name": "Mac",
+    "GUID": "{98D07FFB-96CD-48B0-A9CE-9D56CB3120B0}",
+    "BasePlatform": "Mac",
+    "BasePlatformGUID": "{9C6217D5-DD11-4795-87C1-6CE02853C540}",
+    "Path": "../../../../Deathrun_WwiseProject/GeneratedSoundBanks/Mac"
+   },
+   {
+    "Name": "Windows",
+    "GUID": "{5190951A-2A2B-41E8-B8D4-692EFDBBFE74}",
+    "BasePlatform": "Windows",
+    "BasePlatformGUID": "{6E0CB257-C6C8-4C5C-8366-2740DFC441EB}",
+    "Path": "../../../../Deathrun_WwiseProject/GeneratedSoundBanks/Windows"
+   }
+  ],
+  "Languages": [
+   {
+    "Name": "English(US)",
+    "Id": "684519430",
+    "GUID": "{EED82C1C-58E6-4DCC-8AC9-05676F8BC708}",
+    "Default": "true",
+    "UseAsStandIn": "true"
+   }
+  ],
+  "FileHash": "{65565695-1EF1-65F6-9932-A3FAF997B1D9}"
+ }
+}
