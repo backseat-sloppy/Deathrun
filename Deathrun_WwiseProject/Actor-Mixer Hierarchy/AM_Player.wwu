@@ -1252,7 +1252,12 @@
 						</Sound>
 					</ChildrenList>
 				</RandomSequenceContainer>
-				<RandomSequenceContainer Name="Player_Breath_Loop" ID="{3115D460-B48E-49DF-BFBC-159C19FB6389}" ShortID="823706232">
+				<Sound Name="Player_Swing" ID="{E783C5F5-22BD-4C4C-BA99-A65A9338EC9F}" ShortID="110949636">
+					<PropertyList>
+						<Property Name="3DSpatialization" Type="int16" Value="2"/>
+						<Property Name="EnableDiffraction" Type="bool" Value="True"/>
+						<Property Name="UseGameAuxSends" Type="bool" Value="True"/>
+					</PropertyList>
 					<ReferenceList>
 						<Reference Name="Conversion">
 							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
@@ -1261,7 +1266,19 @@
 							<ObjectRef Name="SFX_Player" ID="{4FD67903-5A59-466B-9255-B4B9683B3F2E}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
 						</Reference>
 					</ReferenceList>
-				</RandomSequenceContainer>
+					<ChildrenList>
+						<AudioFileSource Name="Fight, Cloth, Punch, Block, Swoosh SND4355 S00" ID="{AA7678D8-D4DD-41FC-9617-2E8FF04EE281}">
+							<Language>SFX</Language>
+							<AudioFile>Fight, Cloth, Punch, Block, Swoosh SND4355 S00.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="377210547"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="Fight, Cloth, Punch, Block, Swoosh SND4355 S00" ID="{AA7678D8-D4DD-41FC-9617-2E8FF04EE281}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
 			</ChildrenList>
 		</WorkUnit>
 	</AudioObjects>

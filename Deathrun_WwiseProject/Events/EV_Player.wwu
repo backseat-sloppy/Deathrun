@@ -47,6 +47,17 @@
 						</Action>
 					</ChildrenList>
 				</Event>
+				<Event Name="Plater_Swing_Play" ID="{7935DD1E-46B8-4CD2-B771-7C0935AC13DE}">
+					<ChildrenList>
+						<Action Name="" ID="{F6E977EE-5D94-490E-B2E8-7CCCE686B07D}" ShortID="775958455">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Player_Swing" ID="{E783C5F5-22BD-4C4C-BA99-A65A9338EC9F}" WorkUnitID="{C98302B0-235D-4AB5-97B0-FB2F4499216E}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
 			</ChildrenList>
 		</WorkUnit>
 	</Events>
