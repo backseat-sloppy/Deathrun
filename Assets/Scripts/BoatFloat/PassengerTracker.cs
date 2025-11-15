@@ -5,14 +5,13 @@ using UnityEngine;
 /// Tracks players who are on the boat using trigger collisions.
 /// Communicates with BoatController to determine when all players are aboard.
 /// Parents players to boat so they move with it.
+/// Only tracks ALIVE players (active GameObjects with Player tag).
 /// </summary>
 [RequireComponent(typeof(BoxCollider))]
 public class PassengerTracker : MonoBehaviour
 {
     [Header("Player Detection")]
     [SerializeField] private string playerTag = "Player";
-    [Tooltip("Total number of players expected in the game")]
-    [SerializeField] private int totalExpectedPlayers = 2;
     
     [Header("Player Attachment")]
     [SerializeField] private bool parentPlayersToBoat = true;
@@ -32,7 +31,8 @@ public class PassengerTracker : MonoBehaviour
     public event System.Action OnPlayerLeft;
     
     public int PlayersOnBoard => playersOnBoard.Count;
-    public bool AllPlayersAboard => playersOnBoard.Count >= totalExpectedPlayers;
+    public int TotalAlivePlayers => CountAlivePlayers();
+    public bool AllPlayersAboard => playersOnBoard.Count >= TotalAlivePlayers && TotalAlivePlayers > 0;
     
     private void Awake()
     {
@@ -58,6 +58,13 @@ public class PassengerTracker : MonoBehaviour
         {
             GameObject player = other.gameObject;
             
+            // Only track if player is alive (GameObject is active)
+            if (!player.activeInHierarchy)
+            {
+                Log($"⚠️ Ignoring dead player: {player.name}");
+                return;
+            }
+            
             if (playersOnBoard.Add(player))
             {
                 // Parent player to boat
@@ -66,19 +73,24 @@ public class PassengerTracker : MonoBehaviour
                     AttachPlayerToBoat(player);
                 }
                 
-                Log($"✅ Player boarded! ({playersOnBoard.Count}/{totalExpectedPlayers})");
+                int alivePlayers = CountAlivePlayers();
+                Log($"✅ Player boarded! ({playersOnBoard.Count}/{alivePlayers} alive players)");
                 OnPlayerBoarded?.Invoke();
                 
-                // Check if all players are now aboard
+                // Check if all ALIVE players are now aboard
                 if (AllPlayersAboard)
                 {
-                    Log($"🚢 ALL PLAYERS ABOARD! Starting journey...");
+                    Log($"🚢 ALL ALIVE PLAYERS ABOARD! ({playersOnBoard.Count}/{alivePlayers}) Starting journey...");
                     OnAllPlayersBoarded?.Invoke();
                     
                     if (boatController != null)
                     {
                         boatController.StartJourney();
                     }
+                }
+                else
+                {
+                    Log($"⏳ Waiting for {alivePlayers - playersOnBoard.Count} more alive player(s)...");
                 }
             }
         }
@@ -98,7 +110,8 @@ public class PassengerTracker : MonoBehaviour
                     DetachPlayerFromBoat(player);
                 }
                 
-                Log($"❌ Player left boat! ({playersOnBoard.Count}/{totalExpectedPlayers})");
+                int alivePlayers = CountAlivePlayers();
+                Log($"❌ Player left boat! ({playersOnBoard.Count}/{alivePlayers} alive players)");
                 OnPlayerLeft?.Invoke();
                 
                 // Stop the boat if a player leaves
@@ -108,6 +121,70 @@ public class PassengerTracker : MonoBehaviour
                     boatController.StopJourney();
                 }
             }
+        }
+    }
+    
+    /// <summary>
+    /// Counts the number of alive players in the scene.
+    /// Alive = active GameObject with Player tag.
+    /// Dead = inactive GameObject (disabled when dead).
+    /// </summary>
+    private int CountAlivePlayers()
+    {
+        // Find all objects with Player tag (includes inactive)
+        GameObject[] allPlayers = GameObject.FindGameObjectsWithTag(playerTag);
+        
+        int aliveCount = 0;
+        foreach (GameObject player in allPlayers)
+        {
+            // Only count if the GameObject is active (alive)
+            if (player.activeInHierarchy)
+            {
+                aliveCount++;
+            }
+        }
+        
+        return aliveCount;
+    }
+    
+    /// <summary>
+    /// Removes dead players from the tracking list.
+    /// Call this when a player dies while on the boat.
+    /// </summary>
+    public void RemoveDeadPlayers()
+    {
+        // Create a list of dead players to remove
+        List<GameObject> deadPlayers = new List<GameObject>();
+        
+        foreach (GameObject player in playersOnBoard)
+        {
+            if (player == null || !player.activeInHierarchy)
+            {
+                deadPlayers.Add(player);
+            }
+        }
+        
+        // Remove dead players
+        foreach (GameObject deadPlayer in deadPlayers)
+        {
+            if (playersOnBoard.Remove(deadPlayer))
+            {
+                Log($"💀 Removed dead player from tracking: {deadPlayer?.name ?? "null"}");
+                
+                if (parentPlayersToBoat && deadPlayer != null)
+                {
+                    DetachPlayerFromBoat(deadPlayer);
+                }
+            }
+        }
+        
+        // Check if we should start journey after removing dead players
+        if (AllPlayersAboard && boatController != null && !boatController.IsMoving)
+        {
+            int alivePlayers = CountAlivePlayers();
+            Log($"🚢 ALL ALIVE PLAYERS NOW ABOARD! ({playersOnBoard.Count}/{alivePlayers}) Starting journey...");
+            OnAllPlayersBoarded?.Invoke();
+            boatController.StartJourney();
         }
     }
     
@@ -138,12 +215,6 @@ public class PassengerTracker : MonoBehaviour
             // No original parent stored, unparent completely
             player.transform.SetParent(null, true);
         }
-    }
-    
-    public void SetExpectedPlayerCount(int count)
-    {
-        totalExpectedPlayers = Mathf.Max(1, count);
-        Log($"Expected player count set to: {totalExpectedPlayers}");
     }
     
     private void OnDestroy()
