@@ -12,23 +12,29 @@ public class PlayerSpawnerTest : NetworkBehaviour
     // IMPORTANT: Both must have a NetworkObject component and be registered in 
     // the NetworkManager's Network Prefabs List.
     [Header("Spawnable Prefabs")]
-    [SerializeField] private GameObject PrefabToSpawnP; // E.g., The PC Player Avatar
-    [SerializeField] private GameObject PrefabToSpawnA; // E.g., The AR Player Avatar
+    [SerializeField] private GameObject PrefabToSpawnP; // Index 0: E.g., The PC Player Avatar
+    [SerializeField] private GameObject PrefabToSpawnA; // Index 1: E.g., The AR Player Avatar
 
     private bool hasSpawnedAvatar = false;
+    private GameObject[] spawnablePrefabs; // Array to hold the prefabs for easy lookup
 
     // Called when the NetworkObject is spawned (synced across the network).
     public override void OnNetworkSpawn()
     {
+        // Initialize the array for easy lookup
+        spawnablePrefabs = new GameObject[] { PrefabToSpawnP, PrefabToSpawnA };
+
         // 1. Initial Spawning (Runs only on the Owner's client)
-        // We only want the owner to see the input check.
         if (IsOwner)
         {
             Debug.Log($"Client {OwnerClientId} is now the owner of the Spawner.");
         }
+    }
 
-        // Only allow input to be processed if the current object belongs to the local player.
-        // We do not return here because we still need the Update() to run for IsOwner check.
+    // Recommended best practice is to always clean up the array
+    public override void OnNetworkDespawn()
+    {
+        spawnablePrefabs = null;
     }
 
     private void Update()
@@ -42,22 +48,21 @@ public class PlayerSpawnerTest : NetworkBehaviour
         // Prevent spawning multiple times
         if (hasSpawnedAvatar)
         {
-            // You could add logic here for respawn or replacement if needed.
             return;
         }
 
-        // Check for 'P' key press (for PC/Player Avatar)
+        // Check for 'P' key press (for PC/Player Avatar - Index 0)
         if (Input.GetKeyDown(KeyCode.P))
         {
-            // Request the server to spawn the prefab
-            RequestSpawnPrefabServerRpc(PrefabToSpawnP.GetComponent<NetworkObject>().PrefabHash);
+            // Request the server to spawn the prefab at index 0
+            RequestSpawnPrefabServerRpc(0);
         }
 
-        // Check for 'A' key press (for AR/Avatar)
+        // Check for 'A' key press (for AR/Avatar - Index 1)
         if (Input.GetKeyDown(KeyCode.A))
         {
-            // Request the server to spawn the prefab
-            RequestSpawnPrefabServerRpc(PrefabToSpawnA.GetComponent<NetworkObject>().PrefabHash);
+            // Request the server to spawn the prefab at index 1
+            RequestSpawnPrefabServerRpc(1);
         }
     }
 
@@ -65,16 +70,23 @@ public class PlayerSpawnerTest : NetworkBehaviour
     /// This is an RPC (Remote Procedure Call) executed only on the server.
     /// The client's input (in Update) triggers this.
     /// </summary>
-    /// <param name="prefabHash">The NetworkObject hash of the prefab to spawn.</param>
+    /// <param name="prefabIndex">The index (0 or 1) identifying the prefab to spawn.</param>
     [ServerRpc]
-    private void RequestSpawnPrefabServerRpc(uint prefabHash)
+    private void RequestSpawnPrefabServerRpc(int prefabIndex)
     {
-        // Find the GameObject template based on the hash provided by the client
-        GameObject prefabToSpawn = NetworkManager.Singleton.PrefabHandler.GetPrefab(prefabHash);
+        // Input validation: Check if the index is valid for our array
+        if (prefabIndex < 0 || prefabIndex >= spawnablePrefabs.Length)
+        {
+            Debug.LogError($"Server received invalid prefab index: {prefabIndex} from client {OwnerClientId}");
+            return;
+        }
+
+        // Get the GameObject template from the local (server) array
+        GameObject prefabToSpawn = spawnablePrefabs[prefabIndex];
 
         if (prefabToSpawn == null)
         {
-            Debug.LogError($"Server could not find prefab with hash: {prefabHash}. Is it registered?");
+            Debug.LogError($"Server prefab index {prefabIndex} is null. Check Inspector assignments.");
             return;
         }
 
@@ -92,17 +104,5 @@ public class PlayerSpawnerTest : NetworkBehaviour
 
         // Mark that an avatar has been successfully spawned
         hasSpawnedAvatar = true;
-    }
-
-    /// <summary>
-    /// Utility function to get a GameObject reference from its hash (for logging/debugging).
-    /// </summary>
-    private GameObject GetPrefabFromHash(uint hash)
-    {
-        if (NetworkManager.Singleton.PrefabHandler.TryGetPrefab(hash, out GameObject prefab))
-        {
-            return prefab;
-        }
-        return null;
     }
 }

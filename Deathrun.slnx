@@ -142,6 +142,7 @@
   <Project Path="Unity.AI.Navigation.Editor.ConversionSystem.csproj" />
   <Project Path="Unity.ProBuilder.AssetIdRemapUtility.csproj" />
   <Project Path="com.unity.multiplayer.tools.window.csproj" />
+  <Project Path="meta.xr.mrutilitykit.editor.csproj" />
   <Project Path="Unity.Profiling.Core.csproj" />
   <Project Path="Meta.XR.EnvironmentDepth.Editor.csproj" />
   <Project Path="Unity.Multiplayer.Tools.DependencyInjection.csproj" />
@@ -159,7 +160,6 @@
   <Project Path="Unity.TerrainTools.csproj" />
   <Project Path="Unity.Netcode.Editor.CodeGen.csproj" />
   <Project Path="Unity.XR.Management.csproj" />
-  <Project Path="meta.xr.mrutilitykit.editor.csproj" />
   <Project Path="Unity.TestTools.CodeCoverage.Editor.OpenCover.Model.csproj" />
   <Project Path="Meta.XR.Editor.Callbacks.csproj" />
   <Project Path="Unity.XR.OpenXR.Features.RuntimeDebugger.csproj" />
@@ -187,7 +187,7 @@
   <Project Path="Meta.XR.Editor.EditorCoroutine.csproj" />
   <Project Path="Unity.VisualScripting.SettingsProvider.Editor.csproj" />
   <Project Path="Unity.Services.Core.Scheduler.csproj" />
-  <Project Path="NewAssembly.csproj" />
+  <Project Path="Oculus.Interaction.Samples.Editor.UISet.csproj" />
   <Project Path="Unity.Multiplayer.Tools.Adapters.Utp2.csproj" />
   <Project Path="Unity.XR.OpenXR.Features.ConformanceAutomation.csproj" />
   <Project Path="Unity.PlasticSCM.Editor.Entities.csproj" />

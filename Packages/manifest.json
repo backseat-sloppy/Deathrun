@@ -1,8 +1,8 @@
 {
   "dependencies": {
-    "com.meta.xr.mrutilitykit": "78.0.0",
+    "com.meta.xr.mrutilitykit": "81.0.0",
     "com.meta.xr.sdk.core": "81.0.0",
-    "com.meta.xr.sdk.interaction.ovr": "78.0.0",
+    "com.meta.xr.sdk.interaction.ovr": "81.0.0",
     "com.unity.ai.navigation": "2.0.9",
     "com.unity.burst": "1.8.25",
     "com.unity.cinemachine": "2.10.4",
