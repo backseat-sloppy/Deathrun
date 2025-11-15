@@ -109,10 +109,13 @@
   <Project Path="Unity.Multiplayer.Tools.NetworkSimulator.Editor.csproj" />
   <Project Path="Meta.XR.MultiplayerBlocks.Shared.Editor.csproj" />
   <Project Path="Unity.Performance.Profile-Analyzer.Editor.csproj" />
+  <Project Path="Meta.XR.Editor.RemoteContent.csproj" />
   <Project Path="Unity.Collections.CodeGen.csproj" />
   <Project Path="Unity.Services.Core.Components.csproj" />
   <Project Path="Unity.ProBuilder.Poly2Tri.csproj" />
+  <Project Path="Meta.XR.Editor.Guide.About.csproj" />
   <Project Path="Unity.Multiplayer.Tools.NetVis.Configuration.csproj" />
+  <Project Path="Meta.XR.Editor.UserInterface.csproj" />
   <Project Path="Unity.XR.Hands.csproj" />
   <Project Path="Meta.XR.Editor.Notifications.csproj" />
   <Project Path="Unity.XR.Hands.Editor.csproj" />
@@ -133,7 +136,6 @@
   <Project Path="Unity.InputSystem.TestFramework.csproj" />
   <Project Path="Unity.CollabProxy.Editor.csproj" />
   <Project Path="Unity.Multiplayer.Tools.NetStats.CodeGen.csproj" />
-  <Project Path="Meta.XR.Editor.UserInterface.csproj" />
   <Project Path="Oculus.Interaction.UnityXR.csproj" />
   <Project Path="Unity.Multiplayer.Tools.NetworkProfiler.Runtime.csproj" />
   <Project Path="Unity.VisualScripting.Shared.Editor.csproj" />
@@ -182,10 +184,10 @@
   <Project Path="Unity.Multiplayer.Tools.Adapters.Ngo1.csproj" />
   <Project Path="Unity.ProBuilder.Stl.csproj" />
   <Project Path="Unity.Multiplayer.Tools.NetStatsReporting.csproj" />
+  <Project Path="Meta.XR.Editor.EditorCoroutine.csproj" />
   <Project Path="Unity.VisualScripting.SettingsProvider.Editor.csproj" />
   <Project Path="Unity.Services.Core.Scheduler.csproj" />
   <Project Path="NewAssembly.csproj" />
-  <Project Path="Meta.XR.Editor.Guide.About.csproj" />
   <Project Path="Unity.Multiplayer.Tools.Adapters.Utp2.csproj" />
   <Project Path="Unity.XR.OpenXR.Features.ConformanceAutomation.csproj" />
   <Project Path="Unity.PlasticSCM.Editor.Entities.csproj" />
