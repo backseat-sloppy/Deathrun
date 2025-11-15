@@ -8,6 +8,22 @@ TagManager:
   - CinemachineTarget
   - Enemy
   - SpawnPoint
+  - QDSUIBackplateGradient
+  - QDSUIToggleButton
+  - QDSUIIcon
+  - QDSUITextSecondaryColor
+  - QDSUIBorderlessButton
+  - QDSUISharedThemeColor
+  - QDSUITooltip
+  - QDSUIToggleBorderlessButton
+  - QDSUISecondaryButton
+  - QDSUISection
+  - QDSUIAccentColor
+  - QDSUITextInputField
+  - QDSUIToggleSwitch
+  - QDSUIToggleCheckboxRadio
+  - PCSpawn
+  - ARSpawn
   layers:
   - Default
   - TransparentFX

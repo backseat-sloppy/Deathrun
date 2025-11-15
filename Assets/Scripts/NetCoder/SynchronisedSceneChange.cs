@@ -1,236 +1,142 @@
 ﻿using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.SceneManagement;
-using System.Collections.Generic;
 using System.Collections;
 
 namespace DeathrunGame
 {
     /// <summary>
     /// Manages synchronized scene transitions for all players.
-    /// Monitors a ready zone (BoxCollider trigger) and initiates scene change when all players are present.
+    /// The host/server can initiate a scene change by holding 'R' for 1 second.
     /// </summary>
-    [RequireComponent(typeof(BoxCollider))]
     public class SynchronisedSceneChange : NetworkBehaviour
     {
         [Header("Scene Settings")]
         [SerializeField] private string gameSceneName = "GameScene";
 
-        [Header("Ready Zone Settings")]
-        [SerializeField] private float readyDelay = 5f;
+        [Header("Hold-to-Start Settings")]
+        [SerializeField] private float holdDuration = 1f;
+        [SerializeField] private KeyCode startKey = KeyCode.R;
         [Tooltip("UI Text to show countdown (optional)")]
         [SerializeField] private TMPro.TextMeshProUGUI countdownText;
 
         [Header("Debug")]
         [SerializeField] private bool showDebugLogs = true;
 
-        // Track players in the ready zone
-        private HashSet<ulong> playersInZone = new HashSet<ulong>();
-        private bool isCountingDown = false;
-        private Coroutine countdownCoroutine;
+        private float holdTimer = 0f;
+        private bool isHoldingKey = false;
+        private bool isTransitioning = false;
 
         // Network variable to sync countdown state
-        private NetworkVariable<bool> isReadyCountdownActive = new NetworkVariable<bool>(
+        private NetworkVariable<bool> isCountdownActive = new NetworkVariable<bool>(
             false,
             NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Server
         );
 
-        private NetworkVariable<float> countdownTimer = new NetworkVariable<float>(
+        private NetworkVariable<float> countdownProgress = new NetworkVariable<float>(
             0f,
             NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Server
         );
 
-        private BoxCollider readyZone;
-
-        private void Awake()
-        {
-            readyZone = GetComponent<BoxCollider>();
-            readyZone.isTrigger = true;
-        }
-
         public override void OnNetworkSpawn()
         {
+            isCountdownActive.OnValueChanged += OnCountdownStateChanged;
+            countdownProgress.OnValueChanged += OnCountdownProgressChanged;
+
             if (IsServer)
             {
-                NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
-                NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
-                Log("🎮 Server: SynchronisedSceneChange initialized");
+                Log("🎮 Server: SynchronisedSceneChange initialized (Hold 'R' to start)");
             }
-
-            isReadyCountdownActive.OnValueChanged += OnCountdownStateChanged;
-            countdownTimer.OnValueChanged += OnCountdownTimerChanged;
         }
 
         public override void OnNetworkDespawn()
         {
-            if (IsServer)
-            {
-                NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
-                NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnected;
-            }
-
-            isReadyCountdownActive.OnValueChanged -= OnCountdownStateChanged;
-            countdownTimer.OnValueChanged -= OnCountdownTimerChanged;
+            isCountdownActive.OnValueChanged -= OnCountdownStateChanged;
+            countdownProgress.OnValueChanged -= OnCountdownProgressChanged;
         }
 
-        private void OnClientConnected(ulong clientId)
+        private void Update()
         {
-            Log($"🔌 Client {clientId} connected");
-            CheckReadyStatus();
-        }
-
-        private void OnClientDisconnected(ulong clientId)
-        {
-            Log($"🔌 Client {clientId} disconnected");
-
-            if (playersInZone.Contains(clientId))
+            // Only the server/host can initiate scene changes
+            if (!IsServer)
             {
-                playersInZone.Remove(clientId);
-                Log($"👋 Client {clientId} removed from ready zone");
+                return;
             }
 
-            if (isCountingDown)
+            // Prevent interaction if already transitioning
+            if (isTransitioning)
             {
-                CancelCountdown();
+                return;
             }
-        }
 
-        private void OnTriggerEnter(Collider other)
-        {
-            if (!IsServer) return;
-
-            var networkObject = other.GetComponentInParent<NetworkObject>();
-            if (networkObject != null && networkObject.IsPlayerObject)
+            // Check if the key is being held down
+            if (Input.GetKey(startKey))
             {
-                ulong clientId = networkObject.OwnerClientId;
-
-                if (playersInZone.Add(clientId))
+                if (!isHoldingKey)
                 {
-                    Log($"✅ Player {clientId} entered ready zone ({playersInZone.Count}/{GetConnectedPlayerCount()})");
-                    CheckReadyStatus();
-                }
-            }
-        }
-
-        private void OnTriggerExit(Collider other)
-        {
-            if (!IsServer) return;
-
-            var networkObject = other.GetComponentInParent<NetworkObject>();
-            if (networkObject != null && networkObject.IsPlayerObject)
-            {
-                ulong clientId = networkObject.OwnerClientId;
-
-                if (playersInZone.Remove(clientId))
-                {
-                    Log($"❌ Player {clientId} left ready zone ({playersInZone.Count}/{GetConnectedPlayerCount()})");
-
-                    if (isCountingDown)
-                    {
-                        CancelCountdown();
-                    }
-                }
-            }
-        }
-
-        private void CheckReadyStatus()
-        {
-            if (!IsServer) return;
-
-            int connectedPlayers = GetConnectedPlayerCount();
-            int playersReady = playersInZone.Count;
-
-            if (connectedPlayers > 0 && playersReady == connectedPlayers && !isCountingDown)
-            {
-                Log($"🎉 All {connectedPlayers} players are ready! Starting countdown...");
-                StartCountdown();
-            }
-        }
-
-        private int GetConnectedPlayerCount()
-        {
-            return NetworkManager.Singleton.ConnectedClientsList.Count;
-        }
-
-        private void StartCountdown()
-        {
-            if (isCountingDown) return;
-
-            isCountingDown = true;
-            isReadyCountdownActive.Value = true;
-            countdownTimer.Value = readyDelay;
-
-            if (countdownCoroutine != null)
-            {
-                StopCoroutine(countdownCoroutine);
-            }
-
-            countdownCoroutine = StartCoroutine(CountdownRoutine());
-        }
-
-        private void CancelCountdown()
-        {
-            if (!isCountingDown) return;
-
-            Log("⏸️ Countdown cancelled - player left ready zone");
-
-            isCountingDown = false;
-            isReadyCountdownActive.Value = false;
-            countdownTimer.Value = 0f;
-
-            if (countdownCoroutine != null)
-            {
-                StopCoroutine(countdownCoroutine);
-                countdownCoroutine = null;
-            }
-
-            NotifyCountdownCancelledClientRpc();
-        }
-
-        private IEnumerator CountdownRoutine()
-        {
-            float timeRemaining = readyDelay;
-
-            while (timeRemaining > 0f)
-            {
-                countdownTimer.Value = timeRemaining;
-
-                if (playersInZone.Count != GetConnectedPlayerCount())
-                {
-                    CancelCountdown();
-                    yield break;
+                    isHoldingKey = true;
+                    holdTimer = 0f;
+                    isCountdownActive.Value = true;
+                    Log($"🎮 Host started holding '{startKey}' key");
                 }
 
-                yield return new WaitForSeconds(0.1f);
-                timeRemaining -= 0.1f;
-            }
+                holdTimer += Time.deltaTime;
+                countdownProgress.Value = Mathf.Clamp01(holdTimer / holdDuration);
 
-            countdownTimer.Value = 0f;
-            Log("🚀 Countdown complete! Loading game scene...");
+                // Check if held long enough
+                if (holdTimer >= holdDuration)
+                {
+                    InitiateSceneChange();
+                }
+            }
+            else if (isHoldingKey)
+            {
+                // Key was released before duration completed
+                CancelHold();
+            }
+        }
+
+        private void InitiateSceneChange()
+        {
+            if (isTransitioning) return;
+
+            isTransitioning = true;
+            isCountdownActive.Value = false;
+            countdownProgress.Value = 1f;
+
+            Log($"🚀 Host completed hold! Loading scene: {gameSceneName}");
             LoadGameScene();
+        }
+
+        private void CancelHold()
+        {
+            isHoldingKey = false;
+            holdTimer = 0f;
+            isCountdownActive.Value = false;
+            countdownProgress.Value = 0f;
+
+            Log("⏸️ Hold cancelled - key released");
+            NotifyHoldCancelledClientRpc();
         }
 
         private void LoadGameScene()
         {
             if (!IsServer) return;
 
-            isCountingDown = false;
-            isReadyCountdownActive.Value = false;
-
             Log($"🎮 Loading scene: {gameSceneName}");
             
-            // Just load the scene - repositioning is handled by PlayerRepositionManager in the new scene
+            // Load the scene - repositioning is handled by PlayerRepositionManager in the new scene
             NetworkManager.SceneManager.LoadScene(gameSceneName, LoadSceneMode.Single);
         }
 
         [ClientRpc]
-        private void NotifyCountdownCancelledClientRpc()
+        private void NotifyHoldCancelledClientRpc()
         {
             if (countdownText != null)
             {
-                countdownText.text = "Player left ready zone - Countdown cancelled!";
+                countdownText.text = "Host released key - Scene change cancelled!";
                 StartCoroutine(ClearCountdownTextAfterDelay(2f));
             }
         }
@@ -239,20 +145,25 @@ namespace DeathrunGame
         {
             if (current)
             {
-                Log("⏰ Countdown started on client");
+                Log("⏰ Host started holding key");
             }
             else
             {
-                Log("⏹️ Countdown stopped on client");
+                Log("⏹️ Hold stopped");
             }
         }
 
-        private void OnCountdownTimerChanged(float previous, float current)
+        private void OnCountdownProgressChanged(float previous, float current)
         {
-            if (countdownText != null && isReadyCountdownActive.Value)
+            if (countdownText != null && isCountdownActive.Value)
             {
-                int seconds = Mathf.CeilToInt(current);
-                countdownText.text = $"Starting in {seconds}...";
+                float timeRemaining = holdDuration * (1f - current);
+                countdownText.text = $"Host loading scene: {timeRemaining:F1}s";
+            }
+            else if (countdownText != null && !isCountdownActive.Value && current > 0f && current < 1f)
+            {
+                // Hold was cancelled mid-way
+                countdownText.text = "";
             }
         }
 
@@ -278,23 +189,6 @@ namespace DeathrunGame
         private void LogWarning(string message)
         {
             Debug.LogWarning($"[SceneChange] {message}");
-        }
-
-        #endregion
-
-        #region Debug Gizmos
-
-        private void OnDrawGizmos()
-        {
-            if (readyZone != null || TryGetComponent(out readyZone))
-            {
-                Gizmos.color = new Color(0f, 1f, 0f, 0.3f);
-                Gizmos.matrix = transform.localToWorldMatrix;
-                Gizmos.DrawCube(readyZone.center, readyZone.size);
-
-                Gizmos.color = Color.green;
-                Gizmos.DrawWireCube(readyZone.center, readyZone.size);
-            }
         }
 
         #endregion
