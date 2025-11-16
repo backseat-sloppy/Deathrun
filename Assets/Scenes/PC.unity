@@ -24241,6 +24241,10 @@ PrefabInstance:
       value: 41.2
       objectReference: {fileID: 0}
     - target: {fileID: 7745423967092849808, guid: 70fe337f364eb1849be6b7d5b4e48f87, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -36.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7745423967092849808, guid: 70fe337f364eb1849be6b7d5b4e48f87, type: 3}
       propertyPath: m_LocalPosition.z
       value: 31.1
       objectReference: {fileID: 0}
@@ -29312,6 +29316,10 @@ PrefabInstance:
       propertyPath: InScenePlacedSourceGlobalObjectIdHash
       value: 1523752953
       objectReference: {fileID: 0}
+    - target: {fileID: 5990671367578522166, guid: f7233e3fa6e406446be0b79445e9765a, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6257103014002936786, guid: f7233e3fa6e406446be0b79445e9765a, type: 3}
       propertyPath: _syntheticHand
       value: 
@@ -29324,6 +29332,10 @@ PrefabInstance:
       propertyPath: _handSkeletonProvider
       value: 
       objectReference: {fileID: 511204247}
+    - target: {fileID: 8514143955894989643, guid: f7233e3fa6e406446be0b79445e9765a, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9072090153562617722, guid: f7233e3fa6e406446be0b79445e9765a, type: 3}
       propertyPath: m_LocalScale.x
       value: 31.662
@@ -29379,6 +29391,10 @@ PrefabInstance:
     - target: {fileID: 9072090153562712922, guid: f7233e3fa6e406446be0b79445e9765a, type: 3}
       propertyPath: m_Name
       value: OVRCameraRig Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 9072090153562712922, guid: f7233e3fa6e406446be0b79445e9765a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
