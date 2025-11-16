@@ -71,5 +71,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  PrefabToSpawnP: {fileID: 4639992981897814336, guid: 66547290c08ae4b17ba39c0496fbc53b, type: 3}
-  PrefabToSpawnA: {fileID: 9072090153562712922, guid: f7233e3fa6e406446be0b79445e9765a, type: 3}
+  PC: {fileID: 4639992981897814336, guid: 66547290c08ae4b17ba39c0496fbc53b, type: 3}
+  AR: {fileID: 9072090153562712922, guid: f7233e3fa6e406446be0b79445e9765a, type: 3}
+  pcSpawnPointTag: PCSpawn
+  arSpawnPointTag: ARSpawn
+  removeSpawnPointAfterUse: 1
+  autoSpawnDelay: 10
