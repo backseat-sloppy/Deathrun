@@ -1413,7 +1413,7 @@ MonoBehaviour:
   jumpStateDuration: 0.2
   fallVelocityThreshold: -0.5
   cameraController: {fileID: 0}
-  stateStatus: {fileID: 0}
+  stateStatus: {fileID: 35442470440139780}
 --- !u!114 &5225298580269726338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1441,7 +1441,7 @@ MonoBehaviour:
   offsetTransitionStartAngle: -60
   offsetTransitionEndAngle: -110
   characterBody: {fileID: 4008085981596527460}
-  rotationSmoothTime: 0.12
+  rotationSmoothTime: 31.6
 --- !u!114 &7495306498992352935
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6445,12 +6445,14 @@ MonoBehaviour:
   leftFootTransform: {fileID: 1343392729745555153}
   rightFootTransform: {fileID: 5093848384981344653}
   raycastDistance: 0.07
+  raycastStartOffset: 0.2
   groundLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
   landingVelocityThreshold: 0.5
   footstepCooldown: 0.2
   footHeightThreshold: 0.2
+  surfaceRtpcName: SurfaceType
 --- !u!1 &4668586715627186204
 GameObject:
   m_ObjectHideFlags: 0
