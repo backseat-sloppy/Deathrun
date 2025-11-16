@@ -179,7 +179,17 @@ private void FixedUpdate()
         hasSpawnedAvatar = true;
         
         // 6. Disable the Spawner on the owner's client
-        DisableSpawnerClientRpc(new ClientRpcParams { TargetClientIds = new ulong[] { OwnerClientId } });
+        
+        // FIX: Construct ClientRpcParams using ClientRpcSendParams for targeting
+        ClientRpcParams clientRpcParams = new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams
+            {
+                TargetClientIds = new ulong[] { OwnerClientId }
+            }
+        };
+        
+        DisableSpawnerClientRpc(clientRpcParams);
     }
     
     /// <summary>

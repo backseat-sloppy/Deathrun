@@ -10253,7 +10253,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00e176ee4ef82ca42ae4326261653ed5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxPlayers: 2
+  maxPlayers: 5
   maxARPlayers: 1
   lobbyHeartbeatInterval: 15
   lobbyPollInterval: 1.5
@@ -10290,7 +10290,7 @@ MonoBehaviour:
   autoCreateLobby: 1
   autoCreateDelay: 5
   autoJoinRetryDelay: 10
-  minPlayersToStart: 1
+  minPlayersToStart: 2
   startGameCountdown: 5
 --- !u!114 &1947660911
 MonoBehaviour:
