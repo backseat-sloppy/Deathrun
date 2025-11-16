@@ -1441,7 +1441,7 @@ MonoBehaviour:
   offsetTransitionStartAngle: -60
   offsetTransitionEndAngle: -110
   characterBody: {fileID: 4008085981596527460}
-  rotationSmoothTime: 31.6
+  rotationSmoothTime: 0.12
 --- !u!114 &7495306498992352935
 MonoBehaviour:
   m_ObjectHideFlags: 0
