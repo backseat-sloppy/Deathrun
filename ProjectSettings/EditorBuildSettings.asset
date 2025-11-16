@@ -8,16 +8,16 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Premade Shit/OutdoorsScene.unity
     guid: 8124e5870f4fd4c779e7a5f994e84ad1
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Bootstrab.unity
     guid: 81aa0d9f8b8efc141a99641c2c3c8eba
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/VR.unity
     guid: 40f94fcfb1392ca42929112d50d2056b
   - enabled: 0
     path: Assets/Scenes/Simonas.unity
     guid: 78b2e3286a942864ba36ea61a717df7b
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/PC.unity
     guid: 74284ac62ba9d6345b06a247548df4b4
   m_configObjects:
