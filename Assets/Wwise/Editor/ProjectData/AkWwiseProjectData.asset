@@ -38,7 +38,7 @@ MonoBehaviour:
     ParentPath: Master-Mixer Hierarchy/Default Work Unit
     guid: ff4758e9637e664ab03e852280bc33a9
     GuidInternal: 
-    m_lastTime: -8584391734929334340
+    m_lastTime: -8584382968953396716
     List:
     - name: Amb_Indoor
       guid: 080ed43e3af0404daa8f215e408c6b04
@@ -271,7 +271,7 @@ MonoBehaviour:
     ParentPath: SoundBanks/Default Work Unit
     guid: 857db305ca908b428ab306e5a61125cd
     GuidInternal: 
-    m_lastTime: -8584391734925712820
+    m_lastTime: -8584382968949738484
     List:
     - name: Main
       guid: 84dcec481494b546a45dddd3b044c237
@@ -299,7 +299,7 @@ MonoBehaviour:
     ParentPath: Events/Default Work Unit
     guid: 5a9558895ec0d449b8cc7211fe588746
     GuidInternal: 
-    m_lastTime: -8584391734929663454
+    m_lastTime: -8584382968953878571
     List: []
   - PhysicalPath: Events/EV_Player.wwu
     PathAndIcons:
@@ -315,8 +315,28 @@ MonoBehaviour:
     ParentPath: Events/Default Work Unit/EV_Player
     guid: c95c277cad228148b391ffa0004c77ee
     GuidInternal: 
-    m_lastTime: -8584391734929661230
+    m_lastTime: -8584382968953872164
     List:
+    - name: Plater_Swing_Play
+      guid: 1edd3579b846d24cb7717c0935ac13de
+      id: 2332195469
+      PathAndIcons:
+      - ElementName: Events
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: 5a9558895ec0d449b8cc7211fe588746
+      - ElementName: EV_Player
+        ObjectType: 12
+        guid: c95c277cad228148b391ffa0004c77ee
+      - ElementName: Plater_Swing_Play
+        ObjectType: 3
+        guid: 1edd3579b846d24cb7717c0935ac13de
+      Path: Events/Default Work Unit/EV_Player/Plater_Swing_Play
+      maxAttenuation: 0
+      maxDuration: 0.37883332
+      minDuration: 0.37883332
     - name: Player_Death_Play
       guid: 53c73228572d864f8dcaf87a3e308fdd
       id: 2348472398
@@ -335,8 +355,8 @@ MonoBehaviour:
         guid: 53c73228572d864f8dcaf87a3e308fdd
       Path: Events/Default Work Unit/EV_Player/Player_Death_Play
       maxAttenuation: 0
-      maxDuration: -1
-      minDuration: -1
+      maxDuration: 1.1607866
+      minDuration: 1.1607866
     - name: Player_Footstep_Play
       guid: 5b3b4107db817a4e97d81b908224e077
       id: 2241160260
@@ -355,8 +375,8 @@ MonoBehaviour:
         guid: 5b3b4107db817a4e97d81b908224e077
       Path: Events/Default Work Unit/EV_Player/Player_Footstep_Play
       maxAttenuation: 0
-      maxDuration: -1
-      minDuration: -1
+      maxDuration: 0.6779375
+      minDuration: 0.46091667
     - name: Player_Jump_Play
       guid: 964a85b2815f324bbe05fcb85cc18df7
       id: 391280646
@@ -375,8 +395,8 @@ MonoBehaviour:
         guid: 964a85b2815f324bbe05fcb85cc18df7
       Path: Events/Default Work Unit/EV_Player/Player_Jump_Play
       maxAttenuation: 0
-      maxDuration: -1
-      minDuration: -1
+      maxDuration: 0.949
+      minDuration: 0.3713125
     - name: Player_Land_Play
       guid: 6d436332d1e3ee46b1335a70a8a043f1
       id: 581954083
@@ -395,8 +415,8 @@ MonoBehaviour:
         guid: 6d436332d1e3ee46b1335a70a8a043f1
       Path: Events/Default Work Unit/EV_Player/Player_Land_Play
       maxAttenuation: 0
-      maxDuration: -1
-      minDuration: -1
+      maxDuration: 0.31327224
+      minDuration: 0.21602394
   RtpcWwu:
   - PhysicalPath: Game Parameters/Default Work Unit.wwu
     PathAndIcons:
@@ -409,7 +429,7 @@ MonoBehaviour:
     ParentPath: Game Parameters/Default Work Unit
     guid: a7b484bdc26ec846b9011261f2cb616c
     GuidInternal: 
-    m_lastTime: -8584391734929659224
+    m_lastTime: -8584382968953864202
     List:
     - name: GP_DangerProximity
       guid: a8546ff92787a14281aa416691453223
@@ -465,7 +485,7 @@ MonoBehaviour:
     ParentPath: States/Default Work Unit
     guid: 01a9f951f32d3d42bb462d70eb6b1199
     GuidInternal: 
-    m_lastTime: -8584391734925707688
+    m_lastTime: -8584382968949734257
     List:
     - name: Focus
       guid: 5372c95bea0f5e4ebe4650fa912d96fd
@@ -659,7 +679,7 @@ MonoBehaviour:
     ParentPath: Switches/Default Work Unit
     guid: 0f026608c3535f469e290ea0237f75d0
     GuidInternal: 
-    m_lastTime: -8584391734925703263
+    m_lastTime: -8584382968949719246
     List:
     - name: MovementState
       guid: 6ee329331759ce40bded7a63cbfce019
@@ -855,9 +875,9 @@ MonoBehaviour:
     GuidInternal: 
     m_lastTime: -8584391877870676267
     List: []
-  ExpandedFileSystemItemIds: 
-  ExpandedWaapiItemIds: 
+  ExpandedFileSystemItemIds: 0600000007000000080000000c0000000d000000
+  ExpandedWaapiItemIds: 0600000007000000080000000c0000000d000000
   AutoSyncSelection: 0
   autoPopulateEnabled: 1
-  currentDataSource: 0
+  currentDataSource: 1
   CurrentPluginConfig: 

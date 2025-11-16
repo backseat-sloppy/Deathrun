@@ -1169,6 +1169,8 @@ GameObject:
   - component: {fileID: 2636016424168098404}
   - component: {fileID: 5148501792318804669}
   - component: {fileID: 5925822859263606854}
+  - component: {fileID: 8041006399085367941}
+  - component: {fileID: 9105234382997235252}
   m_Layer: 0
   m_Name: GoblinMode
   m_TagString: Player
@@ -6369,6 +6371,64 @@ MonoBehaviour:
   fallEmitter: {fileID: 2636016424168098404}
   controller: {fileID: 0}
   fallThreshold: -2
+--- !u!114 &8041006399085367941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4639992981897814336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfbf73d899a4642d4beeb42588574161, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  deathEvent:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 11400000, guid: b1160e74c101d4d079b54e95e1c2e3f0, type: 2}
+  jumpEvent:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 11400000, guid: 0991f3d6db6ab44e79f6ea902ea33811, type: 2}
+  landEvent:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 11400000, guid: 0cb073139a3c7425ab918aa6ef2ab870, type: 2}
+  swingEvent:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 11400000, guid: d22eac12a8c584c9ba2fe9e73b34b451, type: 2}
+  footstepEvent:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 11400000, guid: 8e5195b988f034d87bd2eeb5ecd93ba2, type: 2}
+  wwiseEmitter: {fileID: 4639992981897814336}
+--- !u!114 &9105234382997235252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4639992981897814336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51a1903f4d4fd470aacab82142c0da1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_listeners:
+    initialListenerList: []
+    useDefaultListeners: 1
+  isEnvironmentAware: 1
+  isStaticObject: 0
+  usePositionOffsetData: 0
+  m_positionOffsetData:
+    KeepMe: 0
+    positionOffset: {x: 0, y: 0, z: 0}
+  scalingFactor: 1
+  m_posOffsetData: {fileID: 0}
+  listenerMask: 1
 --- !u!1 &4668586715627186204
 GameObject:
   m_ObjectHideFlags: 0

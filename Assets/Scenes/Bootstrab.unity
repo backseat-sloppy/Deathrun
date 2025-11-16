@@ -3584,6 +3584,7 @@ GameObject:
   m_Component:
   - component: {fileID: 668422882}
   - component: {fileID: 668422881}
+  - component: {fileID: 668422883}
   m_Layer: 0
   m_Name: WwiseGlobal
   m_TagString: Untagged
@@ -3631,6 +3632,31 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &668422883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 668422880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd5164e658cff4a6bb0c8b4cb3ea46e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggerList: f7e1664c
+  useOtherObject: 0
+  data:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 11400000, guid: 4d6c455d0b6764635aa293d48e054421, type: 2}
+  decodeBank: 0
+  overrideLoadSetting: 0
+  loadAsynchronous: 0
+  saveDecodedBank: 0
+  unloadTriggerList: 958ca0ea
+  bankNameInternal: 
+  valueGuidInternal: 
 --- !u!1 &669018044
 GameObject:
   m_ObjectHideFlags: 0
@@ -4601,8 +4627,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 791754286}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 406.22385, y: 1.396, z: -26.163107}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 5.496, z: -4.65}
   m_LocalScale: {x: 2.024463, y: 0.93812, z: 0.93812}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10215,10 +10241,10 @@ MonoBehaviour:
   errorMessageText: {fileID: 2084393816}
   closeErrorButton: {fileID: 486577877}
   loadingText: {fileID: 2004392759}
-  autoCreateLobby: 0
+  autoCreateLobby: 1
   autoCreateDelay: 5
   autoJoinRetryDelay: 10
-  minPlayersToStart: 2
+  minPlayersToStart: 1
   startGameCountdown: 5
 --- !u!1 &1971541716
 GameObject:

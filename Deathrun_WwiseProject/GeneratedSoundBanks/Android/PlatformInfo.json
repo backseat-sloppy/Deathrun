@@ -10,7 +10,7 @@
    "SourceFilesRoot": "../../.cache",
    "SoundBanksRoot": ".",
    "ExternalSourcesInputFile": "",
-   "ExternalSourcesOutputRoot": "."
+   "ExternalSourcesOutputRoot": "../../../Assets/GeneratedSoundBanks/Android"
   },
   "DefaultAlign": "16",
   "Settings": {
@@ -33,6 +33,6 @@
    "PrintObjectPath": "true",
    "PrintObjectColor": "true"
   },
-  "FileHash": "{B5BDA37E-8AB2-E2FE-CA14-3781F62DE2C2}"
+  "FileHash": "{0748D85E-60FB-86B0-1D80-DAC01F6B5C82}"
  }
 }
