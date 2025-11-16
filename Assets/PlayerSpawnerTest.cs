@@ -12,8 +12,8 @@ public class PlayerSpawnerTest : NetworkBehaviour
     // IMPORTANT: Both must have a NetworkObject component and be registered in 
     // the NetworkManager's Network Prefabs List.
     [Header("Spawnable Prefabs")]
-    [SerializeField] private GameObject PrefabToSpawnP; // Index 0: E.g., The PC Player Avatar
-    [SerializeField] private GameObject PrefabToSpawnA; // Index 1: E.g., The AR Player Avatar
+    [SerializeField] private GameObject PC; // Index 0: E.g., The PC Player Avatar
+    [SerializeField] private GameObject AR; // Index 1: E.g., The AR Player Avatar
 
     [Header("Spawn Settings")]
     [SerializeField] private string pcSpawnPointTag = "PCSpawn";
@@ -21,7 +21,7 @@ public class PlayerSpawnerTest : NetworkBehaviour
     [SerializeField] private bool removeSpawnPointAfterUse = true;
 
     [Header("Auto Spawn")]
-    [SerializeField] private float autoSpawnDelay = 10f;
+    [SerializeField] private float autoSpawnDelay = 30f;
 
     private bool hasSpawnedAvatar = false;
     private float autoSpawnTimer = 0f;
@@ -31,7 +31,7 @@ public class PlayerSpawnerTest : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         // Initialize the array for easy lookup
-        spawnablePrefabs = new GameObject[] { PrefabToSpawnP, PrefabToSpawnA };
+        spawnablePrefabs = new GameObject[] { PC, AR};
 
         // 1. Initial Spawning (Runs only on the Owner's client)
         if (IsOwner)
