@@ -24,6 +24,7 @@ TagManager:
   - QDSUIToggleCheckboxRadio
   - PCSpawn
   - ARSpawn
+  - Hand
   layers:
   - Default
   - TransparentFX
