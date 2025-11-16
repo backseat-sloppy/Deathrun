@@ -18786,7 +18786,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6526784175123556353}
-  - component: {fileID: 4101057575533755854}
   m_Layer: 0
   m_Name: WwiseGlobal
   m_TagString: Untagged
@@ -18809,31 +18808,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3901823041308063136}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4101057575533755854
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2160538224875347340}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c694f73caa7c5443ba9c4e76e63ef39c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  InitializationSettings: {fileID: 11400000, guid: 75f1856347a5946edb3bb8773f2c9a4b, type: 2}
-  basePath: 
-  language: 
-  defaultPoolSize: 0
-  lowerPoolSize: 0
-  streamingPoolSize: 0
-  memoryCutoffThreshold: 0
-  monitorPoolSize: 0
-  monitorQueuePoolSize: 0
-  callbackManagerBufferSize: 0
-  spatialAudioPoolSize: 0
-  maxSoundPropagationDepth: 0
-  engineLogging: 0
 --- !u!1 &2173799142410900819
 GameObject:
   m_ObjectHideFlags: 0
@@ -35458,10 +35432,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  totalExpectedPlayers: 1
   parentPlayersToBoat: 0
   boatDeck: {fileID: 4547447673298639489}
   showDebugMessages: 1
+  showDetailedDebug: 0
 --- !u!1 &4483181105201620478
 GameObject:
   m_ObjectHideFlags: 0
@@ -61233,6 +61207,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   swingAngle: 45
   swingSpeed: 2
+  startActive: 0
 --- !u!1 &7189262854835952854
 GameObject:
   m_ObjectHideFlags: 0
@@ -71367,7 +71342,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &844612196116283554
 Transform:
   m_ObjectHideFlags: 0

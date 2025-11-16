@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 /// <summary>
 /// Ultra-simple AR placement for Quest 2.
-/// Point anywhere and press trigger to place. No surface detection needed.
+/// Spawns prefab directly at right hand position on trigger press.
 /// </summary>
 public class ARQuest2 : MonoBehaviour
 {
@@ -12,12 +12,25 @@ public class ARQuest2 : MonoBehaviour
     [Tooltip("The prefab to place in AR")]
     [SerializeField] private GameObject prefabToPlace;
     
-    [Tooltip("Scale of the placed prefab")]
-    [SerializeField] private Vector3 prefabScale = new Vector3(0.1f, 0.1f, 0.1f);
+    [Tooltip("Scale multiplier for the prefab (1 = original size)")]
+    [SerializeField] private float prefabScaleMultiplier = 1f;
     
-    [Header("Placement Settings")]
-    [Tooltip("Distance from controller to place the prefab")]
-    [SerializeField] private float placementDistance = 2f;
+    [Header("Player Scale Settings")]
+    [Tooltip("Scale the player/room to be this many times larger than normal")]
+    [SerializeField] private float playerScaleMultiplier = 10f;
+    
+    [Tooltip("Reference to XR Origin (auto-found if null)")]
+    [SerializeField] private Transform xrOrigin;
+    
+    [Tooltip("Reference to TrackingSpace (auto-found if null)")]
+    [SerializeField] private Transform trackingSpace;
+    
+    [Tooltip("Apply player scale immediately on Start (vs on placement)")]
+    [SerializeField] private bool scalePlayerOnStart = true;
+    
+    [Header("Spawn Settings")]
+    [Tooltip("Spawn offset from controller (local space)")]
+    [SerializeField] private Vector3 spawnOffset = Vector3.zero;
     
     [Header("Input")]
     [Tooltip("Use right controller (uncheck for left)")]
@@ -30,6 +43,7 @@ public class ARQuest2 : MonoBehaviour
     private GameObject placedObject;
     private GameObject previewObject;
     private bool hasPlaced = false;
+    private Vector3 originalTrackingSpaceScale;
     
     // Controller tracking
     private Vector3 controllerPosition;
@@ -49,10 +63,73 @@ public class ARQuest2 : MonoBehaviour
             return;
         }
         
+        // Find XR Origin if not assigned
+        if (xrOrigin == null)
+        {
+            // Try common names
+            GameObject xrRig = GameObject.Find("XR Origin") ?? GameObject.Find("XR Rig") ?? GameObject.Find("OVRCameraRig") ?? GameObject.Find("AR Session Origin");
+            if (xrRig != null)
+            {
+                xrOrigin = xrRig.transform;
+                Log($"Found XR Origin: {xrRig.name}");
+            }
+            else
+            {
+                // Last resort: find object with this script's parent
+                xrOrigin = transform.parent;
+                if (xrOrigin != null)
+                {
+                    Log($"Using parent as XR Origin: {xrOrigin.name}");
+                }
+                else
+                {
+                    Debug.LogWarning("[ARQuest2] XR Origin not found. Player scale will not be adjusted.");
+                }
+            }
+        }
+        
+        // Find TrackingSpace under XR Origin
+        if (trackingSpace == null && xrOrigin != null)
+        {
+            // Look for TrackingSpace child (case-insensitive search)
+            foreach (Transform child in xrOrigin)
+            {
+                if (child.name.ToLower().Contains("tracking"))
+                {
+                    trackingSpace = child;
+                    Log($"Found TrackingSpace: {child.name}");
+                    break;
+                }
+            }
+            
+            // If not found, warn user
+            if (trackingSpace == null)
+            {
+                Debug.LogWarning("[ARQuest2] TrackingSpace not found under XR Origin! Please assign it manually in the Inspector.");
+                Debug.LogWarning("[ARQuest2] Expected hierarchy: XR Origin > TrackingSpace");
+            }
+        }
+        
+        // Store original scale
+        if (trackingSpace != null)
+        {
+            originalTrackingSpaceScale = trackingSpace.localScale;
+            
+            // Apply player scale immediately if requested
+            if (scalePlayerOnStart)
+            {
+                ScalePlayer();
+            }
+        }
+        else
+        {
+            Debug.LogError("[ARQuest2] TrackingSpace is required for room-scale adjustment!");
+        }
+        
         // Create preview
         CreatePreview();
         
-        Log("✅ Ready! Point and press trigger to place.");
+        Log($"✅ Ready! Press trigger to spawn at hand position. Player scale: {playerScaleMultiplier}x, Prefab scale: {prefabScaleMultiplier}x");
     }
     
     private void Update()
@@ -70,21 +147,21 @@ public class ARQuest2 : MonoBehaviour
             return;
         }
         
-        // Calculate placement position (always in front of controller)
-        Vector3 placePosition = controllerPosition + (controllerRotation * Vector3.forward) * placementDistance;
+        // Calculate spawn position (directly at controller with optional offset)
+        Vector3 spawnPosition = controllerPosition + (controllerRotation * spawnOffset);
         
-        // Update preview position
+        // Update preview position to show where it will spawn
         if (previewObject != null)
         {
             previewObject.SetActive(true);
-            previewObject.transform.position = placePosition;
+            previewObject.transform.position = spawnPosition;
             previewObject.transform.rotation = Quaternion.identity; // Always upright
         }
         
         // Check for trigger press (detect button down, not hold)
         if (triggerPressed && !triggerWasPressed)
         {
-            PlacePrefab(placePosition);
+            SpawnPrefab(spawnPosition);
         }
         
         triggerWasPressed = triggerPressed;
@@ -136,19 +213,25 @@ public class ARQuest2 : MonoBehaviour
     }
     
     /// <summary>
-    /// Places the prefab
+    /// Spawns the prefab directly at controller position
     /// </summary>
-    private void PlacePrefab(Vector3 position)
+    private void SpawnPrefab(Vector3 position)
     {
         if (hasPlaced) return;
         
-        // Create the object
+        // Create the object at 1:1 scale directly at hand position
         placedObject = Instantiate(prefabToPlace, position, Quaternion.identity);
-        placedObject.transform.localScale = prefabScale;
+        placedObject.transform.localScale = Vector3.one * prefabScaleMultiplier;
         
         hasPlaced = true;
         
-        Log($"✅ Placed at {position}");
+        // Scale player if not already done
+        if (!scalePlayerOnStart && trackingSpace != null)
+        {
+            ScalePlayer();
+        }
+        
+        Log($"✅ Spawned at hand position {position} with scale {prefabScaleMultiplier}x");
         
         // Hide preview
         if (previewObject != null)
@@ -158,13 +241,31 @@ public class ARQuest2 : MonoBehaviour
     }
     
     /// <summary>
-    /// Creates preview object
+    /// Scales the TrackingSpace to make player larger AND scale room-scale tracking
+    /// </summary>
+    private void ScalePlayer()
+    {
+        if (trackingSpace == null)
+        {
+            Debug.LogError("[ARQuest2] Cannot scale player - TrackingSpace is null!");
+            return;
+        }
+        
+        // Scale the TrackingSpace to affect both visual scale AND physical tracking
+        trackingSpace.localScale = originalTrackingSpaceScale * playerScaleMultiplier;
+        
+        Log($"🔍 Scaled TrackingSpace to {playerScaleMultiplier}x (Scale: {trackingSpace.localScale})");
+        Log($"   Your physical movements are now {playerScaleMultiplier}x larger in the virtual world!");
+    }
+    
+    /// <summary>
+    /// Creates preview object at 1:1 scale
     /// </summary>
     private void CreatePreview()
     {
         previewObject = Instantiate(prefabToPlace);
         previewObject.name = "PREVIEW";
-        previewObject.transform.localScale = prefabScale;
+        previewObject.transform.localScale = Vector3.one * prefabScaleMultiplier;
         
         // Make semi-transparent
         Renderer[] renderers = previewObject.GetComponentsInChildren<Renderer>();
@@ -213,8 +314,21 @@ public class ARQuest2 : MonoBehaviour
             Destroy(placedObject);
         }
         
+        // Reset TrackingSpace scale
+        if (trackingSpace != null)
+        {
+            trackingSpace.localScale = originalTrackingSpaceScale;
+        }
+        
         hasPlaced = false;
-        Log("🔄 Reset - point and press trigger to place");
+        
+        // Re-apply player scale if needed
+        if (scalePlayerOnStart && trackingSpace != null)
+        {
+            ScalePlayer();
+        }
+        
+        Log("🔄 Reset - press trigger to spawn at hand");
     }
     
     private void Log(string msg)
@@ -231,6 +345,12 @@ public class ARQuest2 : MonoBehaviour
         {
             Destroy(previewObject);
         }
+        
+        // Restore original TrackingSpace scale
+        if (trackingSpace != null)
+        {
+            trackingSpace.localScale = originalTrackingSpaceScale;
+        }
     }
     
     // Simple on-screen feedback
@@ -244,7 +364,7 @@ public class ARQuest2 : MonoBehaviour
             
             GUI.Label(
                 new Rect(Screen.width / 2 - 200, 50, 400, 50), 
-                "Point and PRESS TRIGGER to place", 
+                "Press TRIGGER to spawn at hand", 
                 style
             );
         }
