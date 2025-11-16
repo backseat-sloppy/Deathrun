@@ -76,4 +76,4 @@ MonoBehaviour:
   pcSpawnPointTag: PCSpawn
   arSpawnPointTag: ARSpawn
   removeSpawnPointAfterUse: 1
-  autoSpawnDelay: 500
+  autoSpawnDelay: 30
