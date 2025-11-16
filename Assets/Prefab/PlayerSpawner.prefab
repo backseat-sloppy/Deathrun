@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 7273863077125379471}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 211.7973, y: 137.31741, z: -101.86503}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -75,5 +75,5 @@ MonoBehaviour:
   AR: {fileID: 9072090153562712922, guid: f7233e3fa6e406446be0b79445e9765a, type: 3}
   pcSpawnPointTag: PCSpawn
   arSpawnPointTag: ARSpawn
-  removeSpawnPointAfterUse: 1
+  removeSpawnPointAfterUse: 0
   autoSpawnDelay: 500
