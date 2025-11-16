@@ -10258,7 +10258,7 @@ MonoBehaviour:
   autoCreateLobby: 1
   autoCreateDelay: 5
   autoJoinRetryDelay: 10
-  minPlayersToStart: 1
+  minPlayersToStart: 2
   startGameCountdown: 5
 --- !u!1 &1971541716
 GameObject:
