@@ -8,9 +8,7 @@ using UnityEngine;
 /// </summary>
 public class PlayerSpawnerTest : NetworkBehaviour
 {
-    // Assign these prefabs in the Inspector. 
-    // IMPORTANT: Both must have a NetworkObject component and be registered in 
-    // the NetworkManager's Network Prefabs List.
+    
     [Header("Spawnable Prefabs")]
     [SerializeField] private GameObject PC; // Index 0: E.g., The PC Player Avatar
     [SerializeField] private GameObject AR; // Index 1: E.g., The AR Player Avatar
@@ -46,7 +44,7 @@ public class PlayerSpawnerTest : NetworkBehaviour
         spawnablePrefabs = null;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         // 2. Ownership Check: Only the client who owns this object should process its input.
         if (!IsOwner)
@@ -71,10 +69,18 @@ public class PlayerSpawnerTest : NetworkBehaviour
         // Auto-spawn AR prefab after delay if no input received
         autoSpawnTimer += Time.deltaTime;
 
+  if (Input.GetKeyDown(KeyCode.K))
+        {
+            // Request the server to spawn the prefab at index 1 (AR)
+            RequestSpawnPrefabServerRpc(1, true); // true = AR Director
+            return; // Exit to prevent auto-spawn
+        }
+
         if (autoSpawnTimer >= autoSpawnDelay)
         {
             // Request the server to spawn the prefab at index 1 (AR)
             RequestSpawnPrefabServerRpc(1, true); // true = AR Director
+            return;
         }
     }
 
