@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -19,11 +20,15 @@ public class PassengerTracker : MonoBehaviour
     
     [Header("Debug")]
     [SerializeField] private bool showDebugMessages = true;
+    [SerializeField] private bool showDetailedDebug = false; // Extra debugging info
     
     private HashSet<GameObject> playersOnBoard = new HashSet<GameObject>();
     private Dictionary<GameObject, Transform> playerOriginalParents = new Dictionary<GameObject, Transform>();
     private BoxCollider triggerZone;
     private BoatController boatController;
+    
+    // Cache of all known player root objects to avoid duplicates
+    private HashSet<GameObject> knownPlayers = new HashSet<GameObject>();
     
     // Event fired when all players board
     public event System.Action OnAllPlayersBoarded;
@@ -52,16 +57,23 @@ public class PassengerTracker : MonoBehaviour
         }
     }
     
+    private void Start()
+    {
+        // Initial scan of players in the scene
+        RefreshKnownPlayers();
+    }
+    
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(playerTag))
         {
-            GameObject player = other.gameObject;
+            // Get the root player GameObject (in case collider is on a child)
+            GameObject player = GetPlayerRoot(other.gameObject);
             
             // Only track if player is alive (GameObject is active)
-            if (!player.activeInHierarchy)
+            if (player == null || !player.activeInHierarchy)
             {
-                Log($"⚠️ Ignoring dead player: {player.name}");
+                Log($"⚠️ Ignoring dead/invalid player: {other.gameObject.name}");
                 return;
             }
             
@@ -75,6 +87,12 @@ public class PassengerTracker : MonoBehaviour
                 
                 int alivePlayers = CountAlivePlayers();
                 Log($"✅ Player boarded! ({playersOnBoard.Count}/{alivePlayers} alive players)");
+                
+                if (showDetailedDebug)
+                {
+                    LogPlayerDetails();
+                }
+                
                 OnPlayerBoarded?.Invoke();
                 
                 // Check if all ALIVE players are now aboard
@@ -100,9 +118,10 @@ public class PassengerTracker : MonoBehaviour
     {
         if (other.CompareTag(playerTag))
         {
-            GameObject player = other.gameObject;
+            // Get the root player GameObject
+            GameObject player = GetPlayerRoot(other.gameObject);
             
-            if (playersOnBoard.Remove(player))
+            if (player != null && playersOnBoard.Remove(player))
             {
                 // Unparent player from boat
                 if (parentPlayersToBoat)
@@ -125,26 +144,96 @@ public class PassengerTracker : MonoBehaviour
     }
     
     /// <summary>
+    /// Gets the root player GameObject from a collider.
+    /// Handles cases where the collider is on a child object (e.g., ragdoll limbs).
+    /// </summary>
+    private GameObject GetPlayerRoot(GameObject obj)
+    {
+        // Check if this object itself has the player tag on the root
+        Transform current = obj.transform;
+        
+        while (current != null)
+        {
+            // Look for common player components to identify the root
+            if (current.GetComponent<PlayerDeathOnImpact>() != null ||
+                current.GetComponent<Rigidbody>() != null && current.CompareTag(playerTag))
+            {
+                return current.gameObject;
+            }
+            
+            current = current.parent;
+        }
+        
+        // Fallback: return the original object
+        return obj;
+    }
+    
+    /// <summary>
     /// Counts the number of alive players in the scene.
-    /// Alive = active GameObject with Player tag.
+    /// Alive = active GameObject with Player tag at the ROOT level.
     /// Dead = inactive GameObject (disabled when dead).
     /// </summary>
     private int CountAlivePlayers()
     {
-        // Find all objects with Player tag (includes inactive)
-        GameObject[] allPlayers = GameObject.FindGameObjectsWithTag(playerTag);
+        RefreshKnownPlayers();
         
         int aliveCount = 0;
-        foreach (GameObject player in allPlayers)
+        foreach (GameObject player in knownPlayers)
         {
-            // Only count if the GameObject is active (alive)
-            if (player.activeInHierarchy)
+            // Only count if the GameObject is active (alive) and not null
+            if (player != null && player.activeInHierarchy)
             {
                 aliveCount++;
             }
         }
         
+        if (showDetailedDebug)
+        {
+            Log($"🔍 Alive player count: {aliveCount} (Total known: {knownPlayers.Count})");
+        }
+        
         return aliveCount;
+    }
+    
+    /// <summary>
+    /// Refreshes the list of known players by finding root player objects.
+    /// This avoids counting ragdoll limbs or child objects as separate players.
+    /// </summary>
+    private void RefreshKnownPlayers()
+    {
+        knownPlayers.Clear();
+        
+        // Find all PlayerDeathOnImpact components (unique to each player root)
+        PlayerDeathOnImpact[] playerScripts = FindObjectsOfType<PlayerDeathOnImpact>(true); // Include inactive
+        
+        foreach (PlayerDeathOnImpact script in playerScripts)
+        {
+            if (script.CompareTag(playerTag))
+            {
+                knownPlayers.Add(script.gameObject);
+            }
+        }
+        
+        // Fallback: If no PlayerDeathOnImpact found, use FindGameObjectsWithTag
+        if (knownPlayers.Count == 0)
+        {
+            GameObject[] allTaggedObjects = GameObject.FindGameObjectsWithTag(playerTag);
+            
+            // Filter to only root-level players (ones with Rigidbody or specific components)
+            foreach (GameObject obj in allTaggedObjects)
+            {
+                if (obj.GetComponent<Rigidbody>() != null || 
+                    obj.GetComponent<PlayerDeathOnImpact>() != null)
+                {
+                    knownPlayers.Add(obj);
+                }
+            }
+        }
+        
+        if (showDetailedDebug && knownPlayers.Count > 0)
+        {
+            Log($"🔍 Known players: {string.Join(", ", knownPlayers.Select(p => p.name))}");
+        }
     }
     
     /// <summary>
@@ -215,6 +304,27 @@ public class PassengerTracker : MonoBehaviour
             // No original parent stored, unparent completely
             player.transform.SetParent(null, true);
         }
+    }
+    
+    /// <summary>
+    /// Debug helper to log all player details.
+    /// </summary>
+    private void LogPlayerDetails()
+    {
+        Log("═══ PLAYER DEBUG INFO ═══");
+        Log($"Players on board: {playersOnBoard.Count}");
+        foreach (GameObject player in playersOnBoard)
+        {
+            Log($"  - {player.name} (Active: {player.activeInHierarchy})");
+        }
+        
+        RefreshKnownPlayers();
+        Log($"Total known players: {knownPlayers.Count}");
+        foreach (GameObject player in knownPlayers)
+        {
+            Log($"  - {player.name} (Active: {player.activeInHierarchy})");
+        }
+        Log("═══════════════════════════");
     }
     
     private void OnDestroy()
