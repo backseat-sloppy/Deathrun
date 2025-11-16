@@ -10199,33 +10199,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainMenuPanel: {fileID: 54165513}
-  createLobbyPanel: {fileID: 1340492813}
-  browseLobbiesPanel: {fileID: 852768320}
   lobbyRoomPanel: {fileID: 149781999}
   errorPanel: {fileID: 628964781}
   loadingPanel: {fileID: 1305875236}
   UIVisual: {fileID: 1586270715}
   mainCamera: {fileID: 791754289}
-  createLobbyButton: {fileID: 2112703523}
-  joinLobbyButton: {fileID: 303662243}
   quickJoinButton: {fileID: 1775799180}
-  playerNameInput: {fileID: 1700363913}
-  pcRunnerButton: {fileID: 0}
-  arDirectorButton: {fileID: 0}
-  roleDisplayText: {fileID: 0}
-  selectedButtonColor: {r: 0, g: 1, b: 0, a: 1}
-  deselectedButtonColor: {r: 1, g: 1, b: 1, a: 1}
-  lobbyNameInput: {fileID: 56771165}
-  createButton: {fileID: 318327518}
-  createBackButton: {fileID: 557283415}
-  lobbyListContent: {fileID: 1689423325}
-  lobbyListItemPrefab: {fileID: 2050952836670107480, guid: 7a21cbae26e1c1f4092acc24625e330f, type: 3}
-  refreshLobbiesButton: {fileID: 1673499396}
-  joinCodeInput: {fileID: 1465152212}
-  joinByCodeButton: {fileID: 1231560933}
-  browseBackButton: {fileID: 1699987648}
-  noLobbiesText: {fileID: 464879459}
-  lobbyNameText: {fileID: 804223784}
   lobbyCodeText: {fileID: 824285092}
   copyCodeButton: {fileID: 756583435}
   playerListContent: {fileID: 708920068}
@@ -10236,6 +10215,11 @@ MonoBehaviour:
   errorMessageText: {fileID: 2084393816}
   closeErrorButton: {fileID: 486577877}
   loadingText: {fileID: 2004392759}
+  autoCreateLobby: 0
+  autoCreateDelay: 5
+  autoJoinRetryDelay: 10
+  minPlayersToStart: 2
+  startGameCountdown: 5
 --- !u!1 &1971541716
 GameObject:
   m_ObjectHideFlags: 0

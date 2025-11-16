@@ -14,8 +14,6 @@ namespace DeathrunGame
     {
         [Header("Panels")]
         [SerializeField] private GameObject mainMenuPanel;
-        [SerializeField] private GameObject createLobbyPanel;
-        [SerializeField] private GameObject browseLobbiesPanel;
         [SerializeField] private GameObject lobbyRoomPanel;
         [SerializeField] private GameObject errorPanel;
         [SerializeField] private GameObject loadingPanel;
@@ -27,34 +25,9 @@ namespace DeathrunGame
         [SerializeField] private Camera mainCamera;
 
         [Header("Main Menu")]
-        [SerializeField] private Button createLobbyButton;
-        [SerializeField] private Button joinLobbyButton;
         [SerializeField] private Button quickJoinButton;
-        [SerializeField] private TMP_InputField playerNameInput;
-
-        [Header("Role Selection")]
-        [SerializeField] private Button pcRunnerButton;
-        [SerializeField] private Button arDirectorButton;
-        [SerializeField] private TextMeshProUGUI roleDisplayText;
-        [SerializeField] private Color selectedButtonColor = Color.green;
-        [SerializeField] private Color deselectedButtonColor = Color.white;
-
-        [Header("Create Lobby")]
-        [SerializeField] private TMP_InputField lobbyNameInput;
-        [SerializeField] private Button createButton;
-        [SerializeField] private Button createBackButton;
-
-        [Header("Browse Lobbies")]
-        [SerializeField] private Transform lobbyListContent;
-        [SerializeField] private GameObject lobbyListItemPrefab;
-        [SerializeField] private Button refreshLobbiesButton;
-        [SerializeField] private TMP_InputField joinCodeInput;
-        [SerializeField] private Button joinByCodeButton;
-        [SerializeField] private Button browseBackButton;
-        [SerializeField] private TextMeshProUGUI noLobbiesText;
 
         [Header("Lobby Room")]
-        [SerializeField] private TextMeshProUGUI lobbyNameText;
         [SerializeField] private TextMeshProUGUI lobbyCodeText;
         [SerializeField] private Button copyCodeButton;
         [SerializeField] private Transform playerListContent;
@@ -70,23 +43,24 @@ namespace DeathrunGame
         [Header("Loading Panel")]
         [SerializeField] private TextMeshProUGUI loadingText;
 
-        [Header("Auto Join")]
-        [SerializeField] private float autoJoinDelay = 10f;
+        [Header("Auto Lobby")]
+        [SerializeField] private bool autoCreateLobby = false;
+        [SerializeField] private float autoCreateDelay = 5f;
+        [SerializeField] private float autoJoinRetryDelay = 10f;
+        [SerializeField] private int minPlayersToStart = 2;
+        [SerializeField] private float startGameCountdown = 5f;
 
         private bool isJoiningLobby = false;
-        private bool isARDirectorSelected = false; // Track selected role
-        private float autoJoinTimer = 0f;
-        private bool hasAutoJoined = false;
+        private float autoTimer = 0f;
+        private bool hasAttemptedAuto = false;
+        private float countdownTimer = 0f;
+        private bool isCountingDown = false;
 
         private void Start()
         {
             SetupButtons();
             SubscribeToLobbyEvents();
-            LoadPlayerName();
             ShowMainMenu();
-            
-            // Initialize role selection to PC Runner
-            SelectPCRunner();
             
             if (mainCamera != null)
             {
@@ -101,16 +75,111 @@ namespace DeathrunGame
 
         private void Update()
         {
-            // Auto-join after delay if not in lobby
-            if (!hasAutoJoined && !LobbyManager.Instance.IsInLobby())
+            HandleAutoLobby();
+            HandleAutoStart();
+        }
+
+        private void HandleAutoLobby()
+        {
+            if (!hasAttemptedAuto && !LobbyManager.Instance.IsInLobby())
             {
-                autoJoinTimer += Time.deltaTime;
+                autoTimer += Time.deltaTime;
                 
-                if (autoJoinTimer >= autoJoinDelay)
+                if (autoCreateLobby)
                 {
-                    hasAutoJoined = true;
-                    OnQuickJoin();
+                    // AR Director: Create lobby after delay
+                    if (autoTimer >= autoCreateDelay)
+                    {
+                        hasAttemptedAuto = true;
+                        AutoCreateLobby();
+                    }
                 }
+                else
+                {
+                    // PC Runner: Try to join every X seconds
+                    if (autoTimer >= autoJoinRetryDelay)
+                    {
+                        autoTimer = 0f;
+                        AutoJoinLobby();
+                    }
+                }
+            }
+        }
+
+        private void HandleAutoStart()
+        {
+            if (!LobbyManager.Instance.IsHost() || !LobbyManager.Instance.IsInLobby()) return;
+
+            var lobby = LobbyManager.Instance.GetCurrentLobby();
+            if (lobby == null) return;
+
+            int playerCount = lobby.Players.Count;
+
+            if (playerCount >= minPlayersToStart)
+            {
+                if (!isCountingDown)
+                {
+                    isCountingDown = true;
+                    countdownTimer = startGameCountdown;
+                    Debug.Log($"🎮 Auto-start countdown initiated! {playerCount}/{minPlayersToStart} players ready.");
+                }
+
+                countdownTimer -= Time.deltaTime;
+
+                if (countdownTimer <= 0f)
+                {
+                    isCountingDown = false;
+                    OnStartGame();
+                }
+            }
+            else
+            {
+                if (isCountingDown)
+                {
+                    isCountingDown = false;
+                    Debug.Log($"⏸️ Auto-start cancelled. Not enough players ({playerCount}/{minPlayersToStart}).");
+                }
+            }
+        }
+
+        private async void AutoCreateLobby()
+        {
+            Debug.Log("🤖 Auto-creating lobby as AR Director (Host)...");
+            ShowLoading("Auto-creating lobby...");
+
+            string lobbyName = $"AR_Lobby_{Random.Range(1000, 9999)}";
+            bool success = await LobbyManager.Instance.CreateLobby(lobbyName, LobbyManager.PlayerRole.ARDirector);
+
+            HideLoading();
+
+            if (success)
+            {
+                ShowLobbyRoom();
+            }
+        }
+
+        private async void AutoJoinLobby()
+        {
+            Debug.Log("🤖 Auto-joining lobby as PC Runner...");
+            ShowLoading("Auto-joining lobby...");
+
+            var lobbies = await LobbyManager.Instance.GetAvailableLobbies();
+
+            if (lobbies.Count > 0)
+            {
+                bool success = await LobbyManager.Instance.JoinLobby(lobbies[0].Id, LobbyManager.PlayerRole.PCRunner);
+
+                HideLoading();
+
+                if (success)
+                {
+                    ShowLobbyRoom();
+                }
+            }
+            else
+            {
+                HideLoading();
+                Debug.Log("⚠️ No lobbies found. Retrying...");
             }
         }
 
@@ -119,34 +188,22 @@ namespace DeathrunGame
         private void SetupButtons()
         {
             // Main Menu
-            createLobbyButton.onClick.AddListener(ShowCreateLobby);
-            joinLobbyButton.onClick.AddListener(ShowBrowseLobbies);
-            quickJoinButton.onClick.AddListener(OnQuickJoin);
-            playerNameInput.onEndEdit.AddListener(OnPlayerNameChanged);
-
-            // Role Selection Buttons
-            if (pcRunnerButton != null)
-                pcRunnerButton.onClick.AddListener(SelectPCRunner);
-            
-            if (arDirectorButton != null)
-                arDirectorButton.onClick.AddListener(SelectARDirector);
-
-            // Create Lobby
-            createButton.onClick.AddListener(OnCreateLobby);
-            createBackButton.onClick.AddListener(ShowMainMenu);
-
-            // Browse Lobbies
-            refreshLobbiesButton.onClick.AddListener(OnRefreshLobbies);
-            joinByCodeButton.onClick.AddListener(OnJoinByCode);
-            browseBackButton.onClick.AddListener(ShowMainMenu);
+            if (quickJoinButton != null)
+                quickJoinButton.onClick.AddListener(OnQuickJoin);
 
             // Lobby Room
-            copyCodeButton.onClick.AddListener(OnCopyLobbyCode);
-            leaveButton.onClick.AddListener(OnLeaveLobby);
-            startGameButton.onClick.AddListener(OnStartGame);
+            if (copyCodeButton != null)
+                copyCodeButton.onClick.AddListener(OnCopyLobbyCode);
+            
+            if (leaveButton != null)
+                leaveButton.onClick.AddListener(OnLeaveLobby);
+            
+            if (startGameButton != null)
+                startGameButton.onClick.AddListener(OnStartGame);
 
             // Error
-            closeErrorButton.onClick.AddListener(HideError);
+            if (closeErrorButton != null)
+                closeErrorButton.onClick.AddListener(HideError);
         }
 
         private void SubscribeToLobbyEvents()
@@ -155,7 +212,6 @@ namespace DeathrunGame
             {
                 LobbyManager.Instance.OnLobbyCreated += OnLobbyCreated;
                 LobbyManager.Instance.OnLobbyJoined += OnLobbyJoined;
-                LobbyManager.Instance.OnLobbyListUpdated += OnLobbyListUpdated;
                 LobbyManager.Instance.OnLobbyError += ShowError;
                 LobbyManager.Instance.OnPlayerListChanged += UpdatePlayerList;
                 LobbyManager.Instance.OnGameStarted += OnGameStarted;
@@ -168,68 +224,10 @@ namespace DeathrunGame
             {
                 LobbyManager.Instance.OnLobbyCreated -= OnLobbyCreated;
                 LobbyManager.Instance.OnLobbyJoined -= OnLobbyJoined;
-                LobbyManager.Instance.OnLobbyListUpdated -= OnLobbyListUpdated;
                 LobbyManager.Instance.OnLobbyError -= ShowError;
                 LobbyManager.Instance.OnPlayerListChanged -= UpdatePlayerList;
                 LobbyManager.Instance.OnGameStarted -= OnGameStarted;
             }
-        }
-
-        private void LoadPlayerName()
-        {
-            string savedName = PlayerPrefs.GetString("PlayerName", "");
-            if (!string.IsNullOrEmpty(savedName))
-            {
-                playerNameInput.text = savedName;
-            }
-        }
-
-        #endregion
-
-        #region Role Selection
-
-        private void SelectPCRunner()
-        {
-            isARDirectorSelected = false;
-            UpdateRoleButtonVisuals();
-            
-            if (roleDisplayText != null)
-                roleDisplayText.text = "Goblin Runner";
-            
-            Debug.Log("Role selected: PC Runner");
-        }
-
-        private void SelectARDirector()
-        {
-            isARDirectorSelected = true;
-            UpdateRoleButtonVisuals();
-            
-            if (roleDisplayText != null)
-                roleDisplayText.text = "TIKI GOD";
-            
-            Debug.Log("Role selected: AR Director");
-        }
-
-        private void UpdateRoleButtonVisuals()
-        {
-            if (pcRunnerButton != null)
-            {
-                var colors = pcRunnerButton.colors;
-                colors.normalColor = isARDirectorSelected ? deselectedButtonColor : selectedButtonColor;
-                pcRunnerButton.colors = colors;
-            }
-
-            if (arDirectorButton != null)
-            {
-                var colors = arDirectorButton.colors;
-                colors.normalColor = isARDirectorSelected ? selectedButtonColor : deselectedButtonColor;
-                arDirectorButton.colors = colors;
-            }
-        }
-
-        private LobbyManager.PlayerRole GetSelectedRole()
-        {
-            return isARDirectorSelected ? LobbyManager.PlayerRole.ARDirector : LobbyManager.PlayerRole.PCRunner;
         }
 
         #endregion
@@ -255,27 +253,15 @@ namespace DeathrunGame
             }
         }
 
-        private void ShowCreateLobby()
-        {
-            HideAllPanels();
-            createLobbyPanel.SetActive(true);
-            lobbyNameInput.text = $"Lobby_{Random.Range(1000, 9999)}";
-        }
-
-        private void ShowBrowseLobbies()
-        {
-            HideAllPanels();
-            browseLobbiesPanel.SetActive(true);
-            OnRefreshLobbies();
-        }
-
         private void ShowLobbyRoom()
         {
             HideAllPanels();
             lobbyRoomPanel.SetActive(true);
 
             bool isHost = LobbyManager.Instance.IsHost();
-            startGameButton.gameObject.SetActive(isHost);
+            
+            if (startGameButton != null)
+                startGameButton.gameObject.SetActive(isHost);
 
             if (waitingForHostText != null)
             {
@@ -306,8 +292,6 @@ namespace DeathrunGame
         private void HideAllPanels()
         {
             mainMenuPanel.SetActive(false);
-            createLobbyPanel.SetActive(false);
-            browseLobbiesPanel.SetActive(false);
             lobbyRoomPanel.SetActive(false);
             errorPanel.SetActive(false);
             HideLoading();
@@ -317,44 +301,14 @@ namespace DeathrunGame
 
         #region Button Callbacks
 
-        private void OnPlayerNameChanged(string newName)
-        {
-            if (!string.IsNullOrEmpty(newName))
-            {
-                LobbyManager.Instance.SetPlayerName(newName);
-            }
-        }
-
-        private async void OnCreateLobby()
-        {
-            string lobbyName = lobbyNameInput.text.Trim();
-
-            if (string.IsNullOrEmpty(lobbyName))
-            {
-                ShowError("Please enter a lobby name!");
-                return;
-            }
-
-            createButton.interactable = false;
-            ShowLoading("Creating lobby...");
-
-            bool success = await LobbyManager.Instance.CreateLobby(lobbyName, GetSelectedRole());
-
-            HideLoading();
-            createButton.interactable = true;
-
-            if (success)
-            {
-                ShowLobbyRoom();
-            }
-        }
-
         private async void OnQuickJoin()
         {
             if (isJoiningLobby) return;
             isJoiningLobby = true;
 
-            quickJoinButton.interactable = false;
+            if (quickJoinButton != null)
+                quickJoinButton.interactable = false;
+            
             ShowLoading("Finding lobby...");
 
             var lobbies = await LobbyManager.Instance.GetAvailableLobbies();
@@ -362,7 +316,7 @@ namespace DeathrunGame
             if (lobbies.Count > 0)
             {
                 loadingText.text = "Joining lobby...";
-                bool success = await LobbyManager.Instance.JoinLobby(lobbies[0].Id, GetSelectedRole());
+                bool success = await LobbyManager.Instance.JoinLobby(lobbies[0].Id, LobbyManager.PlayerRole.PCRunner);
 
                 if (success)
                 {
@@ -375,47 +329,11 @@ namespace DeathrunGame
             }
 
             HideLoading();
-            quickJoinButton.interactable = true;
+            
+            if (quickJoinButton != null)
+                quickJoinButton.interactable = true;
+            
             isJoiningLobby = false;
-        }
-
-        private async void OnRefreshLobbies()
-        {
-            refreshLobbiesButton.interactable = false;
-            ShowLoading("Refreshing lobbies...");
-
-            await LobbyManager.Instance.GetAvailableLobbies();
-
-            HideLoading();
-            refreshLobbiesButton.interactable = true;
-        }
-
-        private async void OnJoinByCode()
-        {
-            string code = joinCodeInput.text.Trim().ToUpper();
-
-            if (string.IsNullOrEmpty(code))
-            {
-                ShowError("Please enter a lobby code!");
-                return;
-            }
-
-            if (isJoiningLobby) return;
-            isJoiningLobby = true;
-
-            joinByCodeButton.interactable = false;
-            ShowLoading("Joining lobby...");
-
-            bool success = await LobbyManager.Instance.JoinLobbyByCode(code, GetSelectedRole());
-
-            HideLoading();
-            joinByCodeButton.interactable = true;
-            isJoiningLobby = false;
-
-            if (success)
-            {
-                ShowLobbyRoom();
-            }
         }
 
         private void OnCopyLobbyCode()
@@ -426,7 +344,7 @@ namespace DeathrunGame
                 GUIUtility.systemCopyBuffer = code;
                 Debug.Log($"📋 Copied lobby code: {code}");
 
-                if (copyCodeButton.GetComponentInChildren<TextMeshProUGUI>() != null)
+                if (copyCodeButton != null && copyCodeButton.GetComponentInChildren<TextMeshProUGUI>() != null)
                 {
                     var buttonText = copyCodeButton.GetComponentInChildren<TextMeshProUGUI>();
                     buttonText.text = "Copied!";
@@ -445,19 +363,26 @@ namespace DeathrunGame
 
         private async void OnLeaveLobby()
         {
-            leaveButton.interactable = false;
+            if (leaveButton != null)
+                leaveButton.interactable = false;
+            
             ShowLoading("Leaving lobby...");
 
             await LobbyManager.Instance.LeaveLobby();
 
             HideLoading();
-            leaveButton.interactable = true;
+            
+            if (leaveButton != null)
+                leaveButton.interactable = true;
+            
             ShowMainMenu();
         }
 
         private async void OnStartGame()
         {
-            startGameButton.interactable = false;
+            if (startGameButton != null)
+                startGameButton.interactable = false;
+            
             ShowLoading("Starting game...");
 
             bool success = await LobbyManager.Instance.StartGame();
@@ -465,7 +390,9 @@ namespace DeathrunGame
             if (!success)
             {
                 HideLoading();
-                startGameButton.interactable = true;
+                
+                if (startGameButton != null)
+                    startGameButton.interactable = true;
             }
         }
 
@@ -475,78 +402,44 @@ namespace DeathrunGame
 
         private void OnLobbyCreated(Lobby lobby)
         {
-            lobbyNameText.text = lobby.Name;
-            lobbyCodeText.text = $"Code: {lobby.LobbyCode}";
+            if (lobbyCodeText != null)
+                lobbyCodeText.text = $"Code: {lobby.LobbyCode}";
+            
             UpdatePlayerList(lobby.Players);
         }
 
         private void OnLobbyJoined(Lobby lobby)
         {
-            lobbyNameText.text = lobby.Name;
-            lobbyCodeText.text = $"Code: {lobby.LobbyCode}";
+            if (lobbyCodeText != null)
+                lobbyCodeText.text = $"Code: {lobby.LobbyCode}";
+            
             UpdatePlayerList(lobby.Players);
-        }
-
-        private void OnLobbyListUpdated(List<Lobby> lobbies)
-        {
-            foreach (Transform child in lobbyListContent)
-            {
-                Destroy(child.gameObject);
-            }
-
-            if (noLobbiesText != null)
-            {
-                noLobbiesText.gameObject.SetActive(lobbies.Count == 0);
-            }
-
-            foreach (var lobby in lobbies)
-            {
-                GameObject item = Instantiate(lobbyListItemPrefab, lobbyListContent);
-                var itemUI = item.GetComponent<LobbyListItem>();
-                if (itemUI != null)
-                {
-                    itemUI.Setup(lobby, OnJoinLobbyFromList);
-                }
-            }
-        }
-
-        private async void OnJoinLobbyFromList(string lobbyId)
-        {
-            if (isJoiningLobby) return;
-            isJoiningLobby = true;
-
-            ShowLoading("Joining lobby...");
-
-            bool success = await LobbyManager.Instance.JoinLobby(lobbyId, GetSelectedRole());
-
-            HideLoading();
-            isJoiningLobby = false;
-
-            if (success)
-            {
-                ShowLobbyRoom();
-            }
         }
 
         private void UpdatePlayerList(List<Player> players)
         {
+            if (playerListContent == null) return;
+
             foreach (Transform child in playerListContent)
             {
                 Destroy(child.gameObject);
             }
 
-            foreach (var player in players)
+            if (playerListItemPrefab != null)
             {
-                GameObject item = Instantiate(playerListItemPrefab, playerListContent);
-                var itemUI = item.GetComponent<PlayerListItem>();
-                if (itemUI != null)
+                foreach (var player in players)
                 {
-                    string playerName = player.Data.ContainsKey("PlayerName") ?
-                        player.Data["PlayerName"].Value : "Unknown Player";
-                    string role = player.Data.ContainsKey("Role") ?
-                        player.Data["Role"].Value : "PCRunner";
+                    GameObject item = Instantiate(playerListItemPrefab, playerListContent);
+                    var itemUI = item.GetComponent<PlayerListItem>();
+                    if (itemUI != null)
+                    {
+                        string playerName = player.Data.ContainsKey("PlayerName") ?
+                            player.Data["PlayerName"].Value : "Player";
+                        string role = player.Data.ContainsKey("Role") ?
+                            player.Data["Role"].Value : "PCRunner";
 
-                    itemUI.Setup(playerName, role);
+                        itemUI.Setup(playerName, role);
+                    }
                 }
             }
 
@@ -557,7 +450,11 @@ namespace DeathrunGame
         {
             yield return null;
             Canvas.ForceUpdateCanvases();
-            UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(playerListContent.GetComponent<RectTransform>());
+            
+            if (playerListContent != null)
+            {
+                UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(playerListContent.GetComponent<RectTransform>());
+            }
         }
 
         private void OnGameStarted()
@@ -584,7 +481,9 @@ namespace DeathrunGame
 
         private void ShowError(string message)
         {
-            errorMessageText.text = message;
+            if (errorMessageText != null)
+                errorMessageText.text = message;
+            
             errorPanel.SetActive(true);
             HideLoading();
         }
