@@ -24,6 +24,9 @@ public class VRTrapActivator : MonoBehaviour
 
     [Header("Debug")]
     [SerializeField] private bool showDebugLogs = true;
+    
+    [Tooltip("Press this button in Inspector to test trap activation")]
+    [SerializeField] private bool debugActivateTrap = false;
 
     private Grabbable grabbable;
 
@@ -48,6 +51,25 @@ public class VRTrapActivator : MonoBehaviour
         if (grabbable != null)
         {
             grabbable.WhenPointerEventRaised -= OnGrabEvent;
+        }
+    }
+
+    private void OnValidate()
+    {
+        // Debug button trigger in Inspector
+        if (debugActivateTrap)
+        {
+            debugActivateTrap = false;
+            
+            // Only activate in Play mode
+            if (Application.isPlaying)
+            {
+                ActivateTrap();
+            }
+            else
+            {
+                Debug.LogWarning("[VRTrapActivator] Debug activation only works in Play mode!");
+            }
         }
     }
 
@@ -86,6 +108,15 @@ public class VRTrapActivator : MonoBehaviour
         trapObject.SendMessage(activationMethodName, SendMessageOptions.DontRequireReceiver);
 
         Log($"✅ Activated trap: {trapObject.name}");
+    }
+    
+    /// <summary>
+    /// Public method to activate trap from other scripts or Unity Events
+    /// </summary>
+    public void ManualActivate()
+    {
+        Log("🔧 Manual activation triggered!");
+        ActivateTrap();
     }
 
     private void Log(string message)
