@@ -24236,6 +24236,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7745423967092849808, guid: 70fe337f364eb1849be6b7d5b4e48f87, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 41.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7745423967092849808, guid: 70fe337f364eb1849be6b7d5b4e48f87, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 31.1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -80733,6 +80741,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   swingAngle: 45
   swingSpeed: 2
+  startActive: 0
 --- !u!4 &1419384492
 Transform:
   m_ObjectHideFlags: 0

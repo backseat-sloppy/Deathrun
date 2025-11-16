@@ -10252,7 +10252,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00e176ee4ef82ca42ae4326261653ed5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxPlayers: 4
+  maxPlayers: 2
   maxARPlayers: 1
   lobbyHeartbeatInterval: 15
   lobbyPollInterval: 1.5
