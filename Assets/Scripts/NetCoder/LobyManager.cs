@@ -601,6 +601,9 @@ namespace DeathrunGame
                 {
                     Log("🎮 Game started by host - connecting as client...");
 
+                    // Add delay to ensure Relay is ready
+                    await System.Threading.Tasks.Task.Delay(500);
+
                     bool started = NetworkManager.Singleton.StartClient();
 
                     if (started)
