@@ -70,8 +70,13 @@ namespace DeathrunGame
         [Header("Loading Panel")]
         [SerializeField] private TextMeshProUGUI loadingText;
 
+        [Header("Auto Join")]
+        [SerializeField] private float autoJoinDelay = 10f;
+
         private bool isJoiningLobby = false;
         private bool isARDirectorSelected = false; // Track selected role
+        private float autoJoinTimer = 0f;
+        private bool hasAutoJoined = false;
 
         private void Start()
         {
@@ -92,6 +97,21 @@ namespace DeathrunGame
         private void OnDestroy()
         {
             UnsubscribeFromLobbyEvents();
+        }
+
+        private void Update()
+        {
+            // Auto-join after delay if not in lobby
+            if (!hasAutoJoined && !LobbyManager.Instance.IsInLobby())
+            {
+                autoJoinTimer += Time.deltaTime;
+                
+                if (autoJoinTimer >= autoJoinDelay)
+                {
+                    hasAutoJoined = true;
+                    OnQuickJoin();
+                }
+            }
         }
 
         #region Setup

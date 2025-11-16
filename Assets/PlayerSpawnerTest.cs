@@ -20,7 +20,11 @@ public class PlayerSpawnerTest : NetworkBehaviour
     [SerializeField] private string arSpawnPointTag = "ARSpawn";
     [SerializeField] private bool removeSpawnPointAfterUse = true;
 
+    [Header("Auto Spawn")]
+    [SerializeField] private float autoSpawnDelay = 10f;
+
     private bool hasSpawnedAvatar = false;
+    private float autoSpawnTimer = 0f;
     private GameObject[] spawnablePrefabs; // Array to hold the prefabs for easy lookup
 
     // Called when the NetworkObject is spawned (synced across the network).
@@ -61,10 +65,13 @@ public class PlayerSpawnerTest : NetworkBehaviour
         {
             // Request the server to spawn the prefab at index 0 (PC)
             RequestSpawnPrefabServerRpc(0, false); // false = PC Runner
+            return; // Exit to prevent auto-spawn
         }
 
-        // Check for 'A' key press (for AR/Avatar - Index 1)
-        if (Input.GetKeyDown(KeyCode.A))
+        // Auto-spawn AR prefab after delay if no input received
+        autoSpawnTimer += Time.deltaTime;
+
+        if (autoSpawnTimer >= autoSpawnDelay)
         {
             // Request the server to spawn the prefab at index 1 (AR)
             RequestSpawnPrefabServerRpc(1, true); // true = AR Director
@@ -132,14 +139,14 @@ public class PlayerSpawnerTest : NetworkBehaviour
 
             spawnRotation = Quaternion.identity;
         }
-
+            
         // 3. Server Instantiation at the spawn point
         GameObject spawnedObject = Instantiate(prefabToSpawn, spawnPosition, spawnRotation);
 
         // 4. Critical Step: Spawn the object and assign ownership.
         NetworkObject netObj = spawnedObject.GetComponent<NetworkObject>();
 
-        // This line makes the client who pressed 'P' or 'A' the owner of the new prefab.
+        // This line makes the client who pressed 'P' or auto-spawned the owner of the new prefab.
         netObj.SpawnWithOwnership(OwnerClientId);
 
         Debug.Log($"🎮 Server spawned '{prefabToSpawn.name}' ({(isARRole ? "AR" : "PC")}) for client {OwnerClientId} at {spawnPosition}");
