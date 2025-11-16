@@ -306,6 +306,12 @@ namespace DeathrunGame
             if (isJoiningLobby) return;
             isJoiningLobby = true;
 
+            // Play click sound
+            if (UIAudioManager.Exists())
+            {
+                UIAudioManager.Instance.PlayClick();
+            }
+
             if (quickJoinButton != null)
                 quickJoinButton.interactable = false;
             
@@ -338,6 +344,12 @@ namespace DeathrunGame
 
         private void OnCopyLobbyCode()
         {
+            // Play click sound
+            if (UIAudioManager.Exists())
+            {
+                UIAudioManager.Instance.PlayClick();
+            }
+
             string code = LobbyManager.Instance.GetLobbyCode();
             if (!string.IsNullOrEmpty(code))
             {
@@ -363,6 +375,12 @@ namespace DeathrunGame
 
         private async void OnLeaveLobby()
         {
+            // Play back sound
+            if (UIAudioManager.Exists())
+            {
+                UIAudioManager.Instance.PlayBack();
+            }
+
             if (leaveButton != null)
                 leaveButton.interactable = false;
             
@@ -380,6 +398,12 @@ namespace DeathrunGame
 
         private async void OnStartGame()
         {
+            // Play click sound
+            if (UIAudioManager.Exists())
+            {
+                UIAudioManager.Instance.PlayClick();
+            }
+
             if (startGameButton != null)
                 startGameButton.interactable = false;
             
@@ -490,6 +514,12 @@ namespace DeathrunGame
 
         private void HideError()
         {
+            // Play back sound
+            if (UIAudioManager.Exists())
+            {
+                UIAudioManager.Instance.PlayBack();
+            }
+
             errorPanel.SetActive(false);
         }
 

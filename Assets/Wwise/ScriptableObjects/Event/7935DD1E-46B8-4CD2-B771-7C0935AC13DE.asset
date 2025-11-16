@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b16f1491b84fd437db9be8da945eab13, type: 3}
   m_Name: 7935DD1E-46B8-4CD2-B771-7C0935AC13DE
   m_EditorClassIdentifier: 
-  objectName: Plater_Swing_Play
-  id: 2332195469
+  objectName: Player_Swing_Play
+  id: 3260876866
   guid: 7935DD1E-46B8-4CD2-B771-7C0935AC13DE
   IsInUserDefinedSoundBank: 1

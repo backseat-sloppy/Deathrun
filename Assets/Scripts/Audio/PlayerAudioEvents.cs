@@ -26,6 +26,15 @@ public class PlayerAudioEvents : NetworkBehaviour
     [Tooltip("Wwise event for footstep sounds")]
     [SerializeField] private AK.Wwise.Event footstepEvent;
 
+    [Tooltip("Wwise event for taunt 1 sound")]
+    [SerializeField] private AK.Wwise.Event taunt1Event;
+
+    [Tooltip("Wwise event for taunt 2 sound")]
+    [SerializeField] private AK.Wwise.Event taunt2Event;
+
+    [Tooltip("Wwise event for taunt 3 sound")]
+    [SerializeField] private AK.Wwise.Event taunt3Event;
+
     [Header("Audio Settings")]
     [Tooltip("Optional: Specific GameObject to use as Wwise emitter. If null, uses this GameObject.")]
     [SerializeField] private GameObject wwiseEmitter;
@@ -102,6 +111,33 @@ public class PlayerAudioEvents : NetworkBehaviour
     {
         if (!IsOwner) return;
         PlayFootstepServerRpc(footId);
+    }
+
+    /// <summary>
+    /// Plays the taunt 1 sound. Call this from Animation Events on your taunt 1 animation.
+    /// </summary>
+    public void PlayTaunt1()
+    {
+        if (!IsOwner) return;
+        PlayTaunt1ServerRpc();
+    }
+
+    /// <summary>
+    /// Plays the taunt 2 sound. Call this from Animation Events on your taunt 2 animation.
+    /// </summary>
+    public void PlayTaunt2()
+    {
+        if (!IsOwner) return;
+        PlayTaunt2ServerRpc();
+    }
+
+    /// <summary>
+    /// Plays the taunt 3 sound. Call this from Animation Events on your taunt 3 animation.
+    /// </summary>
+    public void PlayTaunt3()
+    {
+        if (!IsOwner) return;
+        PlayTaunt3ServerRpc();
     }
 
     #endregion
@@ -247,6 +283,73 @@ public class PlayerAudioEvents : NetworkBehaviour
             // Example: AkSoundEngine.SetSwitch("Foot", footId, audioSource);
             
             footstepEvent.Post(audioSource);
+        }
+    }
+
+    #endregion
+
+    #region Taunt Audio - Network RPCs
+
+    /// <summary>
+    /// ServerRpc: Client requests to play taunt 1 sound.
+    /// </summary>
+    [ServerRpc]
+    private void PlayTaunt1ServerRpc()
+    {
+        PlayTaunt1ClientRpc();
+    }
+
+    /// <summary>
+    /// ClientRpc: All clients play the taunt 1 sound on this player.
+    /// </summary>
+    [ClientRpc]
+    private void PlayTaunt1ClientRpc()
+    {
+        if (taunt1Event != null && audioSource != null)
+        {
+            taunt1Event.Post(audioSource);
+        }
+    }
+
+    /// <summary>
+    /// ServerRpc: Client requests to play taunt 2 sound.
+    /// </summary>
+    [ServerRpc]
+    private void PlayTaunt2ServerRpc()
+    {
+        PlayTaunt2ClientRpc();
+    }
+
+    /// <summary>
+    /// ClientRpc: All clients play the taunt 2 sound on this player.
+    /// </summary>
+    [ClientRpc]
+    private void PlayTaunt2ClientRpc()
+    {
+        if (taunt2Event != null && audioSource != null)
+        {
+            taunt2Event.Post(audioSource);
+        }
+    }
+
+    /// <summary>
+    /// ServerRpc: Client requests to play taunt 3 sound.
+    /// </summary>
+    [ServerRpc]
+    private void PlayTaunt3ServerRpc()
+    {
+        PlayTaunt3ClientRpc();
+    }
+
+    /// <summary>
+    /// ClientRpc: All clients play the taunt 3 sound on this player.
+    /// </summary>
+    [ClientRpc]
+    private void PlayTaunt3ClientRpc()
+    {
+        if (taunt3Event != null && audioSource != null)
+        {
+            taunt3Event.Post(audioSource);
         }
     }
 

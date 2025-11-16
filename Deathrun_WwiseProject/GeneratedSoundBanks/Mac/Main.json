@@ -10,11 +10,19 @@
     "Type": "User",
     "GUID": "{48ECDC84-9414-46B5-A45D-DDD3B044C237}",
     "Language": "SFX",
-    "Hash": "{A7A9D937-6D45-2105-08E3-95D9874F465B}",
+    "Hash": "{D8E252C1-1521-B5A3-1FDA-A826BF30DEB5}",
     "ObjectPath": "\\SoundBanks\\Default Work Unit\\Main",
     "ShortName": "Main",
     "Path": "Main.bnk",
     "Media": [
+     {
+      "Id": "44497691",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "tap_05.wav",
+      "CachePath": "84/{845984A4-9B5E-AE14-1861-4A7A86D2F8CF}.wem"
+     },
      {
       "Id": "88692015",
       "Language": "SFX",
@@ -46,6 +54,14 @@
       "Location": "Memory",
       "ShortName": "Footsteps, Human, Dirty Ground, Jump, Land SND62080 S01.wav",
       "CachePath": "CA/{CAAE4BF5-7363-DC49-B619-5AC4695A122C}.wem"
+     },
+     {
+      "Id": "142904530",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "tap_03.wav",
+      "CachePath": "3D/{3D7179FD-3B25-396E-C078-257F77A21714}.wem"
      },
      {
       "Id": "147905027",
@@ -104,12 +120,28 @@
       "CachePath": "30/{30481FB8-80CA-9852-AFE8-6ABB2CE5CA4B}.wem"
      },
      {
+      "Id": "276127416",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "tap_04.wav",
+      "CachePath": "BF/{BFA1CCAD-41F9-A04B-EE80-CE9F3184C651}.wem"
+     },
+     {
       "Id": "289830924",
       "Language": "SFX",
       "Streaming": "false",
       "Location": "Memory",
       "ShortName": "Footsteps, Human, Walking, Wet Forest Floor SND17453 S02.wav",
       "CachePath": "F1/{F1B8F00A-8C9F-8A0F-F1C1-292F751A458C}.wem"
+     },
+     {
+      "Id": "295202865",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "swipe_03.wav",
+      "CachePath": "6C/{6C6C92B6-3C43-B6E9-492B-80C3263C2698}.wem"
      },
      {
       "Id": "347108839",
@@ -160,6 +192,14 @@
       "CachePath": "97/{976B1BB0-7B47-C970-4BC7-9B73262A124D}.wem"
      },
      {
+      "Id": "435432770",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Fortnite default dance sound.wav",
+      "CachePath": "E0/{E0BE140B-D73D-CCC6-65FF-C37A782D881C}.wem"
+     },
+     {
       "Id": "477819183",
       "Language": "SFX",
       "Streaming": "false",
@@ -190,6 +230,14 @@
       "Location": "Memory",
       "ShortName": "Footsteps, Human, Asphalt, Male, Walk SND11513 S01 1.wav",
       "CachePath": "18/{18492286-6ED2-149A-DA50-D351CA030D61}.wem"
+     },
+     {
+      "Id": "527603987",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "swipe_02.wav",
+      "CachePath": "55/{550D3C99-9BD2-6859-E361-320A409DECE0}.wem"
      },
      {
       "Id": "557391674",
@@ -232,6 +280,14 @@
       "CachePath": "D6/{D69C6A96-F816-BE63-F52F-711D7D4B2BF0}.wem"
      },
      {
+      "Id": "681009106",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Spike Trap Activate by marb7e Id-653130.wav",
+      "CachePath": "3D/{3DB63FBB-F988-D5E6-ADF8-4525EF7D3242}.wem"
+     },
+     {
       "Id": "682736560",
       "Language": "SFX",
       "Streaming": "false",
@@ -246,6 +302,14 @@
       "Location": "Memory",
       "ShortName": "Footsteps, Human, Walking, Wet Forest Floor SND17453 S05.wav",
       "CachePath": "B3/{B332869C-85F1-7459-42C2-15EBD793F16C}.wem"
+     },
+     {
+      "Id": "735213910",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "tap_01.wav",
+      "CachePath": "DE/{DE290585-3351-3D62-3B56-A7714AD9BF45}.wem"
      },
      {
       "Id": "759070456",
@@ -312,6 +376,14 @@
       "CachePath": "FB/{FB0D8074-4B4B-F8BC-9F77-B76F6A3864B2}.wem"
      },
      {
+      "Id": "904766283",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "swipe_01.wav",
+      "CachePath": "52/{52533B03-0F3D-C2D1-E5FD-DC353EC1086F}.wem"
+     },
+     {
       "Id": "914565934",
       "Language": "SFX",
       "Streaming": "false",
@@ -328,12 +400,36 @@
       "CachePath": "4B/{4B350ECF-D4BC-80C2-CC02-AD1FEAB22832}.wem"
      },
      {
+      "Id": "940527361",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "swipe_05.wav",
+      "CachePath": "C3/{C33BE6F4-EB30-EAF9-6450-043AF466A0E3}.wem"
+     },
+     {
+      "Id": "945499628",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "swipe_04.wav",
+      "CachePath": "9F/{9FADBB8D-C344-123A-B0F4-8BD4FFB9D22E}.wem"
+     },
+     {
       "Id": "950761957",
       "Language": "SFX",
       "Streaming": "false",
       "Location": "Memory",
       "ShortName": "Footsteps, Human, Walking, Wet Forest Floor SND17453 S00.wav",
       "CachePath": "92/{926734CE-1D90-2815-6401-4C411CFE3F50}.wem"
+     },
+     {
+      "Id": "956524310",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "tap_02.wav",
+      "CachePath": "84/{8415EAAD-40D3-583C-41E7-B1585F1423AB}.wem"
      },
      {
       "Id": "966348724",
@@ -390,20 +486,81 @@
       "Location": "Memory",
       "ShortName": "Footsteps, Human, Asphalt, Male, Walk SND11513 S02 1.wav",
       "CachePath": "7F/{7F31200C-C498-4C40-B781-F08F9914EE9A}.wem"
+     },
+     {
+      "Id": "1072328463",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "Arrow Impact 2 by Ali_6868 Id-384913.wav",
+      "CachePath": "71/{710B5E50-E582-4580-BD62-B1F0C6274D9E}.wem"
      }
     ],
     "Events": [
      {
-      "Id": "2332195469",
-      "Name": "Plater_Swing_Play",
-      "ObjectPath": "\\Events\\Default Work Unit\\EV_Player\\Plater_Swing_Play",
-      "GUID": "{7935DD1E-46B8-4CD2-B771-7C0935AC13DE}",
+      "Id": "1597374082",
+      "Name": "Button_Back_Play",
+      "ObjectPath": "\\Events\\Default Work Unit\\EV_UI\\Button_Back_Play",
+      "GUID": "{70028A28-055A-46EE-AA52-E7A03432F2CA}",
       "DurationType": "OneShot",
-      "DurationMin": "0.37883332",
-      "DurationMax": "0.37883332",
+      "DurationMin": "0.15",
+      "DurationMax": "0.15027212",
       "MediaRefs": [
        {
-        "Id": "377210547"
+        "Id": "295202865"
+       },
+       {
+        "Id": "527603987"
+       },
+       {
+        "Id": "904766283"
+       },
+       {
+        "Id": "940527361"
+       },
+       {
+        "Id": "945499628"
+       }
+      ]
+     },
+     {
+      "Id": "2856915265",
+      "Name": "Button_Click_Play",
+      "ObjectPath": "\\Events\\Default Work Unit\\EV_UI\\Button_Click_Play",
+      "GUID": "{C3C4B87B-FC05-4F35-8233-86D45F94E7B9}",
+      "DurationType": "OneShot",
+      "DurationMin": "0.01",
+      "DurationMax": "0.010045351",
+      "MediaRefs": [
+       {
+        "Id": "44497691"
+       },
+       {
+        "Id": "142904530"
+       },
+       {
+        "Id": "276127416"
+       },
+       {
+        "Id": "735213910"
+       },
+       {
+        "Id": "956524310"
+       }
+      ]
+     },
+     {
+      "Id": "3314422259",
+      "Name": "Player_Dance_Play",
+      "ObjectPath": "\\Events\\Default Work Unit\\EV_Player\\Player_Dance_Play",
+      "GUID": "{D222667D-7380-4766-9A53-D0BEFDD882E7}",
+      "MaxAttenuation": "20",
+      "DurationType": "OneShot",
+      "DurationMin": "4.1555533",
+      "DurationMax": "4.1555533",
+      "MediaRefs": [
+       {
+        "Id": "435432770"
        }
       ]
      },
@@ -412,6 +569,7 @@
       "Name": "Player_Death_Play",
       "ObjectPath": "\\Events\\Default Work Unit\\EV_Player\\Player_Death_Play",
       "GUID": "{2832C753-2D57-4F86-8DCA-F87A3E308FDD}",
+      "MaxAttenuation": "20",
       "DurationType": "OneShot",
       "DurationMin": "1.1607866",
       "DurationMax": "1.1607866",
@@ -426,6 +584,7 @@
       "Name": "Player_Footstep_Play",
       "ObjectPath": "\\Events\\Default Work Unit\\EV_Player\\Player_Footstep_Play",
       "GUID": "{07413B5B-81DB-4E7A-97D8-1B908224E077}",
+      "MaxAttenuation": "20",
       "DurationType": "OneShot",
       "DurationMin": "0.46091667",
       "DurationMax": "0.6779375",
@@ -578,6 +737,7 @@
       "Name": "Player_Jump_Play",
       "ObjectPath": "\\Events\\Default Work Unit\\EV_Player\\Player_Jump_Play",
       "GUID": "{B2854A96-5F81-4B32-BE05-FCB85CC18DF7}",
+      "MaxAttenuation": "20",
       "DurationType": "OneShot",
       "DurationMin": "0.3713125",
       "DurationMax": "0.949",
@@ -616,6 +776,7 @@
       "Name": "Player_Land_Play",
       "ObjectPath": "\\Events\\Default Work Unit\\EV_Player\\Player_Land_Play",
       "GUID": "{3263436D-E3D1-46EE-B133-5A70A8A043F1}",
+      "MaxAttenuation": "20",
       "DurationType": "OneShot",
       "DurationMin": "0.21602394",
       "DurationMax": "0.31327224",
@@ -637,6 +798,51 @@
        },
        {
         "Id": "985822078"
+       }
+      ]
+     },
+     {
+      "Id": "3260876866",
+      "Name": "Player_Swing_Play",
+      "ObjectPath": "\\Events\\Default Work Unit\\EV_Player\\Player_Swing_Play",
+      "GUID": "{7935DD1E-46B8-4CD2-B771-7C0935AC13DE}",
+      "MaxAttenuation": "20",
+      "DurationType": "OneShot",
+      "DurationMin": "0.37883332",
+      "DurationMax": "0.37883332",
+      "MediaRefs": [
+       {
+        "Id": "377210547"
+       }
+      ]
+     },
+     {
+      "Id": "2657231973",
+      "Name": "Trap_Arrow_Hit_Play",
+      "ObjectPath": "\\Events\\Default Work Unit\\EV_Traps\\Trap_Arrow_Hit_Play",
+      "GUID": "{2BF96C42-79A3-4951-87AC-8994FC625D93}",
+      "MaxAttenuation": "25",
+      "DurationType": "OneShot",
+      "DurationMin": "0.28317183",
+      "DurationMax": "0.28317183",
+      "MediaRefs": [
+       {
+        "Id": "1072328463"
+       }
+      ]
+     },
+     {
+      "Id": "499064214",
+      "Name": "Trap_Spike_Activate_Play",
+      "ObjectPath": "\\Events\\Default Work Unit\\EV_Traps\\Trap_Spike_Activate_Play",
+      "GUID": "{F633E24D-E829-4678-A9FD-55261660FB85}",
+      "MaxAttenuation": "25",
+      "DurationType": "OneShot",
+      "DurationMin": "0.95331657",
+      "DurationMax": "0.95331657",
+      "MediaRefs": [
+       {
+        "Id": "681009106"
        }
       ]
      }
@@ -683,6 +889,6 @@
     ]
    }
   ],
-  "FileHash": "{EA0E0FB6-4622-385D-99B4-00429B1B89A5}"
+  "FileHash": "{9D65DC99-593D-6747-7AB5-154D376355F8}"
  }
 }

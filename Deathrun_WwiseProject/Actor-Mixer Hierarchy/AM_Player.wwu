@@ -4,7 +4,13 @@
 		<WorkUnit Name="AM_Player" ID="{C98302B0-235D-4AB5-97B0-FB2F4499216E}" OwnerID="{8E6EA1D5-401E-4826-BEE8-A6AD2C79B3C9}" PersistMode="Nested">
 			<ChildrenList>
 				<SwitchContainer Name="Player_Footsteps" ID="{2864B63C-E903-4ABE-8933-F1A142F810DF}" ShortID="982053341">
+					<PropertyList>
+						<Property Name="UseGameAuxSends" Type="bool" Value="True"/>
+					</PropertyList>
 					<ReferenceList>
+						<Reference Name="Attenuation">
+							<ObjectRef Name="Players" ID="{B69B597C-18CF-4B57-824E-4C1F658CF866}" WorkUnitID="{DDA96393-DEED-4927-95A4-D5A2B74518B4}"/>
+						</Reference>
 						<Reference Name="Conversion">
 							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
 						</Reference>
@@ -12,7 +18,7 @@
 							<ObjectRef Name="Concrete" ID="{EFEF36D0-5135-4AFE-BB15-2F8EB476E3EC}" WorkUnitID="{0866020F-53C3-465F-9E29-0EA0237F75D0}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+							<ObjectRef Name="SFX_Player" ID="{4FD67903-5A59-466B-9255-B4B9683B3F2E}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
 						</Reference>
 						<Reference Name="SwitchGroupOrStateGroup">
 							<ObjectRef Name="SurfaceType" ID="{4D0D6FEB-46E7-445D-9043-E73D5691F1B1}" WorkUnitID="{0866020F-53C3-465F-9E29-0EA0237F75D0}"/>
@@ -793,12 +799,19 @@
 					</GroupingInfo>
 				</SwitchContainer>
 				<RandomSequenceContainer Name="Player_Jump" ID="{7B72C0F6-A36E-4233-8E8D-5E09FD4D0B77}" ShortID="379317383">
+					<PropertyList>
+						<Property Name="3DSpatialization" Type="int16" Value="2"/>
+						<Property Name="UseGameAuxSends" Type="bool" Value="True"/>
+					</PropertyList>
 					<ReferenceList>
+						<Reference Name="Attenuation">
+							<ObjectRef Name="Players" ID="{B69B597C-18CF-4B57-824E-4C1F658CF866}" WorkUnitID="{DDA96393-DEED-4927-95A4-D5A2B74518B4}"/>
+						</Reference>
 						<Reference Name="Conversion">
 							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+							<ObjectRef Name="SFX_Player" ID="{4FD67903-5A59-466B-9255-B4B9683B3F2E}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
@@ -1003,12 +1016,19 @@
 					</ChildrenList>
 				</RandomSequenceContainer>
 				<RandomSequenceContainer Name="Player_Land" ID="{4B1B845A-763F-4E97-B3D1-9616C57226D5}" ShortID="745010412">
+					<PropertyList>
+						<Property Name="3DSpatialization" Type="int16" Value="2"/>
+						<Property Name="UseGameAuxSends" Type="bool" Value="True"/>
+					</PropertyList>
 					<ReferenceList>
+						<Reference Name="Attenuation">
+							<ObjectRef Name="Players" ID="{B69B597C-18CF-4B57-824E-4C1F658CF866}" WorkUnitID="{DDA96393-DEED-4927-95A4-D5A2B74518B4}"/>
+						</Reference>
 						<Reference Name="Conversion">
 							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+							<ObjectRef Name="SFX_Player" ID="{4FD67903-5A59-466B-9255-B4B9683B3F2E}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
@@ -1215,12 +1235,19 @@
 					</ChildrenList>
 				</RandomSequenceContainer>
 				<RandomSequenceContainer Name="Player_Death" ID="{90C0811D-EB80-4A30-B34F-17865EC3322A}" ShortID="536609119">
+					<PropertyList>
+						<Property Name="3DSpatialization" Type="int16" Value="2"/>
+						<Property Name="UseGameAuxSends" Type="bool" Value="True"/>
+					</PropertyList>
 					<ReferenceList>
+						<Reference Name="Attenuation">
+							<ObjectRef Name="Players" ID="{B69B597C-18CF-4B57-824E-4C1F658CF866}" WorkUnitID="{DDA96393-DEED-4927-95A4-D5A2B74518B4}"/>
+						</Reference>
 						<Reference Name="Conversion">
 							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+							<ObjectRef Name="SFX_Player" ID="{4FD67903-5A59-466B-9255-B4B9683B3F2E}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
@@ -1259,6 +1286,9 @@
 						<Property Name="UseGameAuxSends" Type="bool" Value="True"/>
 					</PropertyList>
 					<ReferenceList>
+						<Reference Name="Attenuation">
+							<ObjectRef Name="Players" ID="{B69B597C-18CF-4B57-824E-4C1F658CF866}" WorkUnitID="{DDA96393-DEED-4927-95A4-D5A2B74518B4}"/>
+						</Reference>
 						<Reference Name="Conversion">
 							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
 						</Reference>
@@ -1277,6 +1307,40 @@
 					</ChildrenList>
 					<ActiveSourceList>
 						<ActiveSource Name="Fight, Cloth, Punch, Block, Swoosh SND4355 S00" ID="{AA7678D8-D4DD-41FC-9617-2E8FF04EE281}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="Taunt_Dance" ID="{6EBC5477-B52D-4A67-A63C-ABF4BD6155AA}" ShortID="866490916">
+					<PropertyList>
+						<Property Name="3DSpatialization" Type="int16" Value="2"/>
+						<Property Name="UseGameAuxSends" Type="bool" Value="True"/>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Attenuation">
+							<ObjectRef Name="Players" ID="{B69B597C-18CF-4B57-824E-4C1F658CF866}" WorkUnitID="{DDA96393-DEED-4927-95A4-D5A2B74518B4}"/>
+						</Reference>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="SFX_Player" ID="{4FD67903-5A59-466B-9255-B4B9683B3F2E}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="Fortnite default dance sound" ID="{2387B5C0-2FA5-4EBE-9454-5440CAAFEA32}">
+							<PropertyList>
+								<Property Name="LoopBegin" Type="Real64" Value="3.54053170775527"/>
+								<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+								<Property Name="TrimBegin" Type="Real64" Value="3.39093177644167"/>
+							</PropertyList>
+							<Language>SFX</Language>
+							<AudioFile>Fortnite default dance sound.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="435432770"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="Fortnite default dance sound" ID="{2387B5C0-2FA5-4EBE-9454-5440CAAFEA32}" Platform="Linked"/>
 					</ActiveSourceList>
 				</Sound>
 			</ChildrenList>

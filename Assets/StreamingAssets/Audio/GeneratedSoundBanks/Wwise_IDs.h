@@ -13,11 +13,16 @@ namespace AK
 {
     namespace EVENTS
     {
-        static const AkUniqueID PLATER_SWING_PLAY = 2332195469U;
+        static const AkUniqueID BUTTON_BACK_PLAY = 1597374082U;
+        static const AkUniqueID BUTTON_CLICK_PLAY = 2856915265U;
+        static const AkUniqueID PLAYER_DANCE_PLAY = 3314422259U;
         static const AkUniqueID PLAYER_DEATH_PLAY = 2348472398U;
         static const AkUniqueID PLAYER_FOOTSTEP_PLAY = 2241160260U;
         static const AkUniqueID PLAYER_JUMP_PLAY = 391280646U;
         static const AkUniqueID PLAYER_LAND_PLAY = 581954083U;
+        static const AkUniqueID PLAYER_SWING_PLAY = 3260876866U;
+        static const AkUniqueID TRAP_ARROW_HIT_PLAY = 2657231973U;
+        static const AkUniqueID TRAP_SPIKE_ACTIVATE_PLAY = 499064214U;
     } // namespace EVENTS
 
     namespace STATES

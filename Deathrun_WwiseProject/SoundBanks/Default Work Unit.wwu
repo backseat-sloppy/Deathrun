@@ -5,11 +5,9 @@
 			<ChildrenList>
 				<SoundBank Name="Main" ID="{48ECDC84-9414-46B5-A45D-DDD3B044C237}">
 					<ObjectInclusionList>
-						<ObjectRef Name="Player_Land_Play" ID="{3263436D-E3D1-46EE-B133-5A70A8A043F1}" WorkUnitID="{7C275CC9-22AD-4881-B391-FFA0004C77EE}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="EV_Traps" ID="{3AAE3100-B422-44D2-AD6E-922A17C24207}" WorkUnitID="{3AAE3100-B422-44D2-AD6E-922A17C24207}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="EV_UI" ID="{0AC66EB0-74E5-4595-B6BB-F204E08B9AC5}" WorkUnitID="{0AC66EB0-74E5-4595-B6BB-F204E08B9AC5}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="EV_Player" ID="{7C275CC9-22AD-4881-B391-FFA0004C77EE}" WorkUnitID="{7C275CC9-22AD-4881-B391-FFA0004C77EE}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Player_Jump_Play" ID="{B2854A96-5F81-4B32-BE05-FCB85CC18DF7}" WorkUnitID="{7C275CC9-22AD-4881-B391-FFA0004C77EE}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Player_Footstep_Play" ID="{07413B5B-81DB-4E7A-97D8-1B908224E077}" WorkUnitID="{7C275CC9-22AD-4881-B391-FFA0004C77EE}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Player_Death_Play" ID="{2832C753-2D57-4F86-8DCA-F87A3E308FDD}" WorkUnitID="{7C275CC9-22AD-4881-B391-FFA0004C77EE}" Origin="Manual" Filter="7"/>
 					</ObjectInclusionList>
 					<ObjectExclusionList/>
 					<GameSyncExclusionList/>

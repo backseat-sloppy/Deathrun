@@ -1,6 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WwiseDocument Type="WorkUnit" ID="{775030FA-E2E1-4BD1-AF71-A4817D9A5A92}" SchemaVersion="123" RootDocumentID="{8E6EA1D5-401E-4826-BEE8-A6AD2C79B3C9}" ParentDocumentID="{8E6EA1D5-401E-4826-BEE8-A6AD2C79B3C9}">
 	<AudioObjects>
-		<WorkUnit Name="Actors_Mixer_Traps" ID="{775030FA-E2E1-4BD1-AF71-A4817D9A5A92}" OwnerID="{8E6EA1D5-401E-4826-BEE8-A6AD2C79B3C9}" PersistMode="Nested"/>
+		<WorkUnit Name="Actors_Mixer_Traps" ID="{775030FA-E2E1-4BD1-AF71-A4817D9A5A92}" OwnerID="{8E6EA1D5-401E-4826-BEE8-A6AD2C79B3C9}" PersistMode="Nested">
+			<ChildrenList>
+				<Sound Name="Arrow Impact 2 by Ali_6868 Id-384913" ID="{46A6767A-610B-4B34-A234-37308A9E1466}" ShortID="379883284">
+					<PropertyList>
+						<Property Name="3DSpatialization" Type="int16" Value="2"/>
+						<Property Name="UseGameAuxSends" Type="bool" Value="True"/>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Attenuation">
+							<ObjectRef Name="Traps" ID="{CEA02A11-3C02-4236-81E0-80882EF55B28}" WorkUnitID="{DDA96393-DEED-4927-95A4-D5A2B74518B4}"/>
+						</Reference>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="SFX_Traps" ID="{149C65F2-BB91-4CD5-8D3C-87190E735723}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="Arrow Impact 2 by Ali_6868 Id-384913" ID="{ABC63CBB-1320-4EFC-8868-A522399989EC}">
+							<PropertyList>
+								<Property Name="LoopBegin" Type="Real64" Value="0.0918395081344917"/>
+								<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+								<Property Name="TrimBegin" Type="Real64" Value="0.0918395081344917"/>
+							</PropertyList>
+							<Language>SFX</Language>
+							<AudioFile>Arrow Impact 2 by Ali_6868 Id-384913.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="1072328463"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="Arrow Impact 2 by Ali_6868 Id-384913" ID="{ABC63CBB-1320-4EFC-8868-A522399989EC}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="Spike Trap Activate by marb7e Id-653130" ID="{16376895-47EE-40C0-B0EB-F54A6D290911}" ShortID="621333525">
+					<PropertyList>
+						<Property Name="3DSpatialization" Type="int16" Value="2"/>
+						<Property Name="UseGameAuxSends" Type="bool" Value="True"/>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Attenuation">
+							<ObjectRef Name="Traps" ID="{CEA02A11-3C02-4236-81E0-80882EF55B28}" WorkUnitID="{DDA96393-DEED-4927-95A4-D5A2B74518B4}"/>
+						</Reference>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="SFX_Traps" ID="{149C65F2-BB91-4CD5-8D3C-87190E735723}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="Spike Trap Activate by marb7e Id-653130" ID="{4EEEF0B2-2CA9-4902-A88C-867F6310DD41}">
+							<PropertyList>
+								<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+								<Property Name="TrimBegin" Type="Real64" Value="2.76160008960314"/>
+							</PropertyList>
+							<Language>SFX</Language>
+							<AudioFile>Spike Trap Activate by marb7e Id-653130.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="681009106"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="Spike Trap Activate by marb7e Id-653130" ID="{4EEEF0B2-2CA9-4902-A88C-867F6310DD41}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+			</ChildrenList>
+		</WorkUnit>
 	</AudioObjects>
 </WwiseDocument>

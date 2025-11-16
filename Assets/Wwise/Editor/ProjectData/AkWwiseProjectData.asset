@@ -271,7 +271,7 @@ MonoBehaviour:
     ParentPath: SoundBanks/Default Work Unit
     guid: 857db305ca908b428ab306e5a61125cd
     GuidInternal: 
-    m_lastTime: -8584382761776852883
+    m_lastTime: -8584382748627401647
     List:
     - name: Main
       guid: 84dcec481494b546a45dddd3b044c237
@@ -299,7 +299,7 @@ MonoBehaviour:
     ParentPath: Events/Default Work Unit
     guid: 5a9558895ec0d449b8cc7211fe588746
     GuidInternal: 
-    m_lastTime: -8584382761779013779
+    m_lastTime: -8584382752813544256
     List: []
   - PhysicalPath: Events/EV_Player.wwu
     PathAndIcons:
@@ -354,7 +354,7 @@ MonoBehaviour:
         ObjectType: 3
         guid: 53c73228572d864f8dcaf87a3e308fdd
       Path: Events/Default Work Unit/EV_Player/Player_Death_Play
-      maxAttenuation: 0
+      maxAttenuation: 20
       maxDuration: 1.1607866
       minDuration: 1.1607866
     - name: Player_Footstep_Play
@@ -374,7 +374,7 @@ MonoBehaviour:
         ObjectType: 3
         guid: 5b3b4107db817a4e97d81b908224e077
       Path: Events/Default Work Unit/EV_Player/Player_Footstep_Play
-      maxAttenuation: 0
+      maxAttenuation: 20
       maxDuration: 0.6779375
       minDuration: 0.46091667
     - name: Player_Jump_Play
@@ -394,7 +394,7 @@ MonoBehaviour:
         ObjectType: 3
         guid: 964a85b2815f324bbe05fcb85cc18df7
       Path: Events/Default Work Unit/EV_Player/Player_Jump_Play
-      maxAttenuation: 0
+      maxAttenuation: 20
       maxDuration: 0.949
       minDuration: 0.3713125
     - name: Player_Land_Play
@@ -414,9 +414,121 @@ MonoBehaviour:
         ObjectType: 3
         guid: 6d436332d1e3ee46b1335a70a8a043f1
       Path: Events/Default Work Unit/EV_Player/Player_Land_Play
-      maxAttenuation: 0
+      maxAttenuation: 20
       maxDuration: 0.31327224
       minDuration: 0.21602394
+  - PhysicalPath: Events/EV_Traps.wwu
+    PathAndIcons:
+    - ElementName: Events
+      ObjectType: 5
+      guid: 00000000000000000000000000000000
+    - ElementName: Default Work Unit
+      ObjectType: 12
+      guid: 5a9558895ec0d449b8cc7211fe588746
+    - ElementName: EV_Traps
+      ObjectType: 12
+      guid: 0031ae3a22b4d244ad6e922a17c24207
+    ParentPath: Events/Default Work Unit/EV_Traps
+    guid: 0031ae3a22b4d244ad6e922a17c24207
+    GuidInternal: 
+    m_lastTime: -8584382752025055269
+    List:
+    - name: Trap_Arrow_Hit_Play
+      guid: 426cf92ba379514987ac8994fc625d93
+      id: 2657231973
+      PathAndIcons:
+      - ElementName: Events
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: 5a9558895ec0d449b8cc7211fe588746
+      - ElementName: EV_Traps
+        ObjectType: 12
+        guid: 0031ae3a22b4d244ad6e922a17c24207
+      - ElementName: Trap_Arrow_Hit_Play
+        ObjectType: 3
+        guid: 426cf92ba379514987ac8994fc625d93
+      Path: Events/Default Work Unit/EV_Traps/Trap_Arrow_Hit_Play
+      maxAttenuation: 25
+      maxDuration: 0.28317183
+      minDuration: 0.28317183
+    - name: Trap_Spike_Activate_Play
+      guid: 4de233f629e87846a9fd55261660fb85
+      id: 499064214
+      PathAndIcons:
+      - ElementName: Events
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: 5a9558895ec0d449b8cc7211fe588746
+      - ElementName: EV_Traps
+        ObjectType: 12
+        guid: 0031ae3a22b4d244ad6e922a17c24207
+      - ElementName: Trap_Spike_Activate_Play
+        ObjectType: 3
+        guid: 4de233f629e87846a9fd55261660fb85
+      Path: Events/Default Work Unit/EV_Traps/Trap_Spike_Activate_Play
+      maxAttenuation: 25
+      maxDuration: 0.95331657
+      minDuration: 0.95331657
+  - PhysicalPath: Events/EV_UI.wwu
+    PathAndIcons:
+    - ElementName: Events
+      ObjectType: 5
+      guid: 00000000000000000000000000000000
+    - ElementName: Default Work Unit
+      ObjectType: 12
+      guid: 5a9558895ec0d449b8cc7211fe588746
+    - ElementName: EV_UI
+      ObjectType: 12
+      guid: b06ec60ae5749545b6bbf204e08b9ac5
+    ParentPath: Events/Default Work Unit/EV_UI
+    guid: b06ec60ae5749545b6bbf204e08b9ac5
+    GuidInternal: 
+    m_lastTime: -8584382752025083906
+    List:
+    - name: Button_Back_Play
+      guid: 288a02705a05ee46aa52e7a03432f2ca
+      id: 1597374082
+      PathAndIcons:
+      - ElementName: Events
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: 5a9558895ec0d449b8cc7211fe588746
+      - ElementName: EV_UI
+        ObjectType: 12
+        guid: b06ec60ae5749545b6bbf204e08b9ac5
+      - ElementName: Button_Back_Play
+        ObjectType: 3
+        guid: 288a02705a05ee46aa52e7a03432f2ca
+      Path: Events/Default Work Unit/EV_UI/Button_Back_Play
+      maxAttenuation: 0
+      maxDuration: 0.15027212
+      minDuration: 0.15
+    - name: Button_Click_Play
+      guid: 7bb8c4c305fc354f823386d45f94e7b9
+      id: 2856915265
+      PathAndIcons:
+      - ElementName: Events
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: 5a9558895ec0d449b8cc7211fe588746
+      - ElementName: EV_UI
+        ObjectType: 12
+        guid: b06ec60ae5749545b6bbf204e08b9ac5
+      - ElementName: Button_Click_Play
+        ObjectType: 3
+        guid: 7bb8c4c305fc354f823386d45f94e7b9
+      Path: Events/Default Work Unit/EV_UI/Button_Click_Play
+      maxAttenuation: 0
+      maxDuration: 0.010045351
+      minDuration: 0.01
   RtpcWwu:
   - PhysicalPath: Game Parameters/Default Work Unit.wwu
     PathAndIcons:

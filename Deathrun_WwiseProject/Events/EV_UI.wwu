@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{0AC66EB0-74E5-4595-B6BB-F204E08B9AC5}" SchemaVersion="123" RootDocumentID="{8958955A-C05E-49D4-B8CC-7211FE588746}" ParentDocumentID="{8958955A-C05E-49D4-B8CC-7211FE588746}">
+	<Events>
+		<WorkUnit Name="EV_UI" ID="{0AC66EB0-74E5-4595-B6BB-F204E08B9AC5}" OwnerID="{8958955A-C05E-49D4-B8CC-7211FE588746}" PersistMode="Nested">
+			<ChildrenList>
+				<Event Name="Button_Click_Play" ID="{C3C4B87B-FC05-4F35-8233-86D45F94E7B9}">
+					<ChildrenList>
+						<Action Name="" ID="{A81C153F-5639-4E68-BA21-4A8154C188C3}" ShortID="652445324">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="UI_Click" ID="{1A6134F5-26A6-4B4F-A466-31605691B1BD}" WorkUnitID="{98F52C03-BDFF-45AD-A0B1-E2319CF7088B}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Button_Back_Play" ID="{70028A28-055A-46EE-AA52-E7A03432F2CA}">
+					<ChildrenList>
+						<Action Name="" ID="{F05CCADE-73D4-40DB-95D0-53E34821CE5A}" ShortID="134418684">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="UI_Back" ID="{0D86CB5B-EBE5-4EAF-956C-9225F90FCC41}" WorkUnitID="{98F52C03-BDFF-45AD-A0B1-E2319CF7088B}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+			</ChildrenList>
+		</WorkUnit>
+	</Events>
+</WwiseDocument>

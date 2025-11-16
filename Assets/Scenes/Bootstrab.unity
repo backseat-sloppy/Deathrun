@@ -10218,6 +10218,7 @@ GameObject:
   - component: {fileID: 1947660908}
   - component: {fileID: 1947660909}
   - component: {fileID: 1947660910}
+  - component: {fileID: 1947660911}
   m_Layer: 0
   m_Name: LobbyManager
   m_TagString: Untagged
@@ -10291,6 +10292,35 @@ MonoBehaviour:
   autoJoinRetryDelay: 10
   minPlayersToStart: 1
   startGameCountdown: 5
+--- !u!114 &1947660911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1947660907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e8acfb0eb0bd41daba399a1009fbd7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiClickEvent:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 11400000, guid: 3c2cb2a419e9f4febb872b5f59698f2a, type: 2}
+  uiHoverEvent:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 0}
+  uiSelectEvent:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 0}
+  uiBackEvent:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 11400000, guid: dc1278d088aa147e888eb2cec34e1534, type: 2}
+  persistAcrossScenes: 0
 --- !u!1 &1971541716
 GameObject:
   m_ObjectHideFlags: 0

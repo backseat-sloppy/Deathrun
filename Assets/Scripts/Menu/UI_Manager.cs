@@ -44,6 +44,12 @@ public class UI_Manager : MonoBehaviour
     /// </summary>
     public void OnQuickJoinButtonPressed()
     {
+        // Play click sound
+        if (UIAudioManager.Exists())
+        {
+            UIAudioManager.Instance.PlayClick();
+        }
+
         // 1. Hide the Main Menu options (leaving TitleText visible)
         SetMainMenuButtonsVisible(false);
 
@@ -60,6 +66,12 @@ public class UI_Manager : MonoBehaviour
     /// </summary>
     public void OnCreateLobbyButtonPressed()
     {
+        // Play click sound
+        if (UIAudioManager.Exists())
+        {
+            UIAudioManager.Instance.PlayClick();
+        }
+
         // 1. Hide the Main Menu options (leaving TitleText visible)
         SetMainMenuButtonsVisible(false);
 
@@ -75,6 +87,12 @@ public class UI_Manager : MonoBehaviour
     /// </summary>
     public void OnJoinLobbyButtonPressed()
     {
+        // Play click sound
+        if (UIAudioManager.Exists())
+        {
+            UIAudioManager.Instance.PlayClick();
+        }
+
         // 1. Hide the Main Menu options (leaving TitleText visible)
         SetMainMenuButtonsVisible(false);
 
@@ -91,6 +109,12 @@ public class UI_Manager : MonoBehaviour
     /// </summary>
     public void OnBackButtonPressed()
     {
+        // Play back sound
+        if (UIAudioManager.Exists())
+        {
+            UIAudioManager.Instance.PlayBack();
+        }
+
         // 1. Deactivate all possible destination panels
         if (browseLobbiesPanel != null)
         {

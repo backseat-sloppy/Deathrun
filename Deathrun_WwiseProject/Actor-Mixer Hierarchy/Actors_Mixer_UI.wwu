@@ -1,6 +1,256 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WwiseDocument Type="WorkUnit" ID="{98F52C03-BDFF-45AD-A0B1-E2319CF7088B}" SchemaVersion="123" RootDocumentID="{8E6EA1D5-401E-4826-BEE8-A6AD2C79B3C9}" ParentDocumentID="{8E6EA1D5-401E-4826-BEE8-A6AD2C79B3C9}">
 	<AudioObjects>
-		<WorkUnit Name="Actors_Mixer_UI" ID="{98F52C03-BDFF-45AD-A0B1-E2319CF7088B}" OwnerID="{8E6EA1D5-401E-4826-BEE8-A6AD2C79B3C9}" PersistMode="Nested"/>
+		<WorkUnit Name="Actors_Mixer_UI" ID="{98F52C03-BDFF-45AD-A0B1-E2319CF7088B}" OwnerID="{8E6EA1D5-401E-4826-BEE8-A6AD2C79B3C9}" PersistMode="Nested">
+			<ChildrenList>
+				<RandomSequenceContainer Name="UI_Click" ID="{1A6134F5-26A6-4B4F-A466-31605691B1BD}" ShortID="427716123">
+					<PropertyList>
+						<Property Name="UseGameAuxSends" Type="bool" Value="True"/>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="UI" ID="{138C3928-08D9-402C-B6E4-15682B942D4D}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<Sound Name="tap_01" ID="{DA09E734-0C4E-49C7-B24D-D6FA9EB664A7}" ShortID="859137439">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="tap_01" ID="{C5B1C0B6-C78F-497D-8A8E-0645076911D6}">
+									<Language>SFX</Language>
+									<AudioFile>tap_01.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="735213910"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="tap_01" ID="{C5B1C0B6-C78F-497D-8A8E-0645076911D6}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="tap_02" ID="{D0F12213-5FD3-4F5D-A09D-8F43E4DA6D59}" ShortID="121175631">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="tap_02" ID="{3221FADF-F140-4C64-93B9-ACFAB213BB17}">
+									<Language>SFX</Language>
+									<AudioFile>tap_02.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="956524310"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="tap_02" ID="{3221FADF-F140-4C64-93B9-ACFAB213BB17}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="tap_03" ID="{C821AA97-4D2D-4373-95BD-67289A17BAD2}" ShortID="630109632">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="tap_03" ID="{E56A6999-EA40-41A4-A2BE-CF753F640FCD}">
+									<Language>SFX</Language>
+									<AudioFile>tap_03.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="142904530"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="tap_03" ID="{E56A6999-EA40-41A4-A2BE-CF753F640FCD}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="tap_04" ID="{2654B729-753A-4C15-8091-C40563489EC0}" ShortID="661211191">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="tap_04" ID="{29270C70-102A-4FAB-8DCA-8C3EFB871375}">
+									<Language>SFX</Language>
+									<AudioFile>tap_04.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="276127416"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="tap_04" ID="{29270C70-102A-4FAB-8DCA-8C3EFB871375}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="tap_05" ID="{75F0AE69-AF5F-4FC6-BBA7-C762942CFF25}" ShortID="716411056">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="tap_05" ID="{C534DC02-E464-4545-94CE-6C7B3D6643DC}">
+									<Language>SFX</Language>
+									<AudioFile>tap_05.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="44497691"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="tap_05" ID="{C534DC02-E464-4545-94CE-6C7B3D6643DC}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+				</RandomSequenceContainer>
+				<RandomSequenceContainer Name="UI_Back" ID="{0D86CB5B-EBE5-4EAF-956C-9225F90FCC41}" ShortID="604870185">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="UI" ID="{138C3928-08D9-402C-B6E4-15682B942D4D}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<Sound Name="swipe_01" ID="{E03869E8-0CCA-43EB-AFD6-D48DF34C7511}" ShortID="140128869">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="swipe_01" ID="{D776C041-6BCA-4076-AD2B-2C6CBC58BBB5}">
+									<Language>SFX</Language>
+									<AudioFile>swipe_01.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="904766283"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="swipe_01" ID="{D776C041-6BCA-4076-AD2B-2C6CBC58BBB5}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="swipe_02" ID="{7D585C25-A3D6-4E06-A997-27BA1F0258C3}" ShortID="904206762">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="swipe_02" ID="{153F4CD0-275E-4B04-B860-61C6FC08F9A9}">
+									<Language>SFX</Language>
+									<AudioFile>swipe_02.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="527603987"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="swipe_02" ID="{153F4CD0-275E-4B04-B860-61C6FC08F9A9}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="swipe_03" ID="{BA4F551E-75E5-474A-95DC-DFCC08E58ACD}" ShortID="236881458">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="swipe_03" ID="{FDCDCF6A-FD44-4FA4-A75E-5428FA6891B0}">
+									<Language>SFX</Language>
+									<AudioFile>swipe_03.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="295202865"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="swipe_03" ID="{FDCDCF6A-FD44-4FA4-A75E-5428FA6891B0}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="swipe_04" ID="{5A3D3832-B936-4B2E-8422-D5CF0FD319ED}" ShortID="735756961">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="swipe_04" ID="{C336B2B8-635C-42F2-BD4B-EFAA81E7612A}">
+									<Language>SFX</Language>
+									<AudioFile>swipe_04.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="945499628"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="swipe_04" ID="{C336B2B8-635C-42F2-BD4B-EFAA81E7612A}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="swipe_05" ID="{42F4CB55-5FA9-4B85-B4A0-D58213E7179A}" ShortID="802089351">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="swipe_05" ID="{57F067A7-FA68-4E83-9FBC-80FA6442E90F}">
+									<Language>SFX</Language>
+									<AudioFile>swipe_05.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="940527361"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="swipe_05" ID="{57F067A7-FA68-4E83-9FBC-80FA6442E90F}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+				</RandomSequenceContainer>
+			</ChildrenList>
+		</WorkUnit>
 	</AudioObjects>
 </WwiseDocument>

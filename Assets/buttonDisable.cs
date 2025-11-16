@@ -13,11 +13,23 @@ public class buttonDisable : MonoBehaviour
     {
         Host.onClick.AddListener(() =>
         {
+            // Play click sound
+            if (UIAudioManager.Exists())
+            {
+                UIAudioManager.Instance.PlayClick();
+            }
+
             Host.interactable = false;
             Client.interactable = false;
         });
         Client.onClick.AddListener(() =>
         {
+            // Play click sound
+            if (UIAudioManager.Exists())
+            {
+                UIAudioManager.Instance.PlayClick();
+            }
+
             Host.interactable = false;
             Client.interactable = false;
         });

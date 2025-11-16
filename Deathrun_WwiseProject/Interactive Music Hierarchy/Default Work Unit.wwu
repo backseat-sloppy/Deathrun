@@ -1,6 +1,218 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WwiseDocument Type="WorkUnit" ID="{B14EF817-884C-4A1B-B7DE-B36662174234}" SchemaVersion="123">
 	<InteractiveMusic>
-		<WorkUnit Name="Default Work Unit" ID="{B14EF817-884C-4A1B-B7DE-B36662174234}" PersistMode="Standalone"/>
+		<WorkUnit Name="Default Work Unit" ID="{B14EF817-884C-4A1B-B7DE-B36662174234}" PersistMode="Standalone">
+			<ChildrenList>
+				<MusicSwitchContainer Name="Lobby_Music" ID="{63DADD19-7637-40EC-9505-66E486836A39}" ShortID="214733554">
+					<PropertyList>
+						<Property Name="UseGameAuxSends" Type="bool" Value="True"/>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Music" ID="{80E25E81-45C9-4CB1-A018-B6EC96D96982}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+						</Reference>
+						<Reference Name="TransitionRoot">
+							<Custom>
+								<MusicTransition Name="Root" ID="{346A3784-4B80-4C01-B7EC-1D615EEC094F}">
+									<PropertyList>
+										<Property Name="IsFolder" Type="bool" Value="True"/>
+									</PropertyList>
+									<ChildrenList>
+										<MusicTransition Name="Transition" ID="{2595CF2C-EDCB-4CF2-B885-BC440DAB5E9C}">
+											<TransitionInfo/>
+										</MusicTransition>
+									</ChildrenList>
+									<TransitionInfo/>
+								</MusicTransition>
+							</Custom>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<MusicSegment Name="Desert Background Music by Sunsai Id-415806" ID="{88189C24-FE7F-4FF3-9E2F-31E57FC8CBE9}" ShortID="67183725">
+							<PropertyList>
+								<Property Name="EndPosition" Type="Real64" Value="62000"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<MusicTrack Name="Desert Background Music by Sunsai Id-415806" ID="{CB5E8528-EBC1-432F-86A0-75711E5E6662}" ShortID="283308634">
+									<ReferenceList>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+										</Reference>
+										<Reference Name="TransitionRoot">
+											<Custom>
+												<MusicTransition Name="Root" ID="{87BCF6DD-F9E3-4D49-A876-9022E4A8F4E8}">
+													<PropertyList>
+														<Property Name="IsFolder" Type="bool" Value="True"/>
+													</PropertyList>
+													<TransitionInfo/>
+												</MusicTransition>
+											</Custom>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="Desert Background Music by Sunsai Id-415806" ID="{09B66ED9-290A-46BE-AE78-1049B7DDF95D}">
+											<Language>SFX</Language>
+											<AudioFile>Desert Background Music by Sunsai Id-415806.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="846481208"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ObjectLists>
+										<ObjectList Name="Sequences">
+											<Reference>
+												<Local>
+													<MusicTrackSequence Name="" ID="{9EEEB467-45B2-4C19-B3C5-E3F19EF2B052}">
+														<ObjectLists>
+															<ObjectList Name="Clips">
+																<Reference>
+																	<Local>
+																		<MusicClip Name="Desert Background Music by Sunsai Id-415806" ID="{F851D7DB-DA12-41F8-B58E-51BA4D47B920}">
+																			<PropertyList>
+																				<Property Name="EndTrimOffset" Type="Real64" Value="62000"/>
+																				<Property Name="FadeInMode" Type="int16" Value="0"/>
+																				<Property Name="FadeOutMode" Type="int16" Value="0"/>
+																			</PropertyList>
+																			<AudioSourceRef Name="Desert Background Music by Sunsai Id-415806" ID="{09B66ED9-290A-46BE-AE78-1049B7DDF95D}"/>
+																		</MusicClip>
+																	</Local>
+																</Reference>
+															</ObjectList>
+														</ObjectLists>
+													</MusicTrackSequence>
+												</Local>
+											</Reference>
+										</ObjectList>
+									</ObjectLists>
+								</MusicTrack>
+							</ChildrenList>
+							<StateInfo>
+								<StateGroupList>
+									<StateGroupInfo>
+										<StateGroupRef Name="GamePhase" ID="{C3BA74A5-AF62-4EFF-A338-081A2581F666}"/>
+									</StateGroupInfo>
+								</StateGroupList>
+								<CustomStateList>
+									<CustomState>
+										<StateRef Name="Countdown" ID="{2ABF52F7-3FA0-4156-BC26-931CB93B7D10}"/>
+										<CustomState Name="" ID="{0025708C-C646-42C3-9D08-6783F3EAAD26}" ShortID="224289120"/>
+									</CustomState>
+									<CustomState>
+										<StateRef Name="Playing" ID="{D3EFD216-3177-4618-B388-5B45AC65332F}"/>
+										<CustomState Name="" ID="{3E956548-20C4-423D-8AF0-A8C9E9138268}" ShortID="539647387"/>
+									</CustomState>
+									<CustomState>
+										<StateRef Name="Failed" ID="{F81843ED-2DD2-46AE-979E-F13FF21DCA97}"/>
+										<CustomState Name="" ID="{FA86AAB5-5502-40EB-AB20-2BFDCBF62FE7}" ShortID="1018577255"/>
+									</CustomState>
+									<CustomState>
+										<StateRef Name="Completed" ID="{477990BC-468D-4A98-A46E-B552655D76F9}"/>
+										<CustomState Name="" ID="{9CDBB626-F76A-4F33-B946-72601AF39CD7}" ShortID="780021098"/>
+									</CustomState>
+									<CustomState>
+										<StateRef Name="None" ID="{1F88B221-C070-4BF3-9D38-42882F4BC856}"/>
+										<CustomState Name="" ID="{319FD454-4C39-4822-BEF7-CEEF3175135E}" ShortID="652275159"/>
+									</CustomState>
+									<CustomState>
+										<StateRef Name="Menu" ID="{220BAC48-3358-4E57-B226-4DEBC4529A12}"/>
+										<CustomState Name="" ID="{BCD5F6B5-C88F-4F59-B7E8-AC4833C5995D}" ShortID="453293091"/>
+									</CustomState>
+								</CustomStateList>
+							</StateInfo>
+							<ObjectLists>
+								<ObjectList Name="Cues">
+									<Reference>
+										<Local>
+											<MusicCue Name="Entry Cue" ID="{CD911BAC-9837-4D44-8C98-9C09CBF2D23C}"/>
+										</Local>
+									</Reference>
+									<Reference>
+										<Local>
+											<MusicCue Name="Exit Cue" ID="{EC5CCFAF-57B1-41F3-A936-38A127A7FFE1}">
+												<PropertyList>
+													<Property Name="CueType" Type="int16" Value="1"/>
+													<Property Name="TimeMs" Type="Real64" Value="62000"/>
+												</PropertyList>
+											</MusicCue>
+										</Local>
+									</Reference>
+								</ObjectList>
+							</ObjectLists>
+						</MusicSegment>
+					</ChildrenList>
+					<StateInfo>
+						<StateGroupList>
+							<StateGroupInfo>
+								<StateGroupRef Name="GamePhase" ID="{C3BA74A5-AF62-4EFF-A338-081A2581F666}"/>
+							</StateGroupInfo>
+						</StateGroupList>
+						<CustomStateList>
+							<CustomState>
+								<StateRef Name="Countdown" ID="{2ABF52F7-3FA0-4156-BC26-931CB93B7D10}"/>
+								<CustomState Name="" ID="{52F8432F-E9B9-4D2B-952B-9CE3C5147F39}" ShortID="306247789"/>
+							</CustomState>
+							<CustomState>
+								<StateRef Name="Playing" ID="{D3EFD216-3177-4618-B388-5B45AC65332F}"/>
+								<CustomState Name="" ID="{B8F4CE15-ABD1-41D8-89AE-E18E6A596924}" ShortID="550030347"/>
+							</CustomState>
+							<CustomState>
+								<StateRef Name="Failed" ID="{F81843ED-2DD2-46AE-979E-F13FF21DCA97}"/>
+								<CustomState Name="" ID="{74D463A5-561B-4AEE-9979-450C5BAB23CB}" ShortID="983297371"/>
+							</CustomState>
+							<CustomState>
+								<StateRef Name="Completed" ID="{477990BC-468D-4A98-A46E-B552655D76F9}"/>
+								<CustomState Name="" ID="{BE1B0D94-4354-4D2B-8AD6-7465E63DB05D}" ShortID="34309591"/>
+							</CustomState>
+							<CustomState>
+								<StateRef Name="None" ID="{1F88B221-C070-4BF3-9D38-42882F4BC856}"/>
+								<CustomState Name="" ID="{CF1783C8-6F1A-4D89-BE82-EFB6127E9D34}" ShortID="151557649"/>
+							</CustomState>
+							<CustomState>
+								<StateRef Name="Menu" ID="{220BAC48-3358-4E57-B226-4DEBC4529A12}"/>
+								<CustomState Name="" ID="{67368DEA-AEBD-46B3-B699-0726863417C6}" ShortID="955141816"/>
+							</CustomState>
+						</CustomStateList>
+					</StateInfo>
+					<ObjectLists>
+						<ObjectList Name="Arguments">
+							<Reference>
+								<ObjectRef Name="GamePhase" ID="{C3BA74A5-AF62-4EFF-A338-081A2581F666}" WorkUnitID="{51F9A901-2DF3-423D-BB46-2D70EB6B1199}"/>
+							</Reference>
+						</ObjectList>
+						<ObjectList Name="Entries">
+							<Reference>
+								<Local>
+									<MultiSwitchEntry Name="" ID="{EC484752-7E17-4E30-B9D2-77A92BEBD6BE}">
+										<ReferenceList>
+											<Reference Name="AudioNode">
+												<ObjectRef Name="Desert Background Music by Sunsai Id-415806" ID="{88189C24-FE7F-4FF3-9E2F-31E57FC8CBE9}" WorkUnitID="{B14EF817-884C-4A1B-B7DE-B36662174234}"/>
+											</Reference>
+										</ReferenceList>
+										<ObjectLists>
+											<ObjectList Name="EntryPath">
+												<Reference>
+													<ObjectRef Name="Menu" ID="{220BAC48-3358-4E57-B226-4DEBC4529A12}" WorkUnitID="{51F9A901-2DF3-423D-BB46-2D70EB6B1199}"/>
+												</Reference>
+											</ObjectList>
+										</ObjectLists>
+									</MultiSwitchEntry>
+								</Local>
+							</Reference>
+						</ObjectList>
+					</ObjectLists>
+				</MusicSwitchContainer>
+			</ChildrenList>
+		</WorkUnit>
 	</InteractiveMusic>
 </WwiseDocument>

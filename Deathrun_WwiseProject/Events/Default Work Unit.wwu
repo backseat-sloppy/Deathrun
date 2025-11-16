@@ -4,6 +4,8 @@
 		<WorkUnit Name="Default Work Unit" ID="{8958955A-C05E-49D4-B8CC-7211FE588746}" PersistMode="Standalone">
 			<ChildrenList>
 				<WorkUnit Name="EV_Player" ID="{7C275CC9-22AD-4881-B391-FFA0004C77EE}" PersistMode="Reference"/>
+				<WorkUnit Name="EV_Traps" ID="{3AAE3100-B422-44D2-AD6E-922A17C24207}" PersistMode="Reference"/>
+				<WorkUnit Name="EV_UI" ID="{0AC66EB0-74E5-4595-B6BB-F204E08B9AC5}" PersistMode="Reference"/>
 			</ChildrenList>
 		</WorkUnit>
 	</Events>
