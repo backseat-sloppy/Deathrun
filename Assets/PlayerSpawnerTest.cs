@@ -44,45 +44,56 @@ public class PlayerSpawnerTest : NetworkBehaviour
         spawnablePrefabs = null;
     }
 
-    private void FixedUpdate()
+private void FixedUpdate()
+{
+    // 2. Ownership Check: Only the client who owns this object should process its input.
+    if (!IsOwner)
     {
-        // 2. Ownership Check: Only the client who owns this object should process its input.
-        if (!IsOwner)
-        {
-            return;
-        }
-
-        // Prevent spawning multiple times
-        if (hasSpawnedAvatar)
-        {
-            return;
-        }
-
-        // Check for 'P' key press (for PC/Player Avatar - Index 0)
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            // Request the server to spawn the prefab at index 0 (PC)
-            RequestSpawnPrefabServerRpc(0, false); // false = PC Runner
-            return; // Exit to prevent auto-spawn
-        }
-
-        // Auto-spawn AR prefab after delay if no input received
-        autoSpawnTimer += Time.deltaTime;
-
-  if (Input.GetKeyDown(KeyCode.K))
-        {
-            // Request the server to spawn the prefab at index 1 (AR)
-            RequestSpawnPrefabServerRpc(1, true); // true = AR Director
-            return; // Exit to prevent auto-spawn
-        }
-
-        if (autoSpawnTimer >= autoSpawnDelay)
-        {
-            // Request the server to spawn the prefab at index 1 (AR)
-            RequestSpawnPrefabServerRpc(1, true); // true = AR Director
-            return;
-        }
+        return;
     }
+
+    // Prevent spawning multiple times
+    if (hasSpawnedAvatar)
+    {
+        return;
+    }
+
+    // --- PC Runner Spawn (Available to all owners) ---
+    // Check for 'P' key press (for PC/Player Avatar - Index 0)
+    if (Input.GetKeyDown(KeyCode.P))
+    {
+        RequestSpawnPrefabServerRpc(0, false); // false = PC Runner
+        return; // Exit to prevent auto-spawn
+    }
+
+    // --- AR Director Logic: Only for the Host ---
+    // The Host is the only one who should auto-spawn the AR Director.
+    if (!IsHost)
+    {
+        // For non-hosts (standard clients), skip the auto-spawn and AR manual key
+        return;
+    }
+
+
+    // --- AR Director Manual Spawn (Host Only) ---
+    // Manual 'K' key press for AR is now restricted to the Host.
+    if (Input.GetKeyDown(KeyCode.K))
+    {
+        // Request the server to spawn the prefab at index 1 (AR)
+        RequestSpawnPrefabServerRpc(1, true); // true = AR Director
+        return; // Exit to prevent auto-spawn
+    }
+
+    // --- AR Director Auto-Spawn (Host Only) ---
+    autoSpawnTimer += Time.deltaTime;
+
+    if (autoSpawnTimer >= autoSpawnDelay)
+    {
+        // Request the server to spawn the prefab at index 1 (AR)
+        RequestSpawnPrefabServerRpc(1, true); // true = AR Director
+        return;
+    }
+}
 
     /// <summary>
     /// This is an RPC (Remote Procedure Call) executed only on the server.
@@ -166,5 +177,22 @@ public class PlayerSpawnerTest : NetworkBehaviour
 
         // Mark that an avatar has been successfully spawned
         hasSpawnedAvatar = true;
+        
+        // 6. Disable the Spawner on the owner's client
+        DisableSpawnerClientRpc(new ClientRpcParams { TargetClientIds = new ulong[] { OwnerClientId } });
+    }
+    
+    /// <summary>
+    /// Notifies the specific client who owns this spawner object to disable this component.
+    /// </summary>
+    [ClientRpc]
+    private void DisableSpawnerClientRpc(ClientRpcParams clientRpcParams = default)
+    {
+        // Check IsOwner just for an extra safety layer, although the RPC should only target the owner.
+        if (IsOwner)
+        {
+            Debug.Log("🗑️ Disabling Player Spawner component after successful spawn.");
+            this.enabled = false;
+        }
     }
 }
