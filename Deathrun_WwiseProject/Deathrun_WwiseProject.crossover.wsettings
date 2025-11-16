@@ -148,7 +148,7 @@
 						<Value Platform="Android"></Value>
 					</ValueList>
 				</Property>
-				<Property Name="SoundEngine\BusMapping\{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" Type="string" Value="{CDA86703-49C9-462E-BE96-8DAE0C30233B}3971303506"/>
+				<Property Name="SoundEngine\BusMapping\{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" Type="string" Value="{CDA86703-49C9-462E-BE96-8DAE0C30233B}4027976184"/>
 				<Property Name="SwitchContainerEditorLocation\{2864B63C-E903-4ABE-8933-F1A142F810DF}\x64_Collapsed States" Type="string" Value="0Dbv7zVR/kq7FS+OtHbj7EdAbJt3WPhLor0wc40dblYCa9k8IboASprexjMVZ0pPY4gZW1mBNkmrNZm4L7PoKEXZz+d8LAVFn1NO7f7p9FI="/>
 				<Property Name="SwitchContainerEditorLocation\{91702B6B-8505-49F5-BDA9-2DF7FD01CEA5}\x64_Collapsed States" Type="string" Value=""/>
 				<Property Name="SwitchContainerEditorLocation\{A476B3DD-4DA0-4393-B799-05D6D3B34BA7}\x64_Collapsed States" Type="string" Value=""/>
