@@ -1164,7 +1164,6 @@ GameObject:
   - component: {fileID: 4278172025655017367}
   - component: {fileID: 7653470262410290320}
   - component: {fileID: 8743761352852536697}
-  - component: {fileID: 6030804496352810190}
   - component: {fileID: 4819512891016731243}
   - component: {fileID: -8502448221971026690}
   - component: {fileID: 2636016424168098404}
@@ -1405,9 +1404,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  moveSpeed: 5
-  airMoveSpeed: 3
-  jumpForce: 5
+  moveSpeed: 6
+  airMoveSpeed: 5
+  jumpForce: 8
   jumpStateDuration: 0.2
   fallVelocityThreshold: -0.5
   cameraController: {fileID: 0}
@@ -1524,31 +1523,6 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   TransitionStateInfoList: []
   m_Animator: {fileID: 5718142505306023859}
---- !u!143 &6030804496352810190
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4639992981897814336}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &4819512891016731243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6393,7 +6367,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fallEmitter: {fileID: 2636016424168098404}
-  controller: {fileID: 6030804496352810190}
+  controller: {fileID: 0}
   fallThreshold: -2
 --- !u!1 &4668586715627186204
 GameObject:
