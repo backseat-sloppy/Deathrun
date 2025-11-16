@@ -1298,6 +1298,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 994936562249113210, guid: f7233e3fa6e406446be0b79445e9765a, type: 3}
+      propertyPath: m_TagString
+      value: Hand
+      objectReference: {fileID: 0}
+    - target: {fileID: 4647641360393917314, guid: f7233e3fa6e406446be0b79445e9765a, type: 3}
+      propertyPath: m_TagString
+      value: Hand
+      objectReference: {fileID: 0}
+    - target: {fileID: 7161028083949160520, guid: f7233e3fa6e406446be0b79445e9765a, type: 3}
+      propertyPath: m_TagString
+      value: Hand
+      objectReference: {fileID: 0}
+    - target: {fileID: 7161028084019063173, guid: f7233e3fa6e406446be0b79445e9765a, type: 3}
+      propertyPath: m_TagString
+      value: Hand
+      objectReference: {fileID: 0}
     - target: {fileID: 9072090153562617722, guid: f7233e3fa6e406446be0b79445e9765a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
