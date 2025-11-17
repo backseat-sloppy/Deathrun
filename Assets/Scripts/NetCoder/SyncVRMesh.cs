@@ -4,31 +4,31 @@ using Unity.Netcode;
 namespace DeathrunGame
 {
     /// <summary>
-    /// Synchronizes VR player head and hand transforms across the network.
-    /// Manually syncs transforms because Meta XR tracking updates aren't detected by NetworkTransform.
-    /// The VR player (host) actively sends their tracking data to all clients.
-    /// Also handles mesh visibility (hides meshes for the local VR player).
+    /// Synchronizes independent VR mesh GameObjects to follow the VR player's movements.
+    /// The meshes exist as separate objects in the world and are positioned via RPC.
+    /// This is a "hacked" solution that syncs only the visual meshes, not the Camera Rig itself.
+    /// The VR player (host) sends position updates, and the meshes mirror the movements for all clients.
     /// </summary>
     public class SyncVRMesh : NetworkBehaviour
     {
-        [Header("VR Transform References")]
-        [Tooltip("The head/camera transform to track")]
+        [Header("VR Transform References (What to Track)")]
+        [Tooltip("The head/camera transform to track from the VR rig")]
         [SerializeField] private Transform headTransform;
         
-        [Tooltip("The left hand controller transform to track")]
+        [Tooltip("The left hand controller transform to track from the VR rig")]
         [SerializeField] private Transform leftHandTransform;
         
-        [Tooltip("The right hand controller transform to track")]
+        [Tooltip("The right hand controller transform to track from the VR rig")]
         [SerializeField] private Transform rightHandTransform;
 
-        [Header("VR Mesh References")]
-        [Tooltip("Assign the head mesh GameObject")]
+        [Header("World Mesh GameObjects (What to Move)")]
+        [Tooltip("The independent head mesh GameObject in the world (NOT a child of Camera Rig)")]
         [SerializeField] private GameObject headMesh;
         
-        [Tooltip("Assign the left hand mesh GameObject")]  
+        [Tooltip("The independent left hand mesh GameObject in the world")]  
         [SerializeField] private GameObject leftHandMesh;
         
-        [Tooltip("Assign the right hand mesh GameObject")]
+        [Tooltip("The independent right hand mesh GameObject in the world")]
         [SerializeField] private GameObject rightHandMesh;
 
         [Header("Settings")]
@@ -39,7 +39,7 @@ namespace DeathrunGame
         [SerializeField] private bool smoothMovement = true;
         
         [Tooltip("Interpolation speed multiplier")]
-        [SerializeField] private float interpolationSpeed = 15f;
+        [SerializeField] private float interpolationSpeed = 20f;
 
         [Header("Debug")]
         [SerializeField] private bool showDebugLogs = true;
@@ -64,30 +64,46 @@ namespace DeathrunGame
         {
             base.OnNetworkSpawn();
             
-            // Hide meshes for the local VR player (host), show for remote players
-            bool shouldShowMeshes = !IsHost;
-            SetMeshesVisibility(shouldShowMeshes);
-            
             if (showDebugLogs)
             {
-                Debug.Log($"[SyncVRMesh] OnNetworkSpawn - IsHost: {IsHost}, IsOwner: {IsOwner}, ShowMeshes: {shouldShowMeshes}");
+                Debug.Log($"[SyncVRMesh] OnNetworkSpawn - IsHost: {IsHost}, IsOwner: {IsOwner}");
             }
 
-            // Initialize interpolation targets for clients
-            if (!IsHost && headMesh != null)
+            if (IsHost)
             {
-                targetHeadPos = headMesh.transform.position;
-                targetHeadRot = headMesh.transform.rotation;
+                // Host: Hide the meshes locally (VR player doesn't see their own mesh)
+                SetMeshesVisibility(false);
+                
+                if (showDebugLogs)
+                {
+                    Debug.Log("[SyncVRMesh] Host - Meshes hidden locally");
+                }
             }
-            if (!IsHost && leftHandMesh != null)
+            else
             {
-                targetLeftHandPos = leftHandMesh.transform.position;
-                targetLeftHandRot = leftHandMesh.transform.rotation;
-            }
-            if (!IsHost && rightHandMesh != null)
-            {
-                targetRightHandPos = rightHandMesh.transform.position;
-                targetRightHandRot = rightHandMesh.transform.rotation;
+                // Clients: Show the meshes and initialize interpolation targets
+                SetMeshesVisibility(true);
+                
+                if (headMesh != null)
+                {
+                    targetHeadPos = headMesh.transform.position;
+                    targetHeadRot = headMesh.transform.rotation;
+                }
+                if (leftHandMesh != null)
+                {
+                    targetLeftHandPos = leftHandMesh.transform.position;
+                    targetLeftHandRot = leftHandMesh.transform.rotation;
+                }
+                if (rightHandMesh != null)
+                {
+                    targetRightHandPos = rightHandMesh.transform.position;
+                    targetRightHandRot = rightHandMesh.transform.rotation;
+                }
+                
+                if (showDebugLogs)
+                {
+                    Debug.Log("[SyncVRMesh] Client - Meshes visible, interpolation initialized");
+                }
             }
         }
 
@@ -97,7 +113,7 @@ namespace DeathrunGame
 
             if (IsHost)
             {
-                // Host: Send VR tracking data to all clients
+                // Host: Read VR tracking and send to all clients
                 SendVRTransformsToClients();
             }
             else
@@ -108,7 +124,7 @@ namespace DeathrunGame
         }
 
         /// <summary>
-        /// Host: Read local VR tracking and send to all clients via ClientRpc
+        /// Host: Read local VR tracking and send world positions to all clients via ClientRpc
         /// </summary>
         private void SendVRTransformsToClients()
         {
@@ -118,7 +134,7 @@ namespace DeathrunGame
             {
                 updateTimer = 0f;
 
-                // Get current world-space transforms
+                // Get current WORLD-SPACE transforms from the VR rig
                 Vector3 headPos = headTransform != null ? headTransform.position : Vector3.zero;
                 Quaternion headRot = headTransform != null ? headTransform.rotation : Quaternion.identity;
                 
@@ -128,33 +144,33 @@ namespace DeathrunGame
                 Vector3 rightHandPos = rightHandTransform != null ? rightHandTransform.position : Vector3.zero;
                 Quaternion rightHandRot = rightHandTransform != null ? rightHandTransform.rotation : Quaternion.identity;
 
-                // Send to all clients
-                UpdateVRTransformsClientRpc(
+                // Send to all clients (RPCs are sent to everyone including host, but we'll ignore on host)
+                UpdateVRMeshTransformsClientRpc(
                     headPos, headRot,
                     leftHandPos, leftHandRot,
                     rightHandPos, rightHandRot
                 );
 
-                if (showDebugLogs && Time.frameCount % 60 == 0) // Log every 60 frames to avoid spam
+                if (showDebugLogs && Time.frameCount % 180 == 0) // Log every 180 frames (3 seconds at 60fps)
                 {
-                    Debug.Log($"[SyncVRMesh] Host sending - Head: {headPos}, LeftHand: {leftHandPos}, RightHand: {rightHandPos}");
+                    Debug.Log($"[SyncVRMesh] Host sending - Head: {headPos:F2}, LeftHand: {leftHandPos:F2}, RightHand: {rightHandPos:F2}");
                 }
             }
         }
 
         /// <summary>
-        /// ClientRpc: Receive transform data from host
+        /// ClientRpc: Receive transform data from host and update mesh positions
         /// </summary>
         [ClientRpc]
-        private void UpdateVRTransformsClientRpc(
+        private void UpdateVRMeshTransformsClientRpc(
             Vector3 headPos, Quaternion headRot,
             Vector3 leftHandPos, Quaternion leftHandRot,
             Vector3 rightHandPos, Quaternion rightHandRot)
         {
-            // Don't apply on host (they have their own tracking)
+            // Don't apply on host (they have their own tracking and meshes are hidden)
             if (IsHost) return;
 
-            // Update interpolation targets
+            // Update interpolation targets (meshes will lerp to these positions)
             targetHeadPos = headPos;
             targetHeadRot = headRot;
             targetLeftHandPos = leftHandPos;
@@ -162,31 +178,34 @@ namespace DeathrunGame
             targetRightHandPos = rightHandPos;
             targetRightHandRot = rightHandRot;
 
-            if (showDebugLogs && Time.frameCount % 60 == 0)
+            if (showDebugLogs && Time.frameCount % 180 == 0)
             {
-                Debug.Log($"[SyncVRMesh] Client received - Head: {headPos}");
+                Debug.Log($"[SyncVRMesh] Client received - Head: {headPos:F2}");
             }
         }
 
         /// <summary>
-        /// Clients: Smoothly interpolate meshes to target positions
+        /// Clients: Smoothly move the world meshes to match the VR player's tracked positions
         /// </summary>
         private void ApplyInterpolation()
         {
             float t = smoothMovement ? Time.deltaTime * interpolationSpeed : 1f;
 
+            // Move the HEAD MESH in the world to match the VR player's head position
             if (headMesh != null)
             {
                 headMesh.transform.position = Vector3.Lerp(headMesh.transform.position, targetHeadPos, t);
                 headMesh.transform.rotation = Quaternion.Slerp(headMesh.transform.rotation, targetHeadRot, t);
             }
 
+            // Move the LEFT HAND MESH in the world to match the VR player's left hand position
             if (leftHandMesh != null)
             {
                 leftHandMesh.transform.position = Vector3.Lerp(leftHandMesh.transform.position, targetLeftHandPos, t);
                 leftHandMesh.transform.rotation = Quaternion.Slerp(leftHandMesh.transform.rotation, targetLeftHandRot, t);
             }
 
+            // Move the RIGHT HAND MESH in the world to match the VR player's right hand position
             if (rightHandMesh != null)
             {
                 rightHandMesh.transform.position = Vector3.Lerp(rightHandMesh.transform.position, targetRightHandPos, t);
@@ -195,7 +214,7 @@ namespace DeathrunGame
         }
 
         /// <summary>
-        /// Sets the visibility of all VR meshes.
+        /// Show or hide the world meshes
         /// </summary>
         private void SetMeshesVisibility(bool visible)
         {
@@ -217,6 +236,19 @@ namespace DeathrunGame
             if (showDebugLogs)
             {
                 Debug.Log($"[SyncVRMesh] Meshes visibility set to: {visible}");
+            }
+        }
+
+        /// <summary>
+        /// Optional: Manually trigger a sync update (for testing)
+        /// </summary>
+        [ContextMenu("Force Sync Now")]
+        public void ForceSyncNow()
+        {
+            if (IsHost)
+            {
+                updateTimer = updateInterval; // Force next update
+                Debug.Log("[SyncVRMesh] Forced sync triggered");
             }
         }
     }
