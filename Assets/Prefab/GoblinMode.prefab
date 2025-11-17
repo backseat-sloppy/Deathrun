@@ -1172,6 +1172,7 @@ GameObject:
   - component: {fileID: 8041006399085367941}
   - component: {fileID: 9105234382997235252}
   - component: {fileID: 8747725736566697178}
+  - component: {fileID: 5728203697304997091}
   m_Layer: 0
   m_Name: GoblinMode
   m_TagString: Player
@@ -1211,7 +1212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1482640004
+  GlobalObjectIdHash: 21757913
   InScenePlacedSourceGlobalObjectIdHash: 1482640004
   DeferredDespawnTick: 0
   Ownership: 1
@@ -6465,6 +6466,20 @@ MonoBehaviour:
   footstepCooldown: 0.2
   footHeightThreshold: 0.2
   surfaceRtpcName: SurfaceType
+--- !u!114 &5728203697304997091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4639992981897814336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28a5c7248ba46410fab764d69aed58e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  endScreenUI: {fileID: 0}
 --- !u!1 &4668586715627186204
 GameObject:
   m_ObjectHideFlags: 0
