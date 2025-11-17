@@ -4,29 +4,42 @@ public class FallParticles : MonoBehaviour
 {
     [Header("References")]
     public ParticleSystem fallEmitter;
-    public CharacterController controller;
+    public Rigidbody rb;
 
     [Header("Settings")]
     public float fallThreshold = -2f; // minimum downward velocity before we consider it "falling"
 
-    private Vector3 lastPosition;
     private bool isFalling;
 
     void Start()
     {
-        if (!controller) controller = GetComponent<CharacterController>();
-        if (fallEmitter) fallEmitter.Stop();
-        lastPosition = transform.position;
+        // Auto-find Rigidbody if not assigned
+        if (rb == null) 
+        {
+            rb = GetComponent<Rigidbody>();
+        }
+        
+        if (fallEmitter) 
+        {
+            fallEmitter.Stop();
+        }
+        
+        if (rb == null)
+        {
+            Debug.LogError("[FallParticles] No Rigidbody found! Please assign one.");
+            enabled = false;
+        }
     }
 
     void Update()
     {
-        // Calculate vertical velocity (approximation)
-        float verticalVelocity = (transform.position.y - lastPosition.y) / Time.deltaTime;
-        lastPosition = transform.position;
+        if (rb == null) return;
 
-        // Detect falling
-        bool currentlyFalling = !controller.isGrounded && verticalVelocity < fallThreshold;
+        // Get vertical velocity from Rigidbody
+        float verticalVelocity = rb.linearVelocity.y;
+
+        // Detect falling - only based on downward velocity
+        bool currentlyFalling = verticalVelocity < fallThreshold;
 
         if (currentlyFalling && !isFalling)
         {
@@ -36,7 +49,7 @@ public class FallParticles : MonoBehaviour
         }
         else if (!currentlyFalling && isFalling)
         {
-            // Player landed or stopped falling
+            // Player stopped falling (moving upward or stopped)
             if (fallEmitter) fallEmitter.Stop();
             isFalling = false;
         }
