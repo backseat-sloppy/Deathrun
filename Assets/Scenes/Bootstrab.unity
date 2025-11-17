@@ -10838,10 +10838,10 @@ MonoBehaviour:
   errorMessageText: {fileID: 2084393816}
   closeErrorButton: {fileID: 486577877}
   loadingText: {fileID: 2004392759}
-  autoCreateLobby: 1
+  autoCreateLobby: 0
   autoCreateDelay: 5
   autoJoinRetryDelay: 10
-  minPlayersToStart: 1
+  minPlayersToStart: 3
   startGameCountdown: 5
 --- !u!114 &1947660911
 MonoBehaviour:
