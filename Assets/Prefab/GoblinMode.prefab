@@ -252,12 +252,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 434325141624473593}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0.0172, z: -0.0244}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: 0.6951689, y: -0, z: -0, w: 0.71884644}
+  m_LocalPosition: {x: 0, y: 0.019294785, z: 0.0095000435}
+  m_LocalScale: {x: 0.6587209, y: 0.6587209, z: 0.65872097}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1450198504754759194}
+  m_Father: {fileID: 841043637146455215}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &495721504825228351
 GameObject:
@@ -706,7 +706,7 @@ MonoBehaviour:
   m_Roots: []
   m_UpdateRate: 60
   m_UpdateMode: 3
-  m_Damping: 0.032
+  m_Damping: 0.569
   m_DampingDistrib:
     serializedVersion: 2
     m_Curve:
@@ -731,21 +731,21 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  m_Elasticity: 0.056
+  m_Elasticity: 0.003
   m_ElasticityDistrib:
     serializedVersion: 2
     m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  m_Stiffness: 0.023
+  m_Stiffness: 0.298
   m_StiffnessDistrib:
     serializedVersion: 2
     m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  m_Inert: 0.015
+  m_Inert: 0
   m_InertDistrib:
     serializedVersion: 2
     m_Curve: []
@@ -1257,6 +1257,7 @@ MonoBehaviour:
   deadlyTags:
   - Enemy
   respawnPoint: {fileID: 0}
+  deathParticles: {fileID: 2636016424168098404}
 --- !u!198 &2636016424168098404
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -1265,14 +1266,14 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4639992981897814336}
   serializedVersion: 8
-  lengthInSec: 4
+  lengthInSec: 3.1
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
-  looping: 1
+  looping: 0
   prewarm: 0
   playOnAwake: 1
   useUnscaledTime: 0
@@ -1888,15 +1889,15 @@ ParticleSystem:
   ShapeModule:
     serializedVersion: 6
     enabled: 1
-    type: 4
-    angle: 25
+    type: 5
+    angle: 79.52
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
     donutRadius: 0.2
-    m_Position: {x: 0, y: 3.45, z: -0.52}
-    m_Rotation: {x: -136.78, y: 0, z: 0}
-    m_Scale: {x: 0.15, y: 0.1, z: 0.51}
+    m_Position: {x: 0, y: 2.46, z: 0.35}
+    m_Rotation: {x: -93.1, y: 0, z: 0}
+    m_Scale: {x: 1.8, y: 2.05, z: 6.22}
     placementMode: 0
     m_MeshMaterialIndex: 0
     m_MeshNormalOffset: 0
@@ -2094,7 +2095,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0
+      scalar: 5.64
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -2147,7 +2148,7 @@ ParticleSystem:
     rateOverDistance:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 2
+      scalar: 0
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -6064,7 +6065,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4639992981897814336}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 52e2a7dc4d367bb45b080cd632e46149, type: 3}
   m_Name: 
@@ -6990,7 +6991,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: -7493596028755563170, guid: 3b303c05486029743b134e6cbaea7a8a, type: 3}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 3b303c05486029743b134e6cbaea7a8a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4060801952518341626}
     m_AddedComponents:
@@ -7007,11 +7008,6 @@ PrefabInstance:
 --- !u!4 &841043637146455215 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 3b303c05486029743b134e6cbaea7a8a, type: 3}
-  m_PrefabInstance: {fileID: 874056519896460100}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1450198504754759194 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -7493596028755563170, guid: 3b303c05486029743b134e6cbaea7a8a, type: 3}
   m_PrefabInstance: {fileID: 874056519896460100}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &5428245171379488851 stripped

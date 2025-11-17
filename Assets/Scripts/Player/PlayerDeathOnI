@@ -1,4 +1,4 @@
-
+﻿mpact.cs
 using UnityEngine;
 
 public class PlayerDeathOnImpact : MonoBehaviour
