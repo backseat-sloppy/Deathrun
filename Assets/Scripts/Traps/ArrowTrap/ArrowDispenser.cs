@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 public class ArrowDispenser : MonoBehaviour
@@ -16,22 +16,53 @@ public class ArrowDispenser : MonoBehaviour
     public float angleVariance = 5f; // degrees to randomly rotate arrow
     public Vector3 positionVariance = new Vector3(0.1f, 0.1f, 0f); // random offset in local space
 
+    [Header("Activation Settings")]
+    [SerializeField] private bool startActive = false; // Start shooting immediately?
+    [SerializeField] private float activeDuration = 3f; // How long to shoot arrows
+    [SerializeField] private bool oneTimeUse = true; // Can only be triggered once
+
     private bool isShooting = false;
+    private bool hasBeenUsed = false;
     private int currentSpawnIndex = 0;
 
-    private void OnTriggerEnter(Collider other)
+    private void Start()
     {
-        if (other.CompareTag("Player"))
-            StartCoroutine(ShootArrows());
+        if (startActive)
+        {
+            ActivateTrap();
+        }
     }
 
-    private void OnTriggerExit(Collider other)
+    /// <summary>
+    /// Activates the arrow dispenser
+    /// </summary>
+    public void ActivateTrap()
     {
-        if (other.CompareTag("Player"))
+        if (hasBeenUsed && oneTimeUse)
         {
-            StopAllCoroutines();
-            isShooting = false;
+            Debug.Log("🏹 ArrowDispenser already used - cannot trigger again!");
+            return;
         }
+
+        if (isShooting)
+        {
+            Debug.Log("🏹 ArrowDispenser already shooting!");
+            return;
+        }
+
+        hasBeenUsed = true;
+        StartCoroutine(ShootArrows());
+        Debug.Log("🏹 ArrowDispenser activated - shooting for " + activeDuration + " seconds!");
+    }
+
+    /// <summary>
+    /// Deactivates the arrow dispenser
+    /// </summary>
+    public void DeactivateTrap()
+    {
+        StopAllCoroutines();
+        isShooting = false;
+        Debug.Log("🏹 ArrowDispenser deactivated!");
     }
 
     private IEnumerator ShootArrows()
@@ -39,11 +70,17 @@ public class ArrowDispenser : MonoBehaviour
         if (isShooting) yield break;
         isShooting = true;
 
-        while (isShooting)
+        float elapsed = 0f;
+
+        while (isShooting && elapsed < activeDuration)
         {
             ShootArrow();
             yield return new WaitForSeconds(1f / Mathf.Max(0.0001f, fireRate));
+            elapsed += 1f / Mathf.Max(0.0001f, fireRate);
         }
+
+        isShooting = false;
+        Debug.Log("🏹 ArrowDispenser finished shooting!");
     }
 
     private void ShootArrow()

@@ -847,6 +847,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1548111313}
+    - target: {fileID: 1608203894691796008, guid: 7c20583e7b13f1e4dad0608e0953b810, type: 3}
+      propertyPath: m_VersionIndex
+      value: 13020
+      objectReference: {fileID: 0}
     - target: {fileID: 2415301180774386943, guid: 7c20583e7b13f1e4dad0608e0953b810, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -871,10 +875,18 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 111109541}
+    - target: {fileID: 3529331291310024882, guid: 7c20583e7b13f1e4dad0608e0953b810, type: 3}
+      propertyPath: m_VersionIndex
+      value: 13954
+      objectReference: {fileID: 0}
     - target: {fileID: 3693934563066007342, guid: 7c20583e7b13f1e4dad0608e0953b810, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1385580571}
+    - target: {fileID: 3693934563066007342, guid: 7c20583e7b13f1e4dad0608e0953b810, type: 3}
+      propertyPath: m_VersionIndex
+      value: 6735
+      objectReference: {fileID: 0}
     - target: {fileID: 3901823041308063136, guid: 7c20583e7b13f1e4dad0608e0953b810, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.80757
@@ -919,6 +931,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1513870866}
+    - target: {fileID: 4471408178166293274, guid: 7c20583e7b13f1e4dad0608e0953b810, type: 3}
+      propertyPath: m_VersionIndex
+      value: 7835
+      objectReference: {fileID: 0}
     - target: {fileID: 4479287874693510128, guid: 7c20583e7b13f1e4dad0608e0953b810, type: 3}
       propertyPath: swingAngle
       value: 180
@@ -2268,7 +2284,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ad6e5482a2266047a0e8ef6aacff691, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trapObject: {fileID: 644092912}
+  trapObject: {fileID: 1560031829}
   activationMethodName: ActivateTrap
   activateOnGrab: 1
   activateOnRelease: 0
@@ -3340,6 +3356,11 @@ Transform:
   - {fileID: 1090802914}
   m_Father: {fileID: 1509034792}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1560031829 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 154203446532219499, guid: 7c20583e7b13f1e4dad0608e0953b810, type: 3}
+  m_PrefabInstance: {fileID: 644092911}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1815680493
 GameObject:
   m_ObjectHideFlags: 0
