@@ -10234,8 +10234,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1947660907}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: 2.4996893e-11, w: 1}
+  m_LocalPosition: {x: 0.000030561838, y: -0.000030473231, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10287,7 +10287,7 @@ MonoBehaviour:
   errorMessageText: {fileID: 2084393816}
   closeErrorButton: {fileID: 486577877}
   loadingText: {fileID: 2004392759}
-  autoCreateLobby: 0
+  autoCreateLobby: 1
   autoCreateDelay: 5
   autoJoinRetryDelay: 10
   minPlayersToStart: 2

@@ -141,14 +141,28 @@ namespace DeathrunGame
                 debugActivateTrap = false;
                 
                 // Only activate in Play mode
-                if (Application.isPlaying)
-                {
-                    ActivateTrap();
-                }
-                else
+                if (!Application.isPlaying)
                 {
                     Debug.LogWarning("[VRTrapActivator] Debug activation only works in Play mode!");
+                    return;
                 }
+
+                // Check if NetworkObject exists
+                NetworkObject netObj = GetComponentInParent<NetworkObject>();
+                if (netObj == null)
+                {
+                    Debug.LogError("[VRTrapActivator] No NetworkObject found! Add a NetworkObject component to this GameObject or its parent.");
+                    return;
+                }
+
+                // Check if spawned
+                if (!netObj.IsSpawned)
+                {
+                    Debug.LogError("[VRTrapActivator] NetworkObject not spawned yet! Start the game as Host/Server first, then try the debug button.");
+                    return;
+                }
+
+                ActivateTrap();
             }
         }
 
@@ -199,6 +213,13 @@ namespace DeathrunGame
             if (trapObject == null)
             {
                 Debug.LogError("[VRTrapActivator] No trap object assigned!");
+                return;
+            }
+
+            // Check if network is ready
+            if (!IsSpawned)
+            {
+                Debug.LogError("[VRTrapActivator] Cannot activate - NetworkObject not spawned! Make sure this GameObject has a NetworkObject component and is spawned on the network.");
                 return;
             }
 
