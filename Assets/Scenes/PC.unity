@@ -2487,6 +2487,84 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 84d332093b2c1254aa23ed69b4530065, type: 3}
   m_PrefabInstance: {fileID: 9204764974670744123}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1407886500
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 9037593944771907212}
+    m_Modifications:
+    - target: {fileID: 5576159658362400606, guid: 72238fb56ee08f5429c178e2d2652fab, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 47.730007
+      objectReference: {fileID: 0}
+    - target: {fileID: 5576159658362400606, guid: 72238fb56ee08f5429c178e2d2652fab, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 132.66138
+      objectReference: {fileID: 0}
+    - target: {fileID: 5576159658362400606, guid: 72238fb56ee08f5429c178e2d2652fab, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 98.86234
+      objectReference: {fileID: 0}
+    - target: {fileID: 5576159658362400606, guid: 72238fb56ee08f5429c178e2d2652fab, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -61.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5576159658362400606, guid: 72238fb56ee08f5429c178e2d2652fab, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 142.34
+      objectReference: {fileID: 0}
+    - target: {fileID: 5576159658362400606, guid: 72238fb56ee08f5429c178e2d2652fab, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 189.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5576159658362400606, guid: 72238fb56ee08f5429c178e2d2652fab, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.4845464
+      objectReference: {fileID: 0}
+    - target: {fileID: 5576159658362400606, guid: 72238fb56ee08f5429c178e2d2652fab, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.4990573
+      objectReference: {fileID: 0}
+    - target: {fileID: 5576159658362400606, guid: 72238fb56ee08f5429c178e2d2652fab, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.5424561
+      objectReference: {fileID: 0}
+    - target: {fileID: 5576159658362400606, guid: 72238fb56ee08f5429c178e2d2652fab, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.4710606
+      objectReference: {fileID: 0}
+    - target: {fileID: 5576159658362400606, guid: 72238fb56ee08f5429c178e2d2652fab, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -84.094
+      objectReference: {fileID: 0}
+    - target: {fileID: 5576159658362400606, guid: 72238fb56ee08f5429c178e2d2652fab, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 147.347
+      objectReference: {fileID: 0}
+    - target: {fileID: 5576159658362400606, guid: 72238fb56ee08f5429c178e2d2652fab, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -415.631
+      objectReference: {fileID: 0}
+    - target: {fileID: 5576159658362400606, guid: 72238fb56ee08f5429c178e2d2652fab, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9112242345494180592, guid: 72238fb56ee08f5429c178e2d2652fab, type: 3}
+      propertyPath: m_Name
+      value: RockRack
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 72238fb56ee08f5429c178e2d2652fab, type: 3}
+--- !u!4 &1407886501 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5576159658362400606, guid: 72238fb56ee08f5429c178e2d2652fab, type: 3}
+  m_PrefabInstance: {fileID: 1407886500}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1421023977 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6ae7edc17d404b346a3cdb561c1a4ccc, type: 3}
@@ -116772,6 +116850,7 @@ Transform:
   - {fileID: 1158277730}
   - {fileID: 7541909981779585943}
   - {fileID: 5376966515111833149}
+  - {fileID: 1407886501}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &9040446167762663230
