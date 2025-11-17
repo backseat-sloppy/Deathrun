@@ -22,6 +22,17 @@ public class VRTrapActivator : MonoBehaviour
     [Tooltip("Activate when released?")]
     [SerializeField] private bool activateOnRelease = false;
 
+    [Header("Visual Feedback")]
+    [Tooltip("Change color to red when activated?")]
+    [SerializeField] private bool changeColorOnActivation = true;
+
+    [Tooltip("Color to change to when activated")]
+    [SerializeField] private Color activatedColor = Color.red;
+
+    [Header("Movement Lock")]
+    [Tooltip("Prevent object from being moved after activation?")]
+    [SerializeField] private bool lockMovementOnActivation = true;
+
     [Header("Debug")]
     [SerializeField] private bool showDebugLogs = true;
     
@@ -29,11 +40,45 @@ public class VRTrapActivator : MonoBehaviour
     [SerializeField] private bool debugActivateTrap = false;
 
     private Grabbable grabbable;
+    private Rigidbody rb;
+    private bool hasBeenActivated = false;
+    private Renderer objectRenderer;
+    private Material originalMaterial;
+    private Material activatedMaterial;
 
     private void Awake()
     {
         // Get the Grabbable component
         grabbable = GetComponent<Grabbable>();
+
+        // Get Rigidbody (if exists) for locking movement
+        rb = GetComponent<Rigidbody>();
+
+        // Get renderer for color change
+        objectRenderer = GetComponent<Renderer>();
+        if (objectRenderer == null)
+        {
+            objectRenderer = GetComponentInChildren<Renderer>();
+        }
+
+        // Store original material
+        if (objectRenderer != null && changeColorOnActivation)
+        {
+            originalMaterial = objectRenderer.material;
+            
+            // Create a copy of the material for activation state
+            activatedMaterial = new Material(originalMaterial);
+            
+            // Set the activated color
+            if (activatedMaterial.HasProperty("_Color"))
+            {
+                activatedMaterial.color = activatedColor;
+            }
+            else if (activatedMaterial.HasProperty("_BaseColor"))
+            {
+                activatedMaterial.SetColor("_BaseColor", activatedColor);
+            }
+        }
     }
 
     private void OnEnable()
@@ -78,6 +123,13 @@ public class VRTrapActivator : MonoBehaviour
     /// </summary>
     private void OnGrabEvent(PointerEvent evt)
     {
+        // Prevent interaction if already activated and locked
+        if (hasBeenActivated && lockMovementOnActivation)
+        {
+            Log("🔒 Object is locked - cannot be grabbed again!");
+            return;
+        }
+
         // Check if object was grabbed
         if (evt.Type == PointerEventType.Select && activateOnGrab)
         {
@@ -98,16 +150,60 @@ public class VRTrapActivator : MonoBehaviour
     /// </summary>
     private void ActivateTrap()
     {
+        if (hasBeenActivated)
+        {
+            Log("⚠️ Trap already activated!");
+            return;
+        }
+
         if (trapObject == null)
         {
             Debug.LogError("[VRTrapActivator] No trap object assigned!");
             return;
         }
 
+        // Mark as activated
+        hasBeenActivated = true;
+
         // Call the activation method on the trap
         trapObject.SendMessage(activationMethodName, SendMessageOptions.DontRequireReceiver);
 
+        // Lock movement
+        if (lockMovementOnActivation)
+        {
+            LockMovement();
+        }
+
+        // Change color
+        if (changeColorOnActivation && objectRenderer != null && activatedMaterial != null)
+        {
+            objectRenderer.material = activatedMaterial;
+            Log("🎨 Changed color to red!");
+        }
+
         Log($"✅ Activated trap: {trapObject.name}");
+    }
+
+    /// <summary>
+    /// Locks the object in place
+    /// </summary>
+    private void LockMovement()
+    {
+        // Disable the grabbable component
+        if (grabbable != null)
+        {
+            grabbable.enabled = false;
+            Log("🔒 Grabbable disabled - object locked!");
+        }
+
+        // Lock the Rigidbody
+        if (rb != null)
+        {
+            rb.isKinematic = true;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            Log("🔒 Rigidbody locked!");
+        }
     }
     
     /// <summary>
@@ -119,11 +215,48 @@ public class VRTrapActivator : MonoBehaviour
         ActivateTrap();
     }
 
+    /// <summary>
+    /// Reset the activator (for testing)
+    /// </summary>
+    public void ResetActivator()
+    {
+        hasBeenActivated = false;
+
+        // Re-enable grabbable
+        if (grabbable != null)
+        {
+            grabbable.enabled = true;
+        }
+
+        // Unlock rigidbody
+        if (rb != null)
+        {
+            rb.isKinematic = false;
+        }
+
+        // Restore original color
+        if (objectRenderer != null && originalMaterial != null)
+        {
+            objectRenderer.material = originalMaterial;
+        }
+
+        Log("🔄 Activator reset!");
+    }
+
     private void Log(string message)
     {
         if (showDebugLogs)
         {
             Debug.Log($"[VRTrapActivator] {message}");
+        }
+    }
+
+    private void OnDestroy()
+    {
+        // Clean up materials to prevent memory leaks
+        if (activatedMaterial != null)
+        {
+            Destroy(activatedMaterial);
         }
     }
 }
