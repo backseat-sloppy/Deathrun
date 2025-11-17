@@ -4635,7 +4635,7 @@ Camera:
   field of view: 60
   orthographic: 1
   orthographic size: 227.3
-  m_Depth: -100
+  m_Depth: 100
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -10290,7 +10290,7 @@ MonoBehaviour:
   autoCreateLobby: 0
   autoCreateDelay: 5
   autoJoinRetryDelay: 10
-  minPlayersToStart: 3
+  minPlayersToStart: 2
   startGameCountdown: 5
 --- !u!114 &1947660911
 MonoBehaviour:

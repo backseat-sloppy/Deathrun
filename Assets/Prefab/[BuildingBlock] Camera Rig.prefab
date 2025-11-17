@@ -1132,7 +1132,7 @@ MonoBehaviour:
   headMesh: {fileID: 7915736871566013686, guid: 758dd723828ff824db676794b1911601, type: 3}
   leftHandMesh: {fileID: 403961274295010573, guid: faa759cc94281f7459f554ff8bec553b, type: 3}
   rightHandMesh: {fileID: 5319419269429512258, guid: d646c8ff3e2f58e458adc5268db5f47a, type: 3}
-  updateRate: 0.02
+  updatesPerSecond: 30
   smoothMovement: 1
   interpolationSpeed: 20
   showDebugLogs: 0
@@ -1497,7 +1497,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bake.002
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -3093394456923590150, guid: d646c8ff3e2f58e458adc5268db5f47a, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1787,7 +1788,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -1408561195442104113, guid: faa759cc94281f7459f554ff8bec553b, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1861,7 +1863,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bake
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8273572254266250902, guid: 758dd723828ff824db676794b1911601, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
