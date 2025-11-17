@@ -38,7 +38,7 @@ MonoBehaviour:
     ParentPath: Master-Mixer Hierarchy/Default Work Unit
     guid: ff4758e9637e664ab03e852280bc33a9
     GuidInternal: 
-    m_lastTime: -8584382394634860018
+    m_lastTime: -8584382335153803830
     List:
     - name: Amb_Indoor
       guid: 080ed43e3af0404daa8f215e408c6b04
@@ -222,6 +222,26 @@ MonoBehaviour:
         ObjectType: 2
         guid: 0379d64f595a6b469255b4b9683b3f2e
       Path: Master-Mixer Hierarchy/Default Work Unit/Master Audio Bus/SFX/SFX_Player
+    - name: SFX_Taunts
+      guid: 209d47dd16d987499967729d9670ec2f
+      id: 4015076934
+      PathAndIcons:
+      - ElementName: Master-Mixer Hierarchy
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: ff4758e9637e664ab03e852280bc33a9
+      - ElementName: Master Audio Bus
+        ObjectType: 2
+        guid: d8a41415a61d2a41a17e75ca0c2149f3
+      - ElementName: SFX
+        ObjectType: 2
+        guid: db08517fad7f914e983a262f30089bbb
+      - ElementName: SFX_Taunts
+        ObjectType: 2
+        guid: 209d47dd16d987499967729d9670ec2f
+      Path: Master-Mixer Hierarchy/Default Work Unit/Master Audio Bus/SFX/SFX_Taunts
     - name: SFX_Traps
       guid: f2659c1491bbd54c8d3c87190e735723
       id: 3795829403
@@ -271,7 +291,7 @@ MonoBehaviour:
     ParentPath: SoundBanks/Default Work Unit
     guid: 857db305ca908b428ab306e5a61125cd
     GuidInternal: 
-    m_lastTime: -8584382704263997802
+    m_lastTime: -8584382372805313241
     List:
     - name: Main
       guid: 84dcec481494b546a45dddd3b044c237
@@ -299,8 +319,44 @@ MonoBehaviour:
     ParentPath: Events/Default Work Unit
     guid: 5a9558895ec0d449b8cc7211fe588746
     GuidInternal: 
-    m_lastTime: -8584382729280606059
+    m_lastTime: -8584382387982237596
     List: []
+  - PhysicalPath: Events/EV_Music.wwu
+    PathAndIcons:
+    - ElementName: Events
+      ObjectType: 5
+      guid: 00000000000000000000000000000000
+    - ElementName: Default Work Unit
+      ObjectType: 12
+      guid: 5a9558895ec0d449b8cc7211fe588746
+    - ElementName: EV_Music
+      ObjectType: 12
+      guid: b37ec9d78411cd44b9acdf43fa2db8b4
+    ParentPath: Events/Default Work Unit/EV_Music
+    guid: b37ec9d78411cd44b9acdf43fa2db8b4
+    GuidInternal: 
+    m_lastTime: -8584382341354173767
+    List:
+    - name: Music_Play
+      guid: 316a2ea6442d754187ff9a7d33784261
+      id: 202194903
+      PathAndIcons:
+      - ElementName: Events
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: 5a9558895ec0d449b8cc7211fe588746
+      - ElementName: EV_Music
+        ObjectType: 12
+        guid: b37ec9d78411cd44b9acdf43fa2db8b4
+      - ElementName: Music_Play
+        ObjectType: 3
+        guid: 316a2ea6442d754187ff9a7d33784261
+      Path: Events/Default Work Unit/EV_Music/Music_Play
+      maxAttenuation: 0
+      maxDuration: 0
+      minDuration: 0
   - PhysicalPath: Events/EV_Player.wwu
     PathAndIcons:
     - ElementName: Events
@@ -699,7 +755,7 @@ MonoBehaviour:
     ParentPath: States/Default Work Unit
     guid: 01a9f951f32d3d42bb462d70eb6b1199
     GuidInternal: 
-    m_lastTime: -8584382761776850289
+    m_lastTime: -8584382355986287431
     List:
     - name: Focus
       guid: 5372c95bea0f5e4ebe4650fa912d96fd

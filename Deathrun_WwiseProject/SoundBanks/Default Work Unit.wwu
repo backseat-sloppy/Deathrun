@@ -5,6 +5,7 @@
 			<ChildrenList>
 				<SoundBank Name="Main" ID="{48ECDC84-9414-46B5-A45D-DDD3B044C237}">
 					<ObjectInclusionList>
+						<ObjectRef Name="EV_Music" ID="{D7C97EB3-1184-44CD-B9AC-DF43FA2DB8B4}" WorkUnitID="{D7C97EB3-1184-44CD-B9AC-DF43FA2DB8B4}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="EV_Traps" ID="{3AAE3100-B422-44D2-AD6E-922A17C24207}" WorkUnitID="{3AAE3100-B422-44D2-AD6E-922A17C24207}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="EV_UI" ID="{0AC66EB0-74E5-4595-B6BB-F204E08B9AC5}" WorkUnitID="{0AC66EB0-74E5-4595-B6BB-F204E08B9AC5}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="EV_Player" ID="{7C275CC9-22AD-4881-B391-FFA0004C77EE}" WorkUnitID="{7C275CC9-22AD-4881-B391-FFA0004C77EE}" Origin="Manual" Filter="7"/>

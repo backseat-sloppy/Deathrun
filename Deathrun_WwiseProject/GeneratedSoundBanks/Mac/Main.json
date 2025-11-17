@@ -10,7 +10,7 @@
     "Type": "User",
     "GUID": "{48ECDC84-9414-46B5-A45D-DDD3B044C237}",
     "Language": "SFX",
-    "Hash": "{D8E252C1-1521-B5A3-1FDA-A826BF30DEB5}",
+    "Hash": "{967A8777-C90C-6CD1-71EB-C16E56A0E924}",
     "ObjectPath": "\\SoundBanks\\Default Work Unit\\Main",
     "ShortName": "Main",
     "Path": "Main.bnk",
@@ -182,6 +182,14 @@
       "Location": "Memory",
       "ShortName": "Footsteps, Human, Grass, Jump, Start SND62075 S03.wav",
       "CachePath": "F8/{F8574925-1D12-5DF1-75AA-FE630FDD5378}.wem"
+     },
+     {
+      "Id": "411051262",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "GoblinCore.wav",
+      "CachePath": "80/{80736F14-4A3C-A464-8F3E-9D96303586C0}.wem"
      },
      {
       "Id": "421926065",
@@ -550,6 +558,107 @@
       ]
      },
      {
+      "Id": "202194903",
+      "Name": "Music_Play",
+      "ObjectPath": "\\Events\\Default Work Unit\\EV_Music\\Music_Play",
+      "GUID": "{A62E6A31-2D44-4175-87FF-9A7D33784261}",
+      "DurationType": "Infinite",
+      "SwitchContainers": [
+       {
+        "SwitchValue": {
+         "GroupType": "State",
+         "GroupId": "768929368",
+         "Id": "1852808225",
+         "GUID": "{D3EFD216-3177-4618-B388-5B45AC65332F}"
+        },
+        "Children": [
+         {
+          "SwitchValue": {
+           "GroupType": "State",
+           "GroupId": "249970651",
+           "Id": "319258907",
+           "GUID": "{AF66D3B3-3B1D-491F-A539-C6D35D601AC0}"
+          },
+          "MediaRefs": [
+           {
+            "Id": "411051262"
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "SwitchValue": {
+         "GroupType": "State",
+         "GroupId": "768929368",
+         "Id": "1852808225",
+         "GUID": "{D3EFD216-3177-4618-B388-5B45AC65332F}"
+        },
+        "Children": [
+         {
+          "SwitchValue": {
+           "GroupType": "State",
+           "GroupId": "249970651",
+           "Id": "1160234136",
+           "GUID": "{562918C0-14A0-45C2-86D0-704B34B41CCE}"
+          },
+          "MediaRefs": [
+           {
+            "Id": "411051262"
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "SwitchValue": {
+         "GroupType": "State",
+         "GroupId": "768929368",
+         "Id": "2607556080",
+         "GUID": "{220BAC48-3358-4E57-B226-4DEBC4529A12}"
+        },
+        "Children": [
+         {
+          "SwitchValue": {
+           "GroupType": "State",
+           "GroupId": "249970651",
+           "Id": "1160234136",
+           "GUID": "{562918C0-14A0-45C2-86D0-704B34B41CCE}"
+          },
+          "MediaRefs": [
+           {
+            "Id": "411051262"
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "SwitchValue": {
+         "GroupType": "State",
+         "GroupId": "768929368",
+         "Id": "2607556080",
+         "GUID": "{220BAC48-3358-4E57-B226-4DEBC4529A12}"
+        },
+        "Children": [
+         {
+          "SwitchValue": {
+           "GroupType": "State",
+           "GroupId": "249970651",
+           "Id": "319258907",
+           "GUID": "{AF66D3B3-3B1D-491F-A539-C6D35D601AC0}"
+          },
+          "MediaRefs": [
+           {
+            "Id": "411051262"
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
       "Id": "3314422259",
       "Name": "Player_Dance_Play",
       "ObjectPath": "\\Events\\Default Work Unit\\EV_Player\\Player_Dance_Play",
@@ -847,6 +956,78 @@
       ]
      }
     ],
+    "StateGroups": [
+     {
+      "Id": "249970651",
+      "Name": "Focus",
+      "ObjectPath": "\\States\\Default Work Unit\\Focus",
+      "GUID": "{5BC97253-0FEA-4E5E-BE46-50FA912D96FD}",
+      "States": [
+       {
+        "Id": "319258907",
+        "Name": "Paused",
+        "ObjectPath": "\\States\\Default Work Unit\\Focus\\Paused",
+        "GUID": "{AF66D3B3-3B1D-491F-A539-C6D35D601AC0}"
+       },
+       {
+        "Id": "748895195",
+        "Name": "None",
+        "ObjectPath": "\\States\\Default Work Unit\\Focus\\None",
+        "GUID": "{93CCD84C-7642-4781-880A-2BEF5732FE4D}"
+       },
+       {
+        "Id": "1160234136",
+        "Name": "Normal",
+        "ObjectPath": "\\States\\Default Work Unit\\Focus\\Normal",
+        "GUID": "{562918C0-14A0-45C2-86D0-704B34B41CCE}"
+       }
+      ]
+     },
+     {
+      "Id": "768929368",
+      "Name": "GamePhase",
+      "ObjectPath": "\\States\\Default Work Unit\\GamePhase",
+      "GUID": "{C3BA74A5-AF62-4EFF-A338-081A2581F666}",
+      "States": [
+       {
+        "Id": "94054856",
+        "Name": "Completed",
+        "ObjectPath": "\\States\\Default Work Unit\\GamePhase\\Completed",
+        "GUID": "{477990BC-468D-4A98-A46E-B552655D76F9}"
+       },
+       {
+        "Id": "748895195",
+        "Name": "None",
+        "ObjectPath": "\\States\\Default Work Unit\\GamePhase\\None",
+        "GUID": "{1F88B221-C070-4BF3-9D38-42882F4BC856}"
+       },
+       {
+        "Id": "1505888634",
+        "Name": "Countdown",
+        "ObjectPath": "\\States\\Default Work Unit\\GamePhase\\Countdown",
+        "GUID": "{2ABF52F7-3FA0-4156-BC26-931CB93B7D10}"
+       },
+       {
+        "Id": "1655200910",
+        "Name": "Failed",
+        "ObjectPath": "\\States\\Default Work Unit\\GamePhase\\Failed",
+        "GUID": "{F81843ED-2DD2-46AE-979E-F13FF21DCA97}"
+       },
+       {
+        "Id": "1852808225",
+        "Name": "Playing",
+        "ObjectPath": "\\States\\Default Work Unit\\GamePhase\\Playing",
+        "GUID": "{D3EFD216-3177-4618-B388-5B45AC65332F}"
+       },
+       {
+        "Id": "2607556080",
+        "Name": "Menu",
+        "ObjectPath": "\\States\\Default Work Unit\\GamePhase\\Menu",
+        "GUID": "{220BAC48-3358-4E57-B226-4DEBC4529A12}"
+       }
+      ]
+     }
+    ],
     "SwitchGroups": [
      {
       "Id": "63790334",
@@ -889,6 +1070,6 @@
     ]
    }
   ],
-  "FileHash": "{9D65DC99-593D-6747-7AB5-154D376355F8}"
+  "FileHash": "{81E9E256-5592-C044-D22C-93D9F0B80983}"
  }
 }

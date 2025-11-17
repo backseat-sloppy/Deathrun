@@ -1322,7 +1322,7 @@
 							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="SFX_Player" ID="{4FD67903-5A59-466B-9255-B4B9683B3F2E}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+							<ObjectRef Name="SFX_Taunts" ID="{DD479D20-D916-4987-9967-729D9670EC2F}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>

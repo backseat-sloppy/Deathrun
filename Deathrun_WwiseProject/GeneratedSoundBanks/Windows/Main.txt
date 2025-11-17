@@ -1,4 +1,5 @@
 Event	ID	Name			Wwise Object Path	Notes
+	202194903	Music_Play			\Default Work Unit\EV_Music\Music_Play	
 	391280646	Player_Jump_Play			\Default Work Unit\EV_Player\Player_Jump_Play	
 	499064214	Trap_Spike_Activate_Play			\Default Work Unit\EV_Traps\Trap_Spike_Activate_Play	
 	581954083	Player_Land_Play			\Default Work Unit\EV_Player\Player_Land_Play	
@@ -19,6 +20,21 @@ Switch	ID	Name	Switch Group			Notes
 	2195636714	Dirt	SurfaceType			
 	2473969246	Metal	SurfaceType			
 	2654748154	Water	SurfaceType			
+
+State Group	ID	Name			Wwise Object Path	Notes
+	249970651	Focus			\Default Work Unit\Focus	
+	768929368	GamePhase			\Default Work Unit\GamePhase	
+
+State	ID	Name	State Group			Notes
+	319258907	Paused	Focus			
+	748895195	None	Focus			
+	1160234136	Normal	Focus			
+	94054856	Completed	GamePhase			
+	748895195	None	GamePhase			
+	1505888634	Countdown	GamePhase			
+	1655200910	Failed	GamePhase			
+	1852808225	Playing	GamePhase			
+	2607556080	Menu	GamePhase			
 
 In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
 	44497691	tap_05	Y:\GitHub\Deathrun\Deathrun_WwiseProject\.cache\84\{845984A4-9B5E-AE14-1861-4A7A86D2F8CF}.wem		\Actor-Mixer Hierarchy\Default Work Unit\Actors_Mixer_UI\UI_Click\tap_05		978
@@ -42,6 +58,7 @@ In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
 	390818541	Footsteps, Human, Asphalt, Male, Walk SND11513 S00 1	Y:\GitHub\Deathrun\Deathrun_WwiseProject\.cache\EE\{EEAC3DF9-06BD-FE06-4777-0C0F25CC4D38}.wem		\Actor-Mixer Hierarchy\Default Work Unit\AM_Player\Player_Footsteps\Footsteps_Concrete\Footsteps, Human, Asphalt, Male, Walk SND11513 S00 1		54122
 	395752802	Footsteps, Human, Grass, Jump, Start SND62075 S01	Y:\GitHub\Deathrun\Deathrun_WwiseProject\.cache\93\{93AB31CF-8373-20A2-DABD-804B48501E02}.wem		\Actor-Mixer Hierarchy\Default Work Unit\AM_Player\Player_Jump\Footsteps, Human, Grass, Jump, Start SND62075 S01		77782
 	407310046	Footsteps, Human, Grass, Jump, Start SND62075 S03	Y:\GitHub\Deathrun\Deathrun_WwiseProject\.cache\F8\{F8574925-1D12-5DF1-75AA-FE630FDD5378}.wem		\Actor-Mixer Hierarchy\Default Work Unit\AM_Player\Player_Jump\Footsteps, Human, Grass, Jump, Start SND62075 S03		91200
+	411051262	GoblinCore	Y:\GitHub\Deathrun\Deathrun_WwiseProject\.cache\80\{80736F14-4A3C-A464-8F3E-9D96303586C0}.wem		\Interactive Music Hierarchy\Default Work Unit\Lobby_Music\Menu\GoblinCore_Menu\GoblinCore		16934496
 	421926065	Footsteps, Human, Barefoot, Dirt, Walk, Close SND125409 S01	Y:\GitHub\Deathrun\Deathrun_WwiseProject\.cache\97\{976B1BB0-7B47-C970-4BC7-9B73262A124D}.wem		\Actor-Mixer Hierarchy\Default Work Unit\AM_Player\Player_Footsteps\Footsteps_Dirt\Footsteps, Human, Barefoot, Dirt, Walk, Close SND125409 S01		44344
 	435432770	Taunt_Dance	Y:\GitHub\Deathrun\Deathrun_WwiseProject\.cache\E0\{E0BE140B-D73D-CCC6-65FF-C37A782D881C}.wem		\Actor-Mixer Hierarchy\Default Work Unit\AM_Player\Taunt_Dance		733184
 	477819183	Footsteps, Human, Barefoot, Dirt, Walk, Close SND125409 S05	Y:\GitHub\Deathrun\Deathrun_WwiseProject\.cache\FB\{FBA1E660-34E7-1E0E-1B0D-E2314F271AFF}.wem		\Actor-Mixer Hierarchy\Default Work Unit\AM_Player\Player_Footsteps\Footsteps_Dirt\Footsteps, Human, Barefoot, Dirt, Walk, Close SND125409 S05		48022

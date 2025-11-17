@@ -5,6 +5,7 @@
 			<ChildrenList>
 				<MusicSwitchContainer Name="Lobby_Music" ID="{63DADD19-7637-40EC-9505-66E486836A39}" ShortID="214733554">
 					<PropertyList>
+						<Property Name="Tempo" Type="Real64" Value="90"/>
 						<Property Name="UseGameAuxSends" Type="bool" Value="True"/>
 					</PropertyList>
 					<ReferenceList>
@@ -22,7 +23,23 @@
 									</PropertyList>
 									<ChildrenList>
 										<MusicTransition Name="Transition" ID="{2595CF2C-EDCB-4CF2-B885-BC440DAB5E9C}">
-											<TransitionInfo/>
+											<PropertyList>
+												<Property Name="EnableDestinationFadeIn" Type="bool" Value="True"/>
+												<Property Name="EnableSourceFadeOut" Type="bool" Value="True"/>
+												<Property Name="ExitSourceAt" Type="int16" Value="2"/>
+											</PropertyList>
+											<TransitionInfo>
+												<SourceFadeOut>
+													<MusicFade Name="Source Fade-out" ID="{02A660FE-A06E-4420-8351-3C1A257E12B5}">
+														<PropertyList>
+															<Property Name="FadeCurve" Type="int16" Value="6"/>
+															<Property Name="FadeOffset" Type="Real64" Value="0.6"/>
+															<Property Name="FadeTime" Type="Real64" Value="1.4"/>
+															<Property Name="FadeType" Type="int16" Value="1"/>
+														</PropertyList>
+													</MusicFade>
+												</SourceFadeOut>
+											</TransitionInfo>
 										</MusicTransition>
 									</ChildrenList>
 									<TransitionInfo/>
@@ -31,10 +48,7 @@
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
-						<MusicSegment Name="Desert Background Music by Sunsai Id-415806" ID="{88189C24-FE7F-4FF3-9E2F-31E57FC8CBE9}" ShortID="67183725">
-							<PropertyList>
-								<Property Name="EndPosition" Type="Real64" Value="62000"/>
-							</PropertyList>
+						<MusicPlaylistContainer Name="Menu" ID="{5A7DAFDD-2B62-4E3A-974F-BF2B944C7E3B}" ShortID="283949727">
 							<ReferenceList>
 								<Reference Name="Conversion">
 									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
@@ -42,116 +56,426 @@
 								<Reference Name="OutputBus">
 									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
 								</Reference>
-							</ReferenceList>
-							<ChildrenList>
-								<MusicTrack Name="Desert Background Music by Sunsai Id-415806" ID="{CB5E8528-EBC1-432F-86A0-75711E5E6662}" ShortID="283308634">
-									<ReferenceList>
-										<Reference Name="OutputBus">
-											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
-										</Reference>
-										<Reference Name="TransitionRoot">
-											<Custom>
-												<MusicTransition Name="Root" ID="{87BCF6DD-F9E3-4D49-A876-9022E4A8F4E8}">
+								<Reference Name="PlaylistRoot">
+									<Custom>
+										<MusicPlaylistItem Name="" ID="{B8ECD7BD-8A8C-4BAD-B789-A232C5CD5985}" ShortID="34734023">
+											<ChildrenList>
+												<MusicPlaylistItem Name="" ID="{566BCC2E-6E84-4113-82E4-8295C2EB47F5}" ShortID="844983590">
 													<PropertyList>
-														<Property Name="IsFolder" Type="bool" Value="True"/>
+														<Property Name="LoopCount" Type="int16" Value="0"/>
+														<Property Name="PlaylistItemType" Type="int16" Value="1"/>
 													</PropertyList>
+													<ReferenceList>
+														<Reference Name="Segment">
+															<ObjectRef Name="GoblinCore_Menu" ID="{19B37BDD-7271-4841-9CE8-BF8881C7FA4B}" WorkUnitID="{B14EF817-884C-4A1B-B7DE-B36662174234}"/>
+														</Reference>
+													</ReferenceList>
+												</MusicPlaylistItem>
+											</ChildrenList>
+										</MusicPlaylistItem>
+									</Custom>
+								</Reference>
+								<Reference Name="TransitionRoot">
+									<Custom>
+										<MusicTransition Name="Root" ID="{0A35769B-407F-4D9F-AE8C-9B3E13BEBBA7}">
+											<PropertyList>
+												<Property Name="IsFolder" Type="bool" Value="True"/>
+											</PropertyList>
+											<ChildrenList>
+												<MusicTransition Name="Transition" ID="{F722605E-8E26-4F72-BA06-F44E16A62D51}">
 													<TransitionInfo/>
 												</MusicTransition>
-											</Custom>
+											</ChildrenList>
+											<TransitionInfo/>
+										</MusicTransition>
+									</Custom>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<MusicSegment Name="GoblinCore_Menu" ID="{19B37BDD-7271-4841-9CE8-BF8881C7FA4B}" ShortID="280683945">
+									<PropertyList>
+										<Property Name="EndPosition" Type="Real64" Value="21082.4731234047"/>
+										<Property Name="Tempo" Type="Real64" Value="90"/>
+										<Property Name="UseGameAuxSends" Type="bool" Value="True"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Music" ID="{80E25E81-45C9-4CB1-A018-B6EC96D96982}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
 										</Reference>
 									</ReferenceList>
 									<ChildrenList>
-										<AudioFileSource Name="Desert Background Music by Sunsai Id-415806" ID="{09B66ED9-290A-46BE-AE78-1049B7DDF95D}">
-											<Language>SFX</Language>
-											<AudioFile>Desert Background Music by Sunsai Id-415806.wav</AudioFile>
-											<MediaIDList>
-												<MediaID ID="846481208"/>
-											</MediaIDList>
-										</AudioFileSource>
+										<MusicTrack Name="GoblinCore" ID="{5896AB83-6E33-4A0E-8D1F-F2B0CBDF64C3}" ShortID="406525116">
+											<PropertyList>
+												<Property Name="UseGameAuxSends" Type="bool" Value="True"/>
+											</PropertyList>
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Music" ID="{80E25E81-45C9-4CB1-A018-B6EC96D96982}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+												</Reference>
+												<Reference Name="TransitionRoot">
+													<Custom>
+														<MusicTransition Name="Root" ID="{C98072E4-A270-4D7E-A821-47DD7ED8727D}">
+															<PropertyList>
+																<Property Name="IsFolder" Type="bool" Value="True"/>
+															</PropertyList>
+															<ChildrenList>
+																<MusicTransition Name="Transition" ID="{B57731EF-3BBD-4952-9DC2-506BC15F0123}">
+																	<TransitionInfo/>
+																</MusicTransition>
+															</ChildrenList>
+															<TransitionInfo/>
+														</MusicTransition>
+													</Custom>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="GoblinCore" ID="{8AB92741-33C1-4022-86FE-ECD94DB2CC6D}">
+													<PropertyList>
+														<Property Name="MarkerInputMode" Type="int16" Value="2"/>
+													</PropertyList>
+													<Language>SFX</Language>
+													<AudioFile>GoblinCore.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="411051262"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists>
+												<ObjectList Name="Sequences">
+													<Reference>
+														<Local>
+															<MusicTrackSequence Name="" ID="{FE8F190F-7153-409F-BB49-764FDF7B4994}">
+																<ObjectLists>
+																	<ObjectList Name="Clips">
+																		<Reference>
+																			<Local>
+																				<MusicClip Name="GoblinCore" ID="{C1F7CFF9-4427-404A-810F-1638E8EC4B22}">
+																					<PropertyList>
+																						<Property Name="EndTrimOffset" Type="Real64" Value="21040.0619706353"/>
+																						<Property Name="FadeInMode" Type="int16" Value="0"/>
+																						<Property Name="FadeOutMode" Type="int16" Value="0"/>
+																					</PropertyList>
+																					<AudioSourceRef Name="GoblinCore" ID="{8AB92741-33C1-4022-86FE-ECD94DB2CC6D}"/>
+																					<PropertyCurveList>
+																						<PropertyCurve PropertyName="Highpass">
+																							<Curve Name="" ID="{2B9DA285-DF50-4B20-81C9-6D9B833141F1}">
+																								<PropertyList>
+																									<Property Name="Flags" Type="int32" Value="1"/>
+																								</PropertyList>
+																								<PointList>
+																									<Point>
+																										<XPos>0</XPos>
+																										<YPos>0</YPos>
+																										<Flags>5</Flags>
+																									</Point>
+																									<Point>
+																										<XPos>21.04006</XPos>
+																										<YPos>0</YPos>
+																										<Flags>37</Flags>
+																									</Point>
+																								</PointList>
+																							</Curve>
+																						</PropertyCurve>
+																						<PropertyCurve PropertyName="Lowpass">
+																							<Curve Name="" ID="{915FB7F1-9470-4C0C-8440-BB6C60C11D50}">
+																								<PropertyList>
+																									<Property Name="Flags" Type="int32" Value="1"/>
+																								</PropertyList>
+																								<PointList>
+																									<Point>
+																										<XPos>0</XPos>
+																										<YPos>0</YPos>
+																										<Flags>5</Flags>
+																									</Point>
+																									<Point>
+																										<XPos>21.04006</XPos>
+																										<YPos>0</YPos>
+																										<Flags>37</Flags>
+																									</Point>
+																								</PointList>
+																							</Curve>
+																						</PropertyCurve>
+																						<PropertyCurve PropertyName="Volume">
+																							<Curve Name="" ID="{CB0322FA-23BA-43D8-9FBD-4F72F00CEDF1}">
+																								<PropertyList>
+																									<Property Name="Flags" Type="int32" Value="3"/>
+																								</PropertyList>
+																								<PointList>
+																									<Point>
+																										<XPos>0</XPos>
+																										<YPos>0</YPos>
+																										<Flags>5</Flags>
+																									</Point>
+																									<Point>
+																										<XPos>21.04006</XPos>
+																										<YPos>0</YPos>
+																										<Flags>37</Flags>
+																									</Point>
+																								</PointList>
+																							</Curve>
+																						</PropertyCurve>
+																					</PropertyCurveList>
+																				</MusicClip>
+																			</Local>
+																		</Reference>
+																	</ObjectList>
+																</ObjectLists>
+															</MusicTrackSequence>
+														</Local>
+													</Reference>
+												</ObjectList>
+											</ObjectLists>
+										</MusicTrack>
 									</ChildrenList>
 									<ObjectLists>
-										<ObjectList Name="Sequences">
+										<ObjectList Name="Cues">
 											<Reference>
 												<Local>
-													<MusicTrackSequence Name="" ID="{9EEEB467-45B2-4C19-B3C5-E3F19EF2B052}">
-														<ObjectLists>
-															<ObjectList Name="Clips">
-																<Reference>
-																	<Local>
-																		<MusicClip Name="Desert Background Music by Sunsai Id-415806" ID="{F851D7DB-DA12-41F8-B58E-51BA4D47B920}">
-																			<PropertyList>
-																				<Property Name="EndTrimOffset" Type="Real64" Value="62000"/>
-																				<Property Name="FadeInMode" Type="int16" Value="0"/>
-																				<Property Name="FadeOutMode" Type="int16" Value="0"/>
-																			</PropertyList>
-																			<AudioSourceRef Name="Desert Background Music by Sunsai Id-415806" ID="{09B66ED9-290A-46BE-AE78-1049B7DDF95D}"/>
-																		</MusicClip>
-																	</Local>
-																</Reference>
-															</ObjectList>
-														</ObjectLists>
-													</MusicTrackSequence>
+													<MusicCue Name="Entry Cue" ID="{2D02C034-0697-4330-95C2-F164C4FB6F34}"/>
+												</Local>
+											</Reference>
+											<Reference>
+												<Local>
+													<MusicCue Name="Exit Cue" ID="{F113E4DE-0EF5-4D5B-B112-F7EE20836F47}">
+														<PropertyList>
+															<Property Name="CueType" Type="int16" Value="1"/>
+															<Property Name="TimeMs" Type="Real64" Value="21040.0619706353"/>
+														</PropertyList>
+													</MusicCue>
 												</Local>
 											</Reference>
 										</ObjectList>
 									</ObjectLists>
-								</MusicTrack>
+								</MusicSegment>
 							</ChildrenList>
-							<StateInfo>
-								<StateGroupList>
-									<StateGroupInfo>
-										<StateGroupRef Name="GamePhase" ID="{C3BA74A5-AF62-4EFF-A338-081A2581F666}"/>
-									</StateGroupInfo>
-								</StateGroupList>
-								<CustomStateList>
-									<CustomState>
-										<StateRef Name="Countdown" ID="{2ABF52F7-3FA0-4156-BC26-931CB93B7D10}"/>
-										<CustomState Name="" ID="{0025708C-C646-42C3-9D08-6783F3EAAD26}" ShortID="224289120"/>
-									</CustomState>
-									<CustomState>
-										<StateRef Name="Playing" ID="{D3EFD216-3177-4618-B388-5B45AC65332F}"/>
-										<CustomState Name="" ID="{3E956548-20C4-423D-8AF0-A8C9E9138268}" ShortID="539647387"/>
-									</CustomState>
-									<CustomState>
-										<StateRef Name="Failed" ID="{F81843ED-2DD2-46AE-979E-F13FF21DCA97}"/>
-										<CustomState Name="" ID="{FA86AAB5-5502-40EB-AB20-2BFDCBF62FE7}" ShortID="1018577255"/>
-									</CustomState>
-									<CustomState>
-										<StateRef Name="Completed" ID="{477990BC-468D-4A98-A46E-B552655D76F9}"/>
-										<CustomState Name="" ID="{9CDBB626-F76A-4F33-B946-72601AF39CD7}" ShortID="780021098"/>
-									</CustomState>
-									<CustomState>
-										<StateRef Name="None" ID="{1F88B221-C070-4BF3-9D38-42882F4BC856}"/>
-										<CustomState Name="" ID="{319FD454-4C39-4822-BEF7-CEEF3175135E}" ShortID="652275159"/>
-									</CustomState>
-									<CustomState>
-										<StateRef Name="Menu" ID="{220BAC48-3358-4E57-B226-4DEBC4529A12}"/>
-										<CustomState Name="" ID="{BCD5F6B5-C88F-4F59-B7E8-AC4833C5995D}" ShortID="453293091"/>
-									</CustomState>
-								</CustomStateList>
-							</StateInfo>
-							<ObjectLists>
-								<ObjectList Name="Cues">
-									<Reference>
-										<Local>
-											<MusicCue Name="Entry Cue" ID="{CD911BAC-9837-4D44-8C98-9C09CBF2D23C}"/>
-										</Local>
-									</Reference>
-									<Reference>
-										<Local>
-											<MusicCue Name="Exit Cue" ID="{EC5CCFAF-57B1-41F3-A936-38A127A7FFE1}">
-												<PropertyList>
-													<Property Name="CueType" Type="int16" Value="1"/>
-													<Property Name="TimeMs" Type="Real64" Value="62000"/>
-												</PropertyList>
-											</MusicCue>
-										</Local>
-									</Reference>
-								</ObjectList>
-							</ObjectLists>
-						</MusicSegment>
+						</MusicPlaylistContainer>
+						<MusicPlaylistContainer Name="Playing" ID="{DB3AF8AB-5889-4327-B481-15BABFD23238}" ShortID="860818181">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+								</Reference>
+								<Reference Name="PlaylistRoot">
+									<Custom>
+										<MusicPlaylistItem Name="" ID="{2FF59BD6-0A15-4318-8341-0C581BD35C6F}" ShortID="319420931">
+											<ChildrenList>
+												<MusicPlaylistItem Name="" ID="{6CB479FA-1E9E-47DD-893E-1A34DCC4604E}" ShortID="512542300">
+													<PropertyList>
+														<Property Name="LoopCount" Type="int16" Value="0"/>
+														<Property Name="PlaylistItemType" Type="int16" Value="1"/>
+													</PropertyList>
+													<ReferenceList>
+														<Reference Name="Segment">
+															<ObjectRef Name="GoblinCore_Playling" ID="{7B70E13F-5790-4655-8B17-31C2603AC118}" WorkUnitID="{B14EF817-884C-4A1B-B7DE-B36662174234}"/>
+														</Reference>
+													</ReferenceList>
+												</MusicPlaylistItem>
+											</ChildrenList>
+										</MusicPlaylistItem>
+									</Custom>
+								</Reference>
+								<Reference Name="TransitionRoot">
+									<Custom>
+										<MusicTransition Name="Root" ID="{0567B6E5-E6F9-4B9E-B1E9-623B09B81BFA}">
+											<PropertyList>
+												<Property Name="IsFolder" Type="bool" Value="True"/>
+											</PropertyList>
+											<ChildrenList>
+												<MusicTransition Name="Transition" ID="{E43595B6-3D90-4C4D-85BD-CA65163D54AD}">
+													<TransitionInfo/>
+												</MusicTransition>
+											</ChildrenList>
+											<TransitionInfo/>
+										</MusicTransition>
+									</Custom>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<MusicSegment Name="GoblinCore_Playling" ID="{7B70E13F-5790-4655-8B17-31C2603AC118}" ShortID="246121758">
+									<PropertyList>
+										<Property Name="EndPosition" Type="Real64" Value="74961.9231171479"/>
+										<Property Name="Tempo" Type="Real64" Value="90"/>
+										<Property Name="UseGameAuxSends" Type="bool" Value="True"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Music" ID="{80E25E81-45C9-4CB1-A018-B6EC96D96982}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<MusicTrack Name="GoblinCore" ID="{682C3F28-7730-449D-8477-33D1622F4000}" ShortID="522649448">
+											<ReferenceList>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+												</Reference>
+												<Reference Name="TransitionRoot">
+													<Custom>
+														<MusicTransition Name="Root" ID="{ECFF0990-E5FD-43C1-A206-D8175D594867}">
+															<PropertyList>
+																<Property Name="IsFolder" Type="bool" Value="True"/>
+															</PropertyList>
+															<TransitionInfo/>
+														</MusicTransition>
+													</Custom>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="GoblinCore" ID="{81B19545-FF65-4224-BED9-6B2FC59A2F79}">
+													<PropertyList>
+														<Property Name="MarkerInputMode" Type="int16" Value="2"/>
+													</PropertyList>
+													<Language>SFX</Language>
+													<AudioFile>GoblinCore.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="411051262"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ObjectLists>
+												<ObjectList Name="Sequences">
+													<Reference>
+														<Local>
+															<MusicTrackSequence Name="" ID="{D9EB1069-5A16-45A4-888E-F77F4281B293}">
+																<ObjectLists>
+																	<ObjectList Name="Clips">
+																		<Reference>
+																			<Local>
+																				<MusicClip Name="GoblinCore" ID="{3EEF4DDB-1969-47B6-A1EE-89095D1D70CE}">
+																					<PropertyList>
+																						<Property Name="BeginTrimOffset" Type="Real64" Value="21333.3333333333"/>
+																						<Property Name="EndTrimOffset" Type="Real64" Value="96000"/>
+																						<Property Name="FadeInMode" Type="int16" Value="0"/>
+																						<Property Name="FadeOutMode" Type="int16" Value="0"/>
+																						<Property Name="PlayAt" Type="Real64" Value="-21333.3333333333"/>
+																					</PropertyList>
+																					<AudioSourceRef Name="GoblinCore" ID="{81B19545-FF65-4224-BED9-6B2FC59A2F79}"/>
+																					<PropertyCurveList>
+																						<PropertyCurve PropertyName="Highpass">
+																							<Curve Name="" ID="{8554FCC8-6BC3-4FD3-84F1-A64D5398770E}">
+																								<PropertyList>
+																									<Property Name="Flags" Type="int32" Value="1"/>
+																								</PropertyList>
+																								<PointList>
+																									<Point>
+																										<XPos>21.33333</XPos>
+																										<YPos>0</YPos>
+																										<Flags>5</Flags>
+																									</Point>
+																									<Point>
+																										<XPos>96</XPos>
+																										<YPos>0</YPos>
+																										<Flags>37</Flags>
+																									</Point>
+																								</PointList>
+																							</Curve>
+																						</PropertyCurve>
+																						<PropertyCurve PropertyName="Lowpass">
+																							<Curve Name="" ID="{195A6912-980D-4A7A-AB38-469D52E4B8E8}">
+																								<PropertyList>
+																									<Property Name="Flags" Type="int32" Value="1"/>
+																								</PropertyList>
+																								<PointList>
+																									<Point>
+																										<XPos>21.33333</XPos>
+																										<YPos>0</YPos>
+																										<Flags>5</Flags>
+																									</Point>
+																									<Point>
+																										<XPos>96</XPos>
+																										<YPos>0</YPos>
+																										<Flags>37</Flags>
+																									</Point>
+																								</PointList>
+																							</Curve>
+																						</PropertyCurve>
+																						<PropertyCurve PropertyName="Volume">
+																							<Curve Name="" ID="{14D1697F-BF8E-40E7-AEF6-A350D27453C5}">
+																								<PropertyList>
+																									<Property Name="Flags" Type="int32" Value="3"/>
+																								</PropertyList>
+																								<PointList>
+																									<Point>
+																										<XPos>21.33333</XPos>
+																										<YPos>0</YPos>
+																										<Flags>5</Flags>
+																									</Point>
+																									<Point>
+																										<XPos>96</XPos>
+																										<YPos>0</YPos>
+																										<Flags>37</Flags>
+																									</Point>
+																								</PointList>
+																							</Curve>
+																						</PropertyCurve>
+																					</PropertyCurveList>
+																				</MusicClip>
+																			</Local>
+																		</Reference>
+																	</ObjectList>
+																</ObjectLists>
+															</MusicTrackSequence>
+														</Local>
+													</Reference>
+												</ObjectList>
+											</ObjectLists>
+										</MusicTrack>
+									</ChildrenList>
+									<ObjectLists>
+										<ObjectList Name="Cues">
+											<Reference>
+												<Local>
+													<MusicCue Name="Entry Cue" ID="{36BC7AB1-3407-4709-8B55-4D09E18EA2BE}">
+														<PropertyList>
+															<Property Name="TimeMs" Type="Real64" Value="4.54747350886464E-13"/>
+														</PropertyList>
+													</MusicCue>
+												</Local>
+											</Reference>
+											<Reference>
+												<Local>
+													<MusicCue Name="Exit Cue" ID="{AC4B00B1-425F-436A-9356-C757C4F3828F}">
+														<PropertyList>
+															<Property Name="CueType" Type="int16" Value="1"/>
+															<Property Name="TimeMs" Type="Real64" Value="74666.6666666667"/>
+														</PropertyList>
+													</MusicCue>
+												</Local>
+											</Reference>
+											<Reference>
+												<Local>
+													<MusicCue Name="" ID="{BF8748CE-B20C-4A88-B4A1-62188E28AE49}">
+														<PropertyList>
+															<Property Name="CueType" Type="int16" Value="2"/>
+															<Property Name="TimeMs" Type="Real64" Value="4.54747350886464E-13"/>
+														</PropertyList>
+													</MusicCue>
+												</Local>
+											</Reference>
+										</ObjectList>
+									</ObjectLists>
+								</MusicSegment>
+							</ChildrenList>
+						</MusicPlaylistContainer>
 					</ChildrenList>
 					<StateInfo>
+						<StatePropertyList>
+							<Property Name="Highpass"/>
+							<Property Name="Lowpass"/>
+							<Property Name="MakeUpGain"/>
+							<Property Name="OutputBusLowpass"/>
+							<Property Name="Volume"/>
+						</StatePropertyList>
 						<StateGroupList>
 							<StateGroupInfo>
 								<StateGroupRef Name="GamePhase" ID="{C3BA74A5-AF62-4EFF-A338-081A2581F666}"/>
@@ -189,20 +513,89 @@
 							<Reference>
 								<ObjectRef Name="GamePhase" ID="{C3BA74A5-AF62-4EFF-A338-081A2581F666}" WorkUnitID="{51F9A901-2DF3-423D-BB46-2D70EB6B1199}"/>
 							</Reference>
+							<Reference>
+								<ObjectRef Name="Focus" ID="{5BC97253-0FEA-4E5E-BE46-50FA912D96FD}" WorkUnitID="{51F9A901-2DF3-423D-BB46-2D70EB6B1199}"/>
+							</Reference>
 						</ObjectList>
 						<ObjectList Name="Entries">
 							<Reference>
 								<Local>
-									<MultiSwitchEntry Name="" ID="{EC484752-7E17-4E30-B9D2-77A92BEBD6BE}">
+									<MultiSwitchEntry Name="" ID="{54416A89-8771-4923-B94E-E53DC9227E6D}">
 										<ReferenceList>
 											<Reference Name="AudioNode">
-												<ObjectRef Name="Desert Background Music by Sunsai Id-415806" ID="{88189C24-FE7F-4FF3-9E2F-31E57FC8CBE9}" WorkUnitID="{B14EF817-884C-4A1B-B7DE-B36662174234}"/>
+												<ObjectRef Name="Playing" ID="{DB3AF8AB-5889-4327-B481-15BABFD23238}" WorkUnitID="{B14EF817-884C-4A1B-B7DE-B36662174234}"/>
+											</Reference>
+										</ReferenceList>
+										<ObjectLists>
+											<ObjectList Name="EntryPath">
+												<Reference>
+													<ObjectRef Name="Playing" ID="{D3EFD216-3177-4618-B388-5B45AC65332F}" WorkUnitID="{51F9A901-2DF3-423D-BB46-2D70EB6B1199}"/>
+												</Reference>
+												<Reference>
+													<ObjectRef Name="Paused" ID="{AF66D3B3-3B1D-491F-A539-C6D35D601AC0}" WorkUnitID="{51F9A901-2DF3-423D-BB46-2D70EB6B1199}"/>
+												</Reference>
+											</ObjectList>
+										</ObjectLists>
+									</MultiSwitchEntry>
+								</Local>
+							</Reference>
+							<Reference>
+								<Local>
+									<MultiSwitchEntry Name="" ID="{B06CB69C-17B0-473E-9A72-61E869F9260C}">
+										<ReferenceList>
+											<Reference Name="AudioNode">
+												<ObjectRef Name="Playing" ID="{DB3AF8AB-5889-4327-B481-15BABFD23238}" WorkUnitID="{B14EF817-884C-4A1B-B7DE-B36662174234}"/>
+											</Reference>
+										</ReferenceList>
+										<ObjectLists>
+											<ObjectList Name="EntryPath">
+												<Reference>
+													<ObjectRef Name="Playing" ID="{D3EFD216-3177-4618-B388-5B45AC65332F}" WorkUnitID="{51F9A901-2DF3-423D-BB46-2D70EB6B1199}"/>
+												</Reference>
+												<Reference>
+													<ObjectRef Name="Normal" ID="{562918C0-14A0-45C2-86D0-704B34B41CCE}" WorkUnitID="{51F9A901-2DF3-423D-BB46-2D70EB6B1199}"/>
+												</Reference>
+											</ObjectList>
+										</ObjectLists>
+									</MultiSwitchEntry>
+								</Local>
+							</Reference>
+							<Reference>
+								<Local>
+									<MultiSwitchEntry Name="" ID="{EED69C0D-2361-418B-8FF6-95D1A961353F}">
+										<ReferenceList>
+											<Reference Name="AudioNode">
+												<ObjectRef Name="Menu" ID="{5A7DAFDD-2B62-4E3A-974F-BF2B944C7E3B}" WorkUnitID="{B14EF817-884C-4A1B-B7DE-B36662174234}"/>
 											</Reference>
 										</ReferenceList>
 										<ObjectLists>
 											<ObjectList Name="EntryPath">
 												<Reference>
 													<ObjectRef Name="Menu" ID="{220BAC48-3358-4E57-B226-4DEBC4529A12}" WorkUnitID="{51F9A901-2DF3-423D-BB46-2D70EB6B1199}"/>
+												</Reference>
+												<Reference>
+													<ObjectRef Name="Normal" ID="{562918C0-14A0-45C2-86D0-704B34B41CCE}" WorkUnitID="{51F9A901-2DF3-423D-BB46-2D70EB6B1199}"/>
+												</Reference>
+											</ObjectList>
+										</ObjectLists>
+									</MultiSwitchEntry>
+								</Local>
+							</Reference>
+							<Reference>
+								<Local>
+									<MultiSwitchEntry Name="" ID="{1434D099-943D-4871-ADB9-BEA995D4C842}">
+										<ReferenceList>
+											<Reference Name="AudioNode">
+												<ObjectRef Name="Menu" ID="{5A7DAFDD-2B62-4E3A-974F-BF2B944C7E3B}" WorkUnitID="{B14EF817-884C-4A1B-B7DE-B36662174234}"/>
+											</Reference>
+										</ReferenceList>
+										<ObjectLists>
+											<ObjectList Name="EntryPath">
+												<Reference>
+													<ObjectRef Name="Menu" ID="{220BAC48-3358-4E57-B226-4DEBC4529A12}" WorkUnitID="{51F9A901-2DF3-423D-BB46-2D70EB6B1199}"/>
+												</Reference>
+												<Reference>
+													<ObjectRef Name="Paused" ID="{AF66D3B3-3B1D-491F-A539-C6D35D601AC0}" WorkUnitID="{51F9A901-2DF3-423D-BB46-2D70EB6B1199}"/>
 												</Reference>
 											</ObjectList>
 										</ObjectLists>
@@ -212,6 +605,126 @@
 						</ObjectList>
 					</ObjectLists>
 				</MusicSwitchContainer>
+				<MusicSegment Name="Desert Background Music by Sunsai Id-415806" ID="{88189C24-FE7F-4FF3-9E2F-31E57FC8CBE9}" ShortID="67183725">
+					<PropertyList>
+						<Property Name="EndPosition" Type="Real64" Value="62000"/>
+						<Property Name="UseGameAuxSends" Type="bool" Value="True"/>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Music" ID="{80E25E81-45C9-4CB1-A018-B6EC96D96982}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<MusicTrack Name="Desert Background Music by Sunsai Id-415806" ID="{CB5E8528-EBC1-432F-86A0-75711E5E6662}" ShortID="283308634">
+							<ReferenceList>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+								</Reference>
+								<Reference Name="TransitionRoot">
+									<Custom>
+										<MusicTransition Name="Root" ID="{87BCF6DD-F9E3-4D49-A876-9022E4A8F4E8}">
+											<PropertyList>
+												<Property Name="IsFolder" Type="bool" Value="True"/>
+											</PropertyList>
+											<TransitionInfo/>
+										</MusicTransition>
+									</Custom>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="Desert Background Music by Sunsai Id-415806" ID="{09B66ED9-290A-46BE-AE78-1049B7DDF95D}">
+									<Language>SFX</Language>
+									<AudioFile>Desert Background Music by Sunsai Id-415806.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="846481208"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ObjectLists>
+								<ObjectList Name="Sequences">
+									<Reference>
+										<Local>
+											<MusicTrackSequence Name="" ID="{9EEEB467-45B2-4C19-B3C5-E3F19EF2B052}">
+												<ObjectLists>
+													<ObjectList Name="Clips">
+														<Reference>
+															<Local>
+																<MusicClip Name="Desert Background Music by Sunsai Id-415806" ID="{F851D7DB-DA12-41F8-B58E-51BA4D47B920}">
+																	<PropertyList>
+																		<Property Name="EndTrimOffset" Type="Real64" Value="62000"/>
+																		<Property Name="FadeInMode" Type="int16" Value="0"/>
+																		<Property Name="FadeOutMode" Type="int16" Value="0"/>
+																	</PropertyList>
+																	<AudioSourceRef Name="Desert Background Music by Sunsai Id-415806" ID="{09B66ED9-290A-46BE-AE78-1049B7DDF95D}"/>
+																</MusicClip>
+															</Local>
+														</Reference>
+													</ObjectList>
+												</ObjectLists>
+											</MusicTrackSequence>
+										</Local>
+									</Reference>
+								</ObjectList>
+							</ObjectLists>
+						</MusicTrack>
+					</ChildrenList>
+					<StateInfo>
+						<StateGroupList>
+							<StateGroupInfo>
+								<StateGroupRef Name="GamePhase" ID="{C3BA74A5-AF62-4EFF-A338-081A2581F666}"/>
+							</StateGroupInfo>
+						</StateGroupList>
+						<CustomStateList>
+							<CustomState>
+								<StateRef Name="Countdown" ID="{2ABF52F7-3FA0-4156-BC26-931CB93B7D10}"/>
+								<CustomState Name="" ID="{0025708C-C646-42C3-9D08-6783F3EAAD26}" ShortID="224289120"/>
+							</CustomState>
+							<CustomState>
+								<StateRef Name="Playing" ID="{D3EFD216-3177-4618-B388-5B45AC65332F}"/>
+								<CustomState Name="" ID="{3E956548-20C4-423D-8AF0-A8C9E9138268}" ShortID="539647387"/>
+							</CustomState>
+							<CustomState>
+								<StateRef Name="Failed" ID="{F81843ED-2DD2-46AE-979E-F13FF21DCA97}"/>
+								<CustomState Name="" ID="{FA86AAB5-5502-40EB-AB20-2BFDCBF62FE7}" ShortID="1018577255"/>
+							</CustomState>
+							<CustomState>
+								<StateRef Name="Completed" ID="{477990BC-468D-4A98-A46E-B552655D76F9}"/>
+								<CustomState Name="" ID="{9CDBB626-F76A-4F33-B946-72601AF39CD7}" ShortID="780021098"/>
+							</CustomState>
+							<CustomState>
+								<StateRef Name="None" ID="{1F88B221-C070-4BF3-9D38-42882F4BC856}"/>
+								<CustomState Name="" ID="{319FD454-4C39-4822-BEF7-CEEF3175135E}" ShortID="652275159"/>
+							</CustomState>
+							<CustomState>
+								<StateRef Name="Menu" ID="{220BAC48-3358-4E57-B226-4DEBC4529A12}"/>
+								<CustomState Name="" ID="{BCD5F6B5-C88F-4F59-B7E8-AC4833C5995D}" ShortID="453293091"/>
+							</CustomState>
+						</CustomStateList>
+					</StateInfo>
+					<ObjectLists>
+						<ObjectList Name="Cues">
+							<Reference>
+								<Local>
+									<MusicCue Name="Entry Cue" ID="{CD911BAC-9837-4D44-8C98-9C09CBF2D23C}"/>
+								</Local>
+							</Reference>
+							<Reference>
+								<Local>
+									<MusicCue Name="Exit Cue" ID="{EC5CCFAF-57B1-41F3-A936-38A127A7FFE1}">
+										<PropertyList>
+											<Property Name="CueType" Type="int16" Value="1"/>
+											<Property Name="TimeMs" Type="Real64" Value="62000"/>
+										</PropertyList>
+									</MusicCue>
+								</Local>
+							</Reference>
+						</ObjectList>
+					</ObjectLists>
+				</MusicSegment>
 			</ChildrenList>
 		</WorkUnit>
 	</InteractiveMusic>

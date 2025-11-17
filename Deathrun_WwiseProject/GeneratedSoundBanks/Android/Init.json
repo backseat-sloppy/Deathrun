@@ -10,7 +10,7 @@
     "Type": "User",
     "GUID": "{701ECBBD-9C7B-4030-8CDB-749EE5D1C7B9}",
     "Language": "SFX",
-    "Hash": "{91B84EAC-7A04-C28C-C89E-E90C886B4459}",
+    "Hash": "{85EEEA22-C085-27CD-854D-A77614E2C73A}",
     "ObjectPath": "Init",
     "ShortName": "Init",
     "Path": "Init.bnk",
@@ -100,6 +100,12 @@
       "Name": "Amb_Indoor",
       "ObjectPath": "\\Master-Mixer Hierarchy\\Default Work Unit\\Master Audio Bus\\Ambience\\Amb_Indoor",
       "GUID": "{3ED40E08-F03A-4D40-AA8F-215E408C6B04}"
+     },
+     {
+      "Id": "4015076934",
+      "Name": "SFX_Taunts",
+      "ObjectPath": "\\Master-Mixer Hierarchy\\Default Work Unit\\Master Audio Bus\\SFX\\SFX_Taunts",
+      "GUID": "{DD479D20-D916-4987-9967-729D9670EC2F}"
      }
     ],
     "AuxBusses": [
@@ -300,6 +306,6 @@
     ]
    }
   ],
-  "FileHash": "{570DA3A2-85F4-22F5-6210-8CF570F5014E}"
+  "FileHash": "{43CB1756-E764-2FCE-1E98-34BEF6EF7AC3}"
  }
 }

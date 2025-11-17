@@ -143,6 +143,12 @@ namespace DeathrunGame
             if (pauseMenuPanel != null)
                 pauseMenuPanel.SetActive(true);
 
+            // Set focus to Paused
+            if (GamePhaseManager.Instance != null)
+            {
+                GamePhaseManager.Instance.SetPaused();
+            }
+
             // Show cursor
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
@@ -169,6 +175,12 @@ namespace DeathrunGame
 
             if (settingsPanel != null)
                 settingsPanel.SetActive(false);
+
+            // Set focus to Normal
+            if (GamePhaseManager.Instance != null)
+            {
+                GamePhaseManager.Instance.SetNormal();
+            }
 
             // Hide cursor (only if in game, not in menu)
             if (!isInMainMenu)

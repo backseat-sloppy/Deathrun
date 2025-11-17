@@ -15,6 +15,7 @@ namespace AK
     {
         static const AkUniqueID BUTTON_BACK_PLAY = 1597374082U;
         static const AkUniqueID BUTTON_CLICK_PLAY = 2856915265U;
+        static const AkUniqueID MUSIC_PLAY = 202194903U;
         static const AkUniqueID PLAYER_DANCE_PLAY = 3314422259U;
         static const AkUniqueID PLAYER_DEATH_PLAY = 2348472398U;
         static const AkUniqueID PLAYER_FOOTSTEP_PLAY = 2241160260U;
@@ -115,6 +116,7 @@ namespace AK
         static const AkUniqueID SFX = 393239870U;
         static const AkUniqueID SFX_ENVIRONMENT = 573128568U;
         static const AkUniqueID SFX_PLAYER = 217780010U;
+        static const AkUniqueID SFX_TAUNTS = 4015076934U;
         static const AkUniqueID SFX_TRAPS = 3795829403U;
         static const AkUniqueID UI = 1551306167U;
     } // namespace BUSSES

@@ -30,9 +30,9 @@
 	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Virtual Acoustics\Default Work Unit.wwu" DateLow="1762419098" DateHigh="0"/>
 	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Triggers\Default Work Unit.wwu" DateLow="1762419098" DateHigh="0"/>
 	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Switches\Default Work Unit.wwu" DateLow="1763316478" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\States\Default Work Unit.wwu" DateLow="1763316478" DateHigh="0"/>
+	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\States\Default Work Unit.wwu" DateLow="1763371286" DateHigh="0"/>
 	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Soundcaster Sessions\Default Work Unit.wwu" DateLow="1762419098" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\SoundBanks\Default Work Unit.wwu" DateLow="1763336459" DateHigh="0"/>
+	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\SoundBanks\Default Work Unit.wwu" DateLow="1763369604" DateHigh="0"/>
 	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Queries\Factory Queries.wwu" DateLow="1762419098" DateHigh="0"/>
 	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Queries\Default Work Unit.wwu" DateLow="1762419098" DateHigh="0"/>
 	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Presets\Factory Spatial Audio.wwu" DateLow="1762419098" DateHigh="0"/>
@@ -40,25 +40,26 @@
 	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Modulators\Default Work Unit.wwu" DateLow="1762419098" DateHigh="0"/>
 	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Mixing Sessions\Default Work Unit.wwu" DateLow="1762419098" DateHigh="0"/>
 	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Metadata\Default Work Unit.wwu" DateLow="1762419098" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Master-Mixer Hierarchy\Default Work Unit.wwu" DateLow="1763336459" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Interactive Music Hierarchy\Default Work Unit.wwu" DateLow="1763325834" DateHigh="0"/>
+	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Master-Mixer Hierarchy\Default Work Unit.wwu" DateLow="1763373370" DateHigh="0"/>
+	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Interactive Music Hierarchy\Default Work Unit.wwu" DateLow="1763377868" DateHigh="0"/>
 	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Game Parameters\Default Work Unit.wwu" DateLow="1763335694" DateHigh="0"/>
 	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Events\EV_UI.wwu" DateLow="1763331682" DateHigh="0"/>
 	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Events\EV_Traps.wwu" DateLow="1763331682" DateHigh="0"/>
 	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Events\EV_Player.wwu" DateLow="1763324372" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Events\Default Work Unit.wwu" DateLow="1763331604" DateHigh="0"/>
+	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Events\EV_Music.wwu" DateLow="1763372750" DateHigh="0"/>
+	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Events\Default Work Unit.wwu" DateLow="1763368087" DateHigh="0"/>
 	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Effects\Factory Effects.wwu" DateLow="1762419098" DateHigh="0"/>
 	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Effects\Default Work Unit.wwu" DateLow="1762419098" DateHigh="0"/>
 	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Dynamic Dialogue\Default Work Unit.wwu" DateLow="1762419098" DateHigh="0"/>
 	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Deathrun_WwiseProject.wproj" DateLow="1763316478" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Deathrun_WwiseProject.crossover.wsettings" DateLow="1763336465" DateHigh="0"/>
+	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Deathrun_WwiseProject.crossover.wsettings" DateLow="1763377938" DateHigh="0"/>
 	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Conversion Settings\Factory Conversion Settings.wwu" DateLow="1762419098" DateHigh="0"/>
 	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Conversion Settings\Default Work Unit.wwu" DateLow="1762419098" DateHigh="0"/>
 	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Control Surface Sessions\Default Work Unit.wwu" DateLow="1762419098" DateHigh="0"/>
 	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Audio Devices\Default Work Unit.wwu" DateLow="1762419098" DateHigh="0"/>
 	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Attenuations\Default Work Unit.wwu" DateLow="1763327604" DateHigh="0"/>
 	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Actor-Mixer Hierarchy\Default Work Unit.wwu" DateLow="1763316478" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Actor-Mixer Hierarchy\AM_Player.wwu" DateLow="1763336459" DateHigh="0"/>
+	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Actor-Mixer Hierarchy\AM_Player.wwu" DateLow="1763373252" DateHigh="0"/>
 	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Actor-Mixer Hierarchy\Actors_Mixer_UI.wwu" DateLow="1763331486" DateHigh="0"/>
 	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Actor-Mixer Hierarchy\Actors_Mixer_Traps.wwu" DateLow="1763336459" DateHigh="0"/>
 	<ValidationCacheItem File="Y:\GitHub\Deathrun\Deathrun_WwiseProject\Actor-Mixer Hierarchy\Actors_Mixer_Ambience.wwu" DateLow="1763316478" DateHigh="0"/>

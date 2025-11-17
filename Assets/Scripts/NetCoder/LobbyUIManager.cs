@@ -60,6 +60,7 @@ namespace DeathrunGame
         {
             SetupButtons();
             SubscribeToLobbyEvents();
+            
             ShowMainMenu();
             
             if (mainCamera != null)
@@ -232,12 +233,18 @@ namespace DeathrunGame
 
         #endregion
 
-        #region Panel Navigation
+        #region Panel Navigation    
 
         private void ShowMainMenu()
         {
             HideAllPanels();
             mainMenuPanel.SetActive(true);
+            
+            // Set game phase to Menu
+            if (GamePhaseManager.Instance != null)
+            {
+                GamePhaseManager.Instance.SetMenu();
+            }
 
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
@@ -402,6 +409,12 @@ namespace DeathrunGame
             if (UIAudioManager.Exists())
             {
                 UIAudioManager.Instance.PlayClick();
+            }
+
+            // Set game phase to Playing
+            if (GamePhaseManager.Instance != null)
+            {
+                GamePhaseManager.Instance.SetPlaying();
             }
 
             if (startGameButton != null)
