@@ -34207,7 +34207,7 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ForceVisible: 0
-  m_ShadowRadius: 0
+  m_ShadowRadius: 41.4
   m_ShadowAngle: 0
   m_LightUnit: 1
   m_LuxAtDistance: 1

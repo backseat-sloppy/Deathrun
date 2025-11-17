@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Tracks players who are on the boat using trigger collisions.
 /// Communicates with BoatController to determine when all players are aboard.
-/// Parents players to boat so they move with it.
+/// Supports Rigidbody players by maintaining their position relative to the boat using physics.
 /// Only tracks ALIVE players (active GameObjects with Player tag).
 /// </summary>
 [RequireComponent(typeof(BoxCollider))]
@@ -18,14 +18,22 @@ public class PassengerTracker : MonoBehaviour
     [SerializeField] private bool parentPlayersToBoat = true;
     [SerializeField] private Transform boatDeck; // Optional: specific deck transform
     
+    [Header("Rigidbody Player Settings")]
+    [SerializeField] private bool supportRigidbodyPlayers = true;
+    [SerializeField] private float rigidbodyAttachmentForce = 500f;
+    [SerializeField] private float rigidbodyDamping = 10f;
+    [SerializeField] private bool useKinematicAttachment = false;
+    
     [Header("Debug")]
     [SerializeField] private bool showDebugMessages = true;
     [SerializeField] private bool showDetailedDebug = false; // Extra debugging info
     
     private HashSet<GameObject> playersOnBoard = new HashSet<GameObject>();
     private Dictionary<GameObject, Transform> playerOriginalParents = new Dictionary<GameObject, Transform>();
+    private Dictionary<GameObject, PlayerRigidbodyData> playerRigidbodyData = new Dictionary<GameObject, PlayerRigidbodyData>();
     private BoxCollider triggerZone;
     private BoatController boatController;
+    private Rigidbody boatRigidbody;
     
     // Cache of all known player root objects to avoid duplicates
     private HashSet<GameObject> knownPlayers = new HashSet<GameObject>();
@@ -39,6 +47,17 @@ public class PassengerTracker : MonoBehaviour
     public int TotalAlivePlayers => CountAlivePlayers();
     public bool AllPlayersAboard => playersOnBoard.Count >= TotalAlivePlayers && TotalAlivePlayers > 0;
     
+    private class PlayerRigidbodyData
+    {
+        public Rigidbody rigidbody;
+        public Vector3 localPosition;
+        public Quaternion localRotation;
+        public bool wasKinematic;
+        public bool wasUsingGravity;
+        public float originalDrag;
+        public float originalAngularDrag;
+    }
+    
     private void Awake()
     {
         triggerZone = GetComponent<BoxCollider>();
@@ -49,6 +68,8 @@ public class PassengerTracker : MonoBehaviour
         {
             Debug.LogError("PassengerTracker requires a BoatController component in parent!");
         }
+        
+        boatRigidbody = GetComponentInParent<Rigidbody>();
         
         // If no specific deck transform, use boat root
         if (boatDeck == null)
@@ -61,6 +82,14 @@ public class PassengerTracker : MonoBehaviour
     {
         // Initial scan of players in the scene
         RefreshKnownPlayers();
+    }
+    
+    private void FixedUpdate()
+    {
+        if (supportRigidbodyPlayers)
+        {
+            UpdateRigidbodyPlayers();
+        }
     }
     
     private void OnTriggerEnter(Collider other)
@@ -79,9 +108,16 @@ public class PassengerTracker : MonoBehaviour
             
             if (playersOnBoard.Add(player))
             {
-                // Parent player to boat
-                if (parentPlayersToBoat)
+                // Check if player has Rigidbody
+                Rigidbody playerRb = player.GetComponent<Rigidbody>();
+                
+                if (supportRigidbodyPlayers && playerRb != null)
                 {
+                    AttachRigidbodyPlayerToBoat(player, playerRb);
+                }
+                else if (parentPlayersToBoat)
+                {
+                    // Fallback to parenting for non-Rigidbody players
                     AttachPlayerToBoat(player);
                 }
                 
@@ -123,9 +159,14 @@ public class PassengerTracker : MonoBehaviour
             
             if (player != null && playersOnBoard.Remove(player))
             {
-                // Unparent player from boat
-                if (parentPlayersToBoat)
+                // Check if player has Rigidbody data
+                if (playerRigidbodyData.ContainsKey(player))
                 {
+                    DetachRigidbodyPlayerFromBoat(player);
+                }
+                else if (parentPlayersToBoat)
+                {
+                    // Unparent player from boat
                     DetachPlayerFromBoat(player);
                 }
                 
@@ -140,6 +181,115 @@ public class PassengerTracker : MonoBehaviour
                     boatController.StopJourney();
                 }
             }
+        }
+    }
+    
+    /// <summary>
+    /// Updates Rigidbody players to follow the boat's movement using physics forces.
+    /// </summary>
+    private void UpdateRigidbodyPlayers()
+    {
+        if (boatDeck == null) return;
+        
+        foreach (var kvp in playerRigidbodyData)
+        {
+            GameObject player = kvp.Key;
+            PlayerRigidbodyData data = kvp.Value;
+            
+            if (player == null || data.rigidbody == null || !player.activeInHierarchy)
+                continue;
+            
+            if (useKinematicAttachment)
+            {
+                // Kinematic mode: directly set position
+                Vector3 targetWorldPosition = boatDeck.TransformPoint(data.localPosition);
+                data.rigidbody.MovePosition(targetWorldPosition);
+                
+                Quaternion targetWorldRotation = boatDeck.rotation * data.localRotation;
+                data.rigidbody.MoveRotation(targetWorldRotation);
+            }
+            else
+            {
+                // Force mode: use physics forces to keep player with boat
+                Vector3 targetWorldPosition = boatDeck.TransformPoint(data.localPosition);
+                Vector3 positionError = targetWorldPosition - player.transform.position;
+                
+                // Calculate velocity needed to reach target
+                Vector3 targetVelocity = positionError * rigidbodyDamping;
+                
+                // Add boat's velocity to maintain relative position
+                if (boatRigidbody != null)
+                {
+                    targetVelocity += boatRigidbody.linearVelocity;
+                }
+                
+                // Apply force to match target velocity
+                Vector3 velocityError = targetVelocity - data.rigidbody.linearVelocity;
+                Vector3 force = velocityError * rigidbodyAttachmentForce * Time.fixedDeltaTime;
+                
+                data.rigidbody.AddForce(force, ForceMode.Force);
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Attaches a Rigidbody player to the boat using physics-based movement.
+    /// </summary>
+    private void AttachRigidbodyPlayerToBoat(GameObject player, Rigidbody playerRb)
+    {
+        // Store rigidbody data
+        PlayerRigidbodyData data = new PlayerRigidbodyData
+        {
+            rigidbody = playerRb,
+            localPosition = boatDeck.InverseTransformPoint(player.transform.position),
+            localRotation = Quaternion.Inverse(boatDeck.rotation) * player.transform.rotation,
+            wasKinematic = playerRb.isKinematic,
+            wasUsingGravity = playerRb.useGravity,
+            originalDrag = playerRb.linearDamping,
+            originalAngularDrag = playerRb.angularDamping
+        };
+        
+        playerRigidbodyData[player] = data;
+        
+        if (useKinematicAttachment)
+        {
+            // Make player kinematic to directly control position
+            playerRb.isKinematic = true;
+        }
+        else
+        {
+            // Increase drag to stabilize player on boat
+            playerRb.linearDamping = rigidbodyDamping;
+            playerRb.angularDamping = rigidbodyDamping * 0.5f;
+        }
+        
+        Log($"🔗 Rigidbody player {player.name} attached to boat (Mode: {(useKinematicAttachment ? "Kinematic" : "Force")})");
+    }
+    
+    /// <summary>
+    /// Detaches a Rigidbody player from the boat and restores original physics settings.
+    /// </summary>
+    private void DetachRigidbodyPlayerFromBoat(GameObject player)
+    {
+        if (playerRigidbodyData.TryGetValue(player, out PlayerRigidbodyData data))
+        {
+            if (data.rigidbody != null)
+            {
+                // Restore original rigidbody settings
+                data.rigidbody.isKinematic = data.wasKinematic;
+                data.rigidbody.useGravity = data.wasUsingGravity;
+                data.rigidbody.linearDamping = data.originalDrag;
+                data.rigidbody.angularDamping = data.originalAngularDrag;
+                
+                // Inherit boat's velocity to prevent sudden stop
+                if (boatRigidbody != null)
+                {
+                    data.rigidbody.linearVelocity = boatRigidbody.linearVelocity;
+                }
+            }
+            
+            playerRigidbodyData.Remove(player);
+            Log($"🔓 Rigidbody player {player.name} detached from boat");
         }
     }
     
@@ -260,7 +410,11 @@ public class PassengerTracker : MonoBehaviour
             {
                 Log($"💀 Removed dead player from tracking: {deadPlayer?.name ?? "null"}");
                 
-                if (parentPlayersToBoat && deadPlayer != null)
+                if (playerRigidbodyData.ContainsKey(deadPlayer))
+                {
+                    DetachRigidbodyPlayerFromBoat(deadPlayer);
+                }
+                else if (parentPlayersToBoat && deadPlayer != null)
                 {
                     DetachPlayerFromBoat(deadPlayer);
                 }
@@ -330,11 +484,18 @@ public class PassengerTracker : MonoBehaviour
     private void OnDestroy()
     {
         // Detach all players on destroy
-        foreach (GameObject player in playersOnBoard)
+        foreach (GameObject player in playersOnBoard.ToList())
         {
             if (player != null)
             {
-                DetachPlayerFromBoat(player);
+                if (playerRigidbodyData.ContainsKey(player))
+                {
+                    DetachRigidbodyPlayerFromBoat(player);
+                }
+                else
+                {
+                    DetachPlayerFromBoat(player);
+                }
             }
         }
     }
