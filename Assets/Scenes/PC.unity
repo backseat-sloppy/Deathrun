@@ -774,6 +774,59 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6ae7edc17d404b346a3cdb561c1a4ccc, type: 3}
   m_PrefabInstance: {fileID: 7719387861042141285}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &353896995
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 353896996}
+  - component: {fileID: 353896997}
+  m_Layer: 0
+  m_Name: FloorCollider (9)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &353896996
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 353896995}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.000000014901161, z: 0.03951777, w: 0.9992189}
+  m_LocalPosition: {x: 0.087, y: -0.447, z: 0.006}
+  m_LocalScale: {x: 1.01, y: 1.22, z: 0.026352938}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2261313668548742957}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 4.53}
+--- !u!65 &353896997
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 353896995}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!4 &372157667 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6ae7edc17d404b346a3cdb561c1a4ccc, type: 3}
@@ -22654,6 +22707,11 @@ MonoBehaviour:
   deadlyTags:
   - Enemy
   respawnPoint: {fileID: 0}
+  deathParticles: {fileID: 0}
+  particlePlayTime: 2
+  playerMesh: {fileID: 0}
+  playerCollider: {fileID: 0}
+  playerControlScripts: []
 --- !u!4 &1689928213881625627
 Transform:
   m_ObjectHideFlags: 0
@@ -28363,6 +28421,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -5232767418968727927, guid: 09395fe3ebb794c8c9431fd80d2a203c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2068342230}
+    - targetCorrespondingSourceObject: {fileID: -5232767418968727927, guid: 09395fe3ebb794c8c9431fd80d2a203c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 353896996}
     - targetCorrespondingSourceObject: {fileID: -5232767418968727927, guid: 09395fe3ebb794c8c9431fd80d2a203c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1893787841}
@@ -117957,6 +118018,11 @@ MonoBehaviour:
   deadlyTags:
   - Enemy
   respawnPoint: {fileID: 0}
+  deathParticles: {fileID: 0}
+  particlePlayTime: 2
+  playerMesh: {fileID: 0}
+  playerCollider: {fileID: 0}
+  playerControlScripts: []
 --- !u!33 &9084152033370815395
 MeshFilter:
   m_ObjectHideFlags: 0
