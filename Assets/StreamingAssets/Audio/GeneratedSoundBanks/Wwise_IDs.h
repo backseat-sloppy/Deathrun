@@ -92,6 +92,10 @@ namespace AK
         static const AkUniqueID GP_DANGERPROXIMITY = 447193833U;
         static const AkUniqueID GP_HEIGHT = 3118997414U;
         static const AkUniqueID GP_PLAYERSPEED = 3075218425U;
+        static const AkUniqueID MASTER_VOLUME = 4179668880U;
+        static const AkUniqueID MUSIC_VOLUME = 1006694123U;
+        static const AkUniqueID PLAYER_VOLUME = 1975814047U;
+        static const AkUniqueID SFX_VOLUME = 1564184899U;
     } // namespace GAME_PARAMETERS
 
     namespace BANKS

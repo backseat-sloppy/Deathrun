@@ -13,6 +13,9 @@ public class PlayerDeathOnImpact : MonoBehaviour
     // Reference to the GameObject that marks the respawn position
     public Transform respawnPoint;
 
+    // Reference to death screen manager
+    private DeathScreenManager deathScreenManager;
+
     // Called when the collider enters a collision
     void OnCollisionEnter(Collision collision)
     {
@@ -43,13 +46,30 @@ public class PlayerDeathOnImpact : MonoBehaviour
         {
             Debug.LogWarning("No respawn point assigned! Using player's starting position.");
         }
+
+        // Find death screen manager
+        deathScreenManager = FindObjectOfType<DeathScreenManager>();
+        if (deathScreenManager == null)
+        {
+            Debug.LogWarning("No DeathScreenManager found in scene. Death screen will not appear.");
+        }
     }
 
     // Handle player death
     void Die()
     {
-        // Disable or respawn player
-        gameObject.SetActive(false);
+        // Show death screen
+        if (deathScreenManager != null)
+        {
+            deathScreenManager.ShowDeathScreen();
+        }
+        else
+        {
+            // Fallback: just disable player
+            gameObject.SetActive(false);
+        }
+
+        Debug.Log("💀 Player died");
     }
 
     //respawn player at respawn position on R press
@@ -60,7 +80,8 @@ public class PlayerDeathOnImpact : MonoBehaviour
             Respawn();
         }
     }
-    void Respawn()
+
+    public void Respawn()
     {
         if (respawnPoint != null)
         {
@@ -71,6 +92,6 @@ public class PlayerDeathOnImpact : MonoBehaviour
             transform.position = new Vector3(0, 1, 0); // Fallback position
         }
         gameObject.SetActive(true);
-        Debug.Log("Player respawned");
+        Debug.Log("✨ Player respawned");
     }
 }

@@ -13,6 +13,12 @@ State	ID	Name	State Group			Notes
 	1852808225	Playing	GamePhase			
 	2607556080	Menu	GamePhase			
 
+Game Parameter	ID	Name			Wwise Object Path	Notes
+	1006694123	Music_Volume			\Default Work Unit\Volume\Music_Volume	
+	1564184899	SFX_Volume			\Default Work Unit\Volume\SFX_Volume	
+	1975814047	Player_Volume			\Default Work Unit\Volume\Player_Volume	
+	4179668880	Master_Volume			\Default Work Unit\Volume\Master_Volume	
+
 Audio Bus	ID	Name			Wwise Object Path	Notes
 	85412153	Ambience			\Default Work Unit\Master Audio Bus\Ambience	
 	136159466	Aux Busses			\Default Work Unit\Master Audio Bus\Aux Busses	

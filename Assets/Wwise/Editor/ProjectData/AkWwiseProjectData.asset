@@ -38,7 +38,7 @@ MonoBehaviour:
     ParentPath: Master-Mixer Hierarchy/Default Work Unit
     guid: ff4758e9637e664ab03e852280bc33a9
     GuidInternal: 
-    m_lastTime: -8584382761778793743
+    m_lastTime: -8584382704264016088
     List:
     - name: Amb_Indoor
       guid: 080ed43e3af0404daa8f215e408c6b04
@@ -271,7 +271,7 @@ MonoBehaviour:
     ParentPath: SoundBanks/Default Work Unit
     guid: 857db305ca908b428ab306e5a61125cd
     GuidInternal: 
-    m_lastTime: -8584382748627401647
+    m_lastTime: -8584382704263997802
     List:
     - name: Main
       guid: 84dcec481494b546a45dddd3b044c237
@@ -541,7 +541,7 @@ MonoBehaviour:
     ParentPath: Game Parameters/Default Work Unit
     guid: a7b484bdc26ec846b9011261f2cb616c
     GuidInternal: 
-    m_lastTime: -8584382761779009472
+    m_lastTime: -8584382711908556288
     List:
     - name: GP_DangerProximity
       guid: a8546ff92787a14281aa416691453223
@@ -585,6 +585,88 @@ MonoBehaviour:
         ObjectType: 13
         guid: a21ec2f4e990be4d8acdc3935c1ca91e
       Path: Game Parameters/Default Work Unit/GP_PlayerSpeed
+    - name: Master_Volume
+      guid: f0190877e91f084eba3d9947e5085ca0
+      id: 4179668880
+      PathAndIcons:
+      - ElementName: Game Parameters
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: a7b484bdc26ec846b9011261f2cb616c
+      - ElementName: Volume
+        ObjectType: 4
+        guid: ed56f2966c4d6f4a850b506a0c19e1d5
+      - ElementName: Master_Volume
+        ObjectType: 13
+        guid: f0190877e91f084eba3d9947e5085ca0
+      Path: Game Parameters/Default Work Unit/Volume/Master_Volume
+    - name: Music_Volume
+      guid: 087df77f9864254699851947ab48cd35
+      id: 1006694123
+      PathAndIcons:
+      - ElementName: Game Parameters
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: a7b484bdc26ec846b9011261f2cb616c
+      - ElementName: Volume
+        ObjectType: 4
+        guid: ed56f2966c4d6f4a850b506a0c19e1d5
+      - ElementName: Music_Volume
+        ObjectType: 13
+        guid: 087df77f9864254699851947ab48cd35
+      Path: Game Parameters/Default Work Unit/Volume/Music_Volume
+    - name: Player_Volume
+      guid: 5adad3459924974e9fd67e71e240c691
+      id: 1975814047
+      PathAndIcons:
+      - ElementName: Game Parameters
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: a7b484bdc26ec846b9011261f2cb616c
+      - ElementName: Volume
+        ObjectType: 4
+        guid: ed56f2966c4d6f4a850b506a0c19e1d5
+      - ElementName: Player_Volume
+        ObjectType: 13
+        guid: 5adad3459924974e9fd67e71e240c691
+      Path: Game Parameters/Default Work Unit/Volume/Player_Volume
+    - name: SFX_Volume
+      guid: 43cb8f8423a57c4a8d22df9c5b13bd36
+      id: 1564184899
+      PathAndIcons:
+      - ElementName: Game Parameters
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: a7b484bdc26ec846b9011261f2cb616c
+      - ElementName: Volume
+        ObjectType: 4
+        guid: ed56f2966c4d6f4a850b506a0c19e1d5
+      - ElementName: SFX_Volume
+        ObjectType: 13
+        guid: 43cb8f8423a57c4a8d22df9c5b13bd36
+      Path: Game Parameters/Default Work Unit/Volume/SFX_Volume
+    - name: Volume
+      guid: ed56f2966c4d6f4a850b506a0c19e1d5
+      id: 2415836739
+      PathAndIcons:
+      - ElementName: Game Parameters
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: a7b484bdc26ec846b9011261f2cb616c
+      - ElementName: Volume
+        ObjectType: 4
+        guid: ed56f2966c4d6f4a850b506a0c19e1d5
+      Path: Game Parameters/Default Work Unit/Volume
   StateWwu:
   - PhysicalPath: States/Default Work Unit.wwu
     PathAndIcons:
@@ -987,7 +1069,7 @@ MonoBehaviour:
     GuidInternal: 
     m_lastTime: -8584391877870676267
     List: []
-  ExpandedFileSystemItemIds: 0200000003000000040000000600000007000000080000000c0000000d000000
+  ExpandedFileSystemItemIds: 0200000003000000040000000600000007000000080000000a0000000c0000000d000000
   ExpandedWaapiItemIds: 0600000007000000080000000c0000000d000000
   AutoSyncSelection: 0
   autoPopulateEnabled: 1

@@ -29,14 +29,8 @@ namespace DeathrunGame
         [SerializeField] private Slider masterVolumeSlider;
         [SerializeField] private Slider musicVolumeSlider;
         [SerializeField] private Slider sfxVolumeSlider;
-
-        [Header("Settings - Graphics")]
-        [SerializeField] private TMP_Dropdown qualityDropdown;
-        [SerializeField] private Toggle fullscreenToggle;
-
-        [Header("Settings - Mouse Sensitivity")]
-        [SerializeField] private Slider mouseSensitivitySlider;
-        [SerializeField] private TextMeshProUGUI sensitivityValueText;
+        [SerializeField] private Slider playerVolumeSlider;
+        [SerializeField] private TextMeshProUGUI playerVolumeValueText;
 
         [Header("Settings")]
         [SerializeField] private KeyCode pauseKey = KeyCode.Escape;
@@ -48,7 +42,6 @@ namespace DeathrunGame
 
         private bool isPaused = false;
         private bool isInMainMenu = true; // Assume we start in main menu
-        private PlayerCameraController cameraController;
 
         #endregion
 
@@ -120,16 +113,8 @@ namespace DeathrunGame
             if (sfxVolumeSlider != null)
                 sfxVolumeSlider.onValueChanged.AddListener(OnSFXVolumeChanged);
 
-            // Graphics settings
-            if (qualityDropdown != null)
-                qualityDropdown.onValueChanged.AddListener(OnQualityChanged);
-
-            if (fullscreenToggle != null)
-                fullscreenToggle.onValueChanged.AddListener(OnFullscreenChanged);
-
-            // Mouse sensitivity
-            if (mouseSensitivitySlider != null)
-                mouseSensitivitySlider.onValueChanged.AddListener(OnMouseSensitivityChanged);
+            if (playerVolumeSlider != null)
+                playerVolumeSlider.onValueChanged.AddListener(OnPlayerVolumeChanged);
         }
 
         #endregion
@@ -260,67 +245,40 @@ namespace DeathrunGame
 
         private void OnMasterVolumeChanged(float value)
         {
-            // TODO: Integrate with Wwise
-            // Example: AkSoundEngine.SetRTPCValue("Master_Volume", value);
-            Debug.Log($"🔊 Master Volume: {value}");
+            // Convert 0-1 slider range to 0-100 for Wwise
+            float wwiseValue = value * 100f;
+            AkSoundEngine.SetRTPCValue("Master_Volume", wwiseValue);
+            Debug.Log($"🔊 Master Volume: {value:F2} ({wwiseValue:F0}%)");
         }
 
         private void OnMusicVolumeChanged(float value)
         {
-            // TODO: Integrate with Wwise
-            // Example: AkSoundEngine.SetRTPCValue("Music_Volume", value);
-            Debug.Log($"🎵 Music Volume: {value}");
+            // Convert 0-1 slider range to 0-100 for Wwise
+            float wwiseValue = value * 100f;
+            AkSoundEngine.SetRTPCValue("Music_Volume", wwiseValue);
+            Debug.Log($"🎵 Music Volume: {value:F2} ({wwiseValue:F0}%)");
         }
 
         private void OnSFXVolumeChanged(float value)
         {
-            // TODO: Integrate with Wwise
-            // Example: AkSoundEngine.SetRTPCValue("SFX_Volume", value);
-            Debug.Log($"🔔 SFX Volume: {value}");
+            // Convert 0-1 slider range to 0-100 for Wwise
+            float wwiseValue = value * 100f;
+            AkSoundEngine.SetRTPCValue("SFX_Volume", wwiseValue);
+            Debug.Log($"🔔 SFX Volume: {value:F2} ({wwiseValue:F0}%)");
         }
 
-        #endregion
-
-        #region Graphics Settings
-
-        private void OnQualityChanged(int qualityIndex)
+        private void OnPlayerVolumeChanged(float value)
         {
-            QualitySettings.SetQualityLevel(qualityIndex);
-            Debug.Log($"🎨 Quality set to: {QualitySettings.names[qualityIndex]}");
-        }
-
-        private void OnFullscreenChanged(bool isFullscreen)
-        {
-            Screen.fullScreen = isFullscreen;
-            Debug.Log($"🖥️ Fullscreen: {isFullscreen}");
-        }
-
-        #endregion
-
-        #region Mouse Sensitivity
-
-        private void OnMouseSensitivityChanged(float value)
-        {
-            // Update sensitivity text
-            if (sensitivityValueText != null)
+            // Update player volume text
+            if (playerVolumeValueText != null)
             {
-                sensitivityValueText.text = value.ToString("F2");
+                playerVolumeValueText.text = value.ToString("F2");
             }
 
-            // Update camera controller sensitivity if available
-            if (cameraController == null)
-            {
-                // Try to find the player's camera controller
-                var player = GameObject.FindGameObjectWithTag("Player");
-                if (player != null)
-                {
-                    cameraController = player.GetComponent<PlayerCameraController>();
-                }
-            }
-
-            // TODO: Apply sensitivity to camera controller
-            // You'll need to add public setters in PlayerCameraController for this
-            Debug.Log($"🖱️ Mouse Sensitivity: {value}");
+            // Convert 0-1 slider range to 0-100 for Wwise
+            float wwiseValue = value * 100f;
+            AkSoundEngine.SetRTPCValue("Player_Volume", wwiseValue);
+            Debug.Log($"🎮 Player Volume: {value:F2} ({wwiseValue:F0}%)");
         }
 
         #endregion
@@ -338,14 +296,8 @@ namespace DeathrunGame
             if (sfxVolumeSlider != null)
                 PlayerPrefs.SetFloat("SFXVolume", sfxVolumeSlider.value);
 
-            if (qualityDropdown != null)
-                PlayerPrefs.SetInt("QualityLevel", qualityDropdown.value);
-
-            if (fullscreenToggle != null)
-                PlayerPrefs.SetInt("Fullscreen", fullscreenToggle.isOn ? 1 : 0);
-
-            if (mouseSensitivitySlider != null)
-                PlayerPrefs.SetFloat("MouseSensitivity", mouseSensitivitySlider.value);
+            if (playerVolumeSlider != null)
+                PlayerPrefs.SetFloat("PlayerVolume", playerVolumeSlider.value);
 
             PlayerPrefs.Save();
             Debug.Log("💾 Settings saved");
@@ -375,27 +327,11 @@ namespace DeathrunGame
                 OnSFXVolumeChanged(volume);
             }
 
-            // Load graphics settings
-            if (qualityDropdown != null)
+            if (playerVolumeSlider != null)
             {
-                int quality = PlayerPrefs.GetInt("QualityLevel", QualitySettings.GetQualityLevel());
-                qualityDropdown.value = quality;
-                OnQualityChanged(quality);
-            }
-
-            if (fullscreenToggle != null)
-            {
-                bool isFullscreen = PlayerPrefs.GetInt("Fullscreen", Screen.fullScreen ? 1 : 0) == 1;
-                fullscreenToggle.isOn = isFullscreen;
-                OnFullscreenChanged(isFullscreen);
-            }
-
-            // Load mouse sensitivity
-            if (mouseSensitivitySlider != null)
-            {
-                float sensitivity = PlayerPrefs.GetFloat("MouseSensitivity", 2f);
-                mouseSensitivitySlider.value = sensitivity;
-                OnMouseSensitivityChanged(sensitivity);
+                float volume = PlayerPrefs.GetFloat("PlayerVolume", 1f);
+                playerVolumeSlider.value = volume;
+                OnPlayerVolumeChanged(volume);
             }
 
             Debug.Log("📂 Settings loaded");

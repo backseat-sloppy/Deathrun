@@ -10,7 +10,7 @@
     "Type": "User",
     "GUID": "{701ECBBD-9C7B-4030-8CDB-749EE5D1C7B9}",
     "Language": "SFX",
-    "Hash": "{C4331FD5-6F5A-F513-309A-E450313E117A}",
+    "Hash": "{8691B52D-E0DB-77DD-2BCE-603A1CAE2652}",
     "ObjectPath": "Init",
     "ShortName": "Init",
     "Path": "Init.bnk",
@@ -118,6 +118,24 @@
       "GUID": "{F96F54A8-8727-42A1-81AA-416691453223}"
      },
      {
+      "Id": "1006694123",
+      "Name": "Music_Volume",
+      "ObjectPath": "\\Game Parameters\\Default Work Unit\\Volume\\Music_Volume",
+      "GUID": "{7FF77D08-6498-4625-9985-1947AB48CD35}"
+     },
+     {
+      "Id": "1564184899",
+      "Name": "SFX_Volume",
+      "ObjectPath": "\\Game Parameters\\Default Work Unit\\Volume\\SFX_Volume",
+      "GUID": "{848FCB43-A523-4A7C-8D22-DF9C5B13BD36}"
+     },
+     {
+      "Id": "1975814047",
+      "Name": "Player_Volume",
+      "ObjectPath": "\\Game Parameters\\Default Work Unit\\Volume\\Player_Volume",
+      "GUID": "{45D3DA5A-2499-4E97-9FD6-7E71E240C691}"
+     },
+     {
       "Id": "3075218425",
       "Name": "GP_PlayerSpeed",
       "ObjectPath": "\\Game Parameters\\Default Work Unit\\GP_PlayerSpeed",
@@ -128,6 +146,12 @@
       "Name": "GP_Height",
       "ObjectPath": "\\Game Parameters\\Default Work Unit\\GP_Height",
       "GUID": "{80E48801-9890-486F-8EDE-3BE41B0F026D}"
+     },
+     {
+      "Id": "4179668880",
+      "Name": "Master_Volume",
+      "ObjectPath": "\\Game Parameters\\Default Work Unit\\Volume\\Master_Volume",
+      "GUID": "{770819F0-1FE9-4E08-BA3D-9947E5085CA0}"
      }
     ],
     "StateGroups": [
@@ -276,6 +300,6 @@
     ]
    }
   ],
-  "FileHash": "{E37B2E3A-3DD5-0A76-4D6F-857F848EE981}"
+  "FileHash": "{FCF18B24-7F95-E595-5611-A0DB32D58790}"
  }
 }
