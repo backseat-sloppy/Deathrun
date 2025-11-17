@@ -38,7 +38,7 @@ MonoBehaviour:
     ParentPath: Master-Mixer Hierarchy/Default Work Unit
     guid: ff4758e9637e664ab03e852280bc33a9
     GuidInternal: 
-    m_lastTime: -8584382704264016088
+    m_lastTime: -8584382394634860018
     List:
     - name: Amb_Indoor
       guid: 080ed43e3af0404daa8f215e408c6b04
@@ -299,7 +299,7 @@ MonoBehaviour:
     ParentPath: Events/Default Work Unit
     guid: 5a9558895ec0d449b8cc7211fe588746
     GuidInternal: 
-    m_lastTime: -8584382752813544256
+    m_lastTime: -8584382729280606059
     List: []
   - PhysicalPath: Events/EV_Player.wwu
     PathAndIcons:
@@ -315,11 +315,11 @@ MonoBehaviour:
     ParentPath: Events/Default Work Unit/EV_Player
     guid: c95c277cad228148b391ffa0004c77ee
     GuidInternal: 
-    m_lastTime: -8584382761779011687
+    m_lastTime: -8584382729280604778
     List:
-    - name: Plater_Swing_Play
-      guid: 1edd3579b846d24cb7717c0935ac13de
-      id: 2332195469
+    - name: Player_Dance_Play
+      guid: 7d6622d2807366479a53d0befdd882e7
+      id: 3314422259
       PathAndIcons:
       - ElementName: Events
         ObjectType: 5
@@ -330,13 +330,13 @@ MonoBehaviour:
       - ElementName: EV_Player
         ObjectType: 12
         guid: c95c277cad228148b391ffa0004c77ee
-      - ElementName: Plater_Swing_Play
+      - ElementName: Player_Dance_Play
         ObjectType: 3
-        guid: 1edd3579b846d24cb7717c0935ac13de
-      Path: Events/Default Work Unit/EV_Player/Plater_Swing_Play
-      maxAttenuation: 0
-      maxDuration: 0.37883332
-      minDuration: 0.37883332
+        guid: 7d6622d2807366479a53d0befdd882e7
+      Path: Events/Default Work Unit/EV_Player/Player_Dance_Play
+      maxAttenuation: 20
+      maxDuration: 4.1555533
+      minDuration: 4.1555533
     - name: Player_Death_Play
       guid: 53c73228572d864f8dcaf87a3e308fdd
       id: 2348472398
@@ -417,6 +417,26 @@ MonoBehaviour:
       maxAttenuation: 20
       maxDuration: 0.31327224
       minDuration: 0.21602394
+    - name: Player_Swing_Play
+      guid: 1edd3579b846d24cb7717c0935ac13de
+      id: 3260876866
+      PathAndIcons:
+      - ElementName: Events
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: 5a9558895ec0d449b8cc7211fe588746
+      - ElementName: EV_Player
+        ObjectType: 12
+        guid: c95c277cad228148b391ffa0004c77ee
+      - ElementName: Player_Swing_Play
+        ObjectType: 3
+        guid: 1edd3579b846d24cb7717c0935ac13de
+      Path: Events/Default Work Unit/EV_Player/Player_Swing_Play
+      maxAttenuation: 20
+      maxDuration: 0.37883332
+      minDuration: 0.37883332
   - PhysicalPath: Events/EV_Traps.wwu
     PathAndIcons:
     - ElementName: Events
@@ -431,7 +451,7 @@ MonoBehaviour:
     ParentPath: Events/Default Work Unit/EV_Traps
     guid: 0031ae3a22b4d244ad6e922a17c24207
     GuidInternal: 
-    m_lastTime: -8584382752025055269
+    m_lastTime: -8584382729280604076
     List:
     - name: Trap_Arrow_Hit_Play
       guid: 426cf92ba379514987ac8994fc625d93
@@ -487,7 +507,7 @@ MonoBehaviour:
     ParentPath: Events/Default Work Unit/EV_UI
     guid: b06ec60ae5749545b6bbf204e08b9ac5
     GuidInternal: 
-    m_lastTime: -8584382752025083906
+    m_lastTime: -8584382729280603305
     List:
     - name: Button_Back_Play
       guid: 288a02705a05ee46aa52e7a03432f2ca
@@ -541,7 +561,7 @@ MonoBehaviour:
     ParentPath: Game Parameters/Default Work Unit
     guid: a7b484bdc26ec846b9011261f2cb616c
     GuidInternal: 
-    m_lastTime: -8584382711908556288
+    m_lastTime: -8584382394634877484
     List:
     - name: GP_DangerProximity
       guid: a8546ff92787a14281aa416691453223
