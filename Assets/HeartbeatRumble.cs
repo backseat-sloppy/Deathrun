@@ -21,7 +21,7 @@ public class HeartbeatRumbleWwise_PostEvent : MonoBehaviour
     private Gamepad pad;
     private Coroutine heartbeatRoutine;
     
-    public RPPGProcessor rppgProcessor; // drag your RPPG GameObject here in Inspector
+  //  public RPPGProcessor rppgProcessor; // drag your RPPG GameObject here in Inspector
 
     private void Start()
     {
@@ -41,7 +41,8 @@ public class HeartbeatRumbleWwise_PostEvent : MonoBehaviour
     {
         while (true)
         {
-            bpm = RPPGProccesor.CurrentBPM;
+       
+        //bpm = rppgProccesor.CurrentBPM;
             if (bpm < initialBPM)
             {
                 yield return null; // wait one frame, then check again
