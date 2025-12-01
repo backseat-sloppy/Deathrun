@@ -14206,6 +14206,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: RPPG manager
       objectReference: {fileID: 0}
+    - target: {fileID: 7398341853217110164, guid: 0ec2544ac5a900c499323adc0ecd7e32, type: 3}
+      propertyPath: width
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 7398341853217110164, guid: 0ec2544ac5a900c499323adc0ecd7e32, type: 3}
+      propertyPath: height
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 7398341853217110164, guid: 0ec2544ac5a900c499323adc0ecd7e32, type: 3}
+      propertyPath: centerY
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9223102983468755284, guid: 0ec2544ac5a900c499323adc0ecd7e32, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 5.31
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

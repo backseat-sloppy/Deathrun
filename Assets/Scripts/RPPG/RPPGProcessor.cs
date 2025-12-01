@@ -290,14 +290,14 @@ public class RPPGProcessor : MonoBehaviour
         style.normal.textColor = Color.white;
         style.alignment = TextAnchor.UpperLeft;
         
-        string info = $"BPM: {CurrentBPM:F1}\nQuality: {(SignalQuality * 100):F0}%\nPeaks: {peakTimes.Count}\nSNR: {(signalPower / Mathf.Max(noisePower, 0.001f)):F2}";
+        string info = $"BPM: {CurrentBPM:F1}\nPeaks: {peakTimes.Count}";
         
         // Draw background
         GUI.color = new Color(0, 0, 0, 0.7f);
-        GUI.Box(new Rect(10, 10, 200, 120), "");
+        GUI.Box(new Rect(10, 10, 200, 90), "");
         
         // Draw text
         GUI.color = Color.white;
-        GUI.Label(new Rect(20, 20, 180, 100), info, style);
+        GUI.Label(new Rect(20, 20, 180, 70), info, style);
     }
 }

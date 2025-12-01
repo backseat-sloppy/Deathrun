@@ -13,9 +13,11 @@ public class ROISelector : MonoBehaviour
     [Header("Visualization")]
     [SerializeField] private bool showOverlay = true;
     [SerializeField] private Color overlayColor = new Color(0, 1, 0, 0.5f);
+    [SerializeField] private int borderThickness = 3;
 
     private WebcamController webcamController;
     private Rect roiRect;
+    private Texture2D overlayTexture;
 
     void Start()
     {
@@ -27,6 +29,11 @@ public class ROISelector : MonoBehaviour
         if (webcamController != null && webcamController.IsPlaying)
         {
             UpdateROI();
+            
+            if (showOverlay)
+            {
+                DrawROIOnTexture();
+            }
         }
     }
 
@@ -42,6 +49,115 @@ public class ROISelector : MonoBehaviour
         float pixelY = (centerY * texHeight) - (pixelHeight / 2f);
 
         roiRect = new Rect(pixelX, pixelY, pixelWidth, pixelHeight);
+    }
+
+    void DrawROIOnTexture()
+    {
+        if (webcamController.CameraTexture == null) return;
+
+        int texWidth = webcamController.CameraTexture.width;
+        int texHeight = webcamController.CameraTexture.height;
+
+        // Create overlay texture if needed
+        if (overlayTexture == null || overlayTexture.width != texWidth || overlayTexture.height != texHeight)
+        {
+            overlayTexture = new Texture2D(texWidth, texHeight, TextureFormat.RGBA32, false);
+            overlayTexture.filterMode = FilterMode.Point;
+        }
+
+        // Get webcam pixels
+        Color32[] pixels = webcamController.CameraTexture.GetPixels32();
+        Color32[] overlayPixels = new Color32[pixels.Length];
+        System.Array.Copy(pixels, overlayPixels, pixels.Length);
+
+        // Calculate ROI bounds in texture coordinates
+        int x = Mathf.Clamp((int)roiRect.x, 0, texWidth - 1);
+        int y = Mathf.Clamp((int)roiRect.y, 0, texHeight - 1);
+        int w = Mathf.Clamp((int)roiRect.width, 1, texWidth - x);
+        int h = Mathf.Clamp((int)roiRect.height, 1, texHeight - y);
+
+        Color32 borderColor = new Color32(
+            (byte)(overlayColor.r * 255),
+            (byte)(overlayColor.g * 255),
+            (byte)(overlayColor.b * 255),
+            (byte)(overlayColor.a * 255)
+        );
+
+        // Draw rectangle border
+        for (int thickness = 0; thickness < borderThickness; thickness++)
+        {
+            // Top border
+            for (int i = x - thickness; i < x + w + thickness; i++)
+            {
+                if (i >= 0 && i < texWidth && y + h + thickness < texHeight)
+                {
+                    int index = (y + h + thickness) * texWidth + i;
+                    overlayPixels[index] = borderColor;
+                }
+            }
+
+            // Bottom border
+            for (int i = x - thickness; i < x + w + thickness; i++)
+            {
+                if (i >= 0 && i < texWidth && y - thickness >= 0)
+                {
+                    int index = (y - thickness) * texWidth + i;
+                    overlayPixels[index] = borderColor;
+                }
+            }
+
+            // Left border
+            for (int i = y - thickness; i < y + h + thickness; i++)
+            {
+                if (i >= 0 && i < texHeight && x - thickness >= 0)
+                {
+                    int index = i * texWidth + (x - thickness);
+                    overlayPixels[index] = borderColor;
+                }
+            }
+
+            // Right border
+            for (int i = y - thickness; i < y + h + thickness; i++)
+            {
+                if (i >= 0 && i < texHeight && x + w + thickness < texWidth)
+                {
+                    int index = i * texWidth + (x + w + thickness);
+                    overlayPixels[index] = borderColor;
+                }
+            }
+        }
+
+        // Apply overlay to texture
+        overlayTexture.SetPixels32(overlayPixels);
+        overlayTexture.Apply();
+
+        // Update the display with overlay
+        UpdateDisplay();
+    }
+
+    void UpdateDisplay()
+    {
+        var webcamComp = GetComponent<WebcamController>();
+        
+        // Update UI RawImage if present
+        var rawImage = webcamComp.GetType().GetField("displayImage", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+            ?.GetValue(webcamComp) as UnityEngine.UI.RawImage;
+        
+        if (rawImage != null)
+        {
+            rawImage.texture = overlayTexture;
+        }
+
+        // Update 3D plane renderer if present
+        var planeRenderer = webcamComp.GetType().GetField("planeRenderer", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+            ?.GetValue(webcamComp) as Renderer;
+        
+        if (planeRenderer != null)
+        {
+            planeRenderer.material.mainTexture = overlayTexture;
+        }
     }
 
     public Color32[] GetROIPixels()
@@ -76,26 +192,11 @@ public class ROISelector : MonoBehaviour
         return roiPixels;
     }
 
-    void OnGUI()
+    void OnDestroy()
     {
-        if (showOverlay && webcamController != null && webcamController.IsPlaying)
+        if (overlayTexture != null)
         {
-            // Draw ROI rectangle overlay
-            GUI.color = overlayColor;
-            
-            // Scale to screen space (assuming camera feed fills screen)
-            float screenWidth = Screen.width;
-            float screenHeight = Screen.height;
-            
-            Rect screenRect = new Rect(
-                roiRect.x / webcamController.CameraTexture.width * screenWidth,
-                (1f - (roiRect.y + roiRect.height) / webcamController.CameraTexture.height) * screenHeight,
-                roiRect.width / webcamController.CameraTexture.width * screenWidth,
-                roiRect.height / webcamController.CameraTexture.height * screenHeight
-            );
-            
-            GUI.Box(screenRect, "");
-            GUI.color = Color.white;
+            Destroy(overlayTexture);
         }
     }
 }
