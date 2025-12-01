@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public class RPPGProcessor : MonoBehaviour
 {
@@ -39,6 +40,11 @@ public class RPPGProcessor : MonoBehaviour
     private float minPeakDistance = 0.4f; // Minimum 0.4s between peaks (150 BPM)
     private bool wasAboveThreshold = false;
     
+    // Signal quality metrics
+    private float runningMean = 128f;
+    private float signalPower = 0f;
+    private float noisePower = 0f;
+    
     void Start()
     {
         if (roiSelector == null)
@@ -73,25 +79,56 @@ public class RPPGProcessor : MonoBehaviour
         }
         greenAverage /= roiPixels.Length;
         
+        // Update running mean with exponential moving average
+        runningMean = 0.98f * runningMean + 0.02f * greenAverage;
+        
+        // Normalize by removing DC component (detrending)
+        float normalized = greenAverage - runningMean;
+        
         // Add to raw signal buffer
-        rawSignal.Enqueue(greenAverage);
+        rawSignal.Enqueue(normalized);
         if (rawSignal.Count > windowSize * 2)
         {
             rawSignal.Dequeue();
         }
         
         // Apply bandpass filter
-        float filtered = ApplyBandpassFilter(greenAverage);
+        float filtered = ApplyBandpassFilter(normalized);
         filteredSignal.Enqueue(filtered);
         if (filteredSignal.Count > windowSize * 2)
         {
             filteredSignal.Dequeue();
         }
         
+        // Calculate signal quality based on SNR
+        UpdateSignalQuality(filtered, normalized);
+        
         // Detect peaks and calculate BPM
         if (filteredSignal.Count >= windowSize)
         {
             DetectPeaksAndCalculateBPM(filtered);
+        }
+    }
+    
+    void UpdateSignalQuality(float filtered, float raw)
+    {
+        // Signal power (from filtered bandpass output)
+        signalPower = 0.95f * signalPower + 0.05f * (filtered * filtered);
+        
+        // Noise power (difference between raw and filtered)
+        float noise = raw - filtered;
+        noisePower = 0.95f * noisePower + 0.05f * (noise * noise);
+        
+        // Calculate SNR (Signal-to-Noise Ratio)
+        if (noisePower > 0.001f)
+        {
+            float snr = signalPower / noisePower;
+            // Convert SNR to 0-1 quality metric (SNR > 2 is good for rPPG)
+            SignalQuality = Mathf.Clamp01(snr / 3f);
+        }
+        else
+        {
+            SignalQuality = 0f;
         }
     }
     
@@ -199,18 +236,6 @@ public class RPPGProcessor : MonoBehaviour
         // Clamp to valid range
         bpm = Mathf.Clamp(bpm, minBPM, maxBPM);
         
-        // Calculate signal quality (0-1 based on consistency of intervals)
-        float intervalVariance = 0f;
-        for (int i = 1; i < peakTimes.Count; i++)
-        {
-            float interval = peakTimes[i] - peakTimes[i - 1];
-            intervalVariance += Mathf.Abs(interval - avgInterval);
-        }
-        intervalVariance /= (peakTimes.Count - 1);
-        
-        // Lower variance = higher quality
-        SignalQuality = Mathf.Clamp01(1f - (intervalVariance * 5f));
-        
         // Smooth BPM update
         CurrentBPM = Mathf.Lerp(CurrentBPM, bpm, 0.3f);
     }
@@ -265,14 +290,14 @@ public class RPPGProcessor : MonoBehaviour
         style.normal.textColor = Color.white;
         style.alignment = TextAnchor.UpperLeft;
         
-        string info = $"BPM: {CurrentBPM:F1}\nQuality: {(SignalQuality * 100):F0}%\nPeaks: {peakTimes.Count}";
+        string info = $"BPM: {CurrentBPM:F1}\nQuality: {(SignalQuality * 100):F0}%\nPeaks: {peakTimes.Count}\nSNR: {(signalPower / Mathf.Max(noisePower, 0.001f)):F2}";
         
         // Draw background
         GUI.color = new Color(0, 0, 0, 0.7f);
-        GUI.Box(new Rect(10, 10, 200, 100), "");
+        GUI.Box(new Rect(10, 10, 200, 120), "");
         
         // Draw text
         GUI.color = Color.white;
-        GUI.Label(new Rect(20, 20, 180, 80), info, style);
+        GUI.Label(new Rect(20, 20, 180, 100), info, style);
     }
 }
