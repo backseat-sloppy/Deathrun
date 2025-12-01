@@ -1343,6 +1343,78 @@
 						<ActiveSource Name="Fortnite default dance sound" ID="{2387B5C0-2FA5-4EBE-9454-5440CAAFEA32}" Platform="Linked"/>
 					</ActiveSourceList>
 				</Sound>
+				<Sound Name="Heartbeat, In" ID="{DA7016AF-87FE-4528-9553-2756F28A9358}" ShortID="501792557">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="Human, Heartbeat, Designed, Heartbeats, Loopable 03 SND115591 S00" ID="{2DD2FE5D-0797-47BB-BE02-AA7F6FA48212}">
+							<PropertyList>
+								<Property Name="LoopBegin" Type="Real64" Value="0"/>
+								<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+								<Property Name="TrimEnd" Type="Real64" Value="0.0734174419659631"/>
+							</PropertyList>
+							<Language>SFX</Language>
+							<AudioFile>Human, Heartbeat, Designed, Heartbeats, Loopable 03 SND115591 S00.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="889844061"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="Human, Heartbeat, Designed, Heartbeats, Loopable 03 SND115591 S00" ID="{2DD2FE5D-0797-47BB-BE02-AA7F6FA48212}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="Heartbeat, Out" ID="{17D2460B-8F4D-404F-BA7A-7C717F2F768A}" ShortID="726723816">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{57A35757-C66C-464A-84D7-7E9EB37C3787}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{E95847FF-7E63-4A66-B03E-852280BC33A9}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="Human, Heartbeat, Designed, Heartbeats, Loopable 03 SND115591 S01" ID="{0E080D7F-6DFA-46CE-BE72-17AEC227DA2A}">
+							<PropertyList>
+								<Property Name="MarkerInputMode" Type="int16" Value="2"/>
+								<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+								<Property Name="TrimEnd" Type="Real64" Value="0.286244792146801"/>
+							</PropertyList>
+							<Language>SFX</Language>
+							<AudioFile>Human, Heartbeat, Designed, Heartbeats, Loopable 03 SND115591 S01.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="345492274"/>
+							</MediaIDList>
+							<ObjectLists>
+								<ObjectList Name="Markers">
+									<Reference>
+										<Local>
+											<Marker Name="" ID="{CE4E279E-E5A7-4295-B472-005F24933A73}"/>
+										</Local>
+									</Reference>
+									<Reference>
+										<Local>
+											<Marker Name="" ID="{6E3F3A32-5870-4D27-B06C-92C991EA63CF}">
+												<PropertyList>
+													<Property Name="Time" Type="Real64" Value="1.30073958333333"/>
+												</PropertyList>
+											</Marker>
+										</Local>
+									</Reference>
+								</ObjectList>
+							</ObjectLists>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="Human, Heartbeat, Designed, Heartbeats, Loopable 03 SND115591 S01" ID="{0E080D7F-6DFA-46CE-BE72-17AEC227DA2A}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
 			</ChildrenList>
 		</WorkUnit>
 	</AudioObjects>
