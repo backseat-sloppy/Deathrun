@@ -42,7 +42,7 @@
 				<Property Name="General\LatestLanguage" Type="int32" Value="684519430"/>
 				<Property Name="General\LatestPlatform" Type="string" Value="Android"/>
 				<Property Name="General\SourceControlPluginID" Type="string" Value="{C403A906-0C19-4ED5-808E-748707065301}"/>
-				<Property Name="GenerateSoundBanks\x64_SelectedLanguages" Type="string" Value=""/>
+				<Property Name="GenerateSoundBanks\x64_SelectedLanguages" Type="string" Value="BvDMKA=="/>
 				<Property Name="GenerateSoundBanks\x64_SelectedPlatforms" Type="string" Value="ZF6HXbm6wEywfFzxr43IhPt/0JjNlrBIqc6dVssxILAalZBRKyroQbjUaS79u/50"/>
 				<Property Name="HardwareController\CurrentSession" Type="string" Value="{00000000-0000-0000-0000-000000000000}"/>
 				<Property Name="Interactive Music\x64_{19B37BDD-7271-4841-9CE8-BF8881C7FA4B} - SegmentEditorZoomInfo" Type="string" Value="AR64zkZhDkCv591YUFj8P6uqqqqqKghAAAAAAAAA8D8AAAAAAAAAAAAAAAAAAAAA"/>
