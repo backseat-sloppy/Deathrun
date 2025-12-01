@@ -897,7 +897,7 @@ MonoBehaviour:
   width: 0.136
   height: 0.15
   showOverlay: 1
-  overlayColor: {r: 0, g: 1, b: 0, a: 0.5}
+  overlayColor: {r: 0, g: 1, b: 0, a: 0.54509807}
 --- !u!114 &1234780715
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -957,8 +957,10 @@ MonoBehaviour:
   minBPM: 44
   maxBPM: 150
   samplingRate: 30
+  minAmplitudeThreshold: 0.05
   thresholdMultiplier: 0.6
   windowSize: 60
+  bpmCalculationWindow: 15
   showDebugInfo: 1
 --- !u!43 &1248228379
 Mesh:
