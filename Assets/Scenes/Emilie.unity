@@ -6970,6 +6970,7 @@ MonoBehaviour:
     WwiseObjectReference: {fileID: 11400000, guid: 372eafadecb4cd6418822266e5516ad1, type: 2}
   initialBPM: 60
   bpm: 60
+  rppgProcessor: {fileID: 1962464403}
 --- !u!114 &931335572
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15820,6 +15821,17 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1955294064}
   m_Mesh: {fileID: 3692989287640907169, guid: 09395fe3ebb794c8c9431fd80d2a203c, type: 3}
+--- !u!114 &1962464403 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2279275997327740282, guid: 0ec2544ac5a900c499323adc0ecd7e32, type: 3}
+  m_PrefabInstance: {fileID: 1744571761}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf3a2b5679440d41a34c41bc09bfbff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1962903322
 GameObject:
   m_ObjectHideFlags: 0
