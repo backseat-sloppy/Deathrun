@@ -4168,7 +4168,6 @@ GameObject:
   m_Component:
   - component: {fileID: 747555902}
   - component: {fileID: 747555901}
-  - component: {fileID: 747555900}
   - component: {fileID: 747555903}
   m_Layer: 0
   m_Name: Directional Moon Light
@@ -4177,18 +4176,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &747555900
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 747555899}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a68c43fe1f2a47cfa234b5eeaa98012, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!108 &747555901
 Light:
   m_ObjectHideFlags: 0
