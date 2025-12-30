@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8448029454981433060}
   - component: {fileID: 4080460110169510009}
-  - component: {fileID: 4197257806811025251}
   m_Layer: 0
   m_Name: PlayerSpawner
   m_TagString: Untagged
@@ -58,22 +57,3 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
---- !u!114 &4197257806811025251
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7273863077125379471}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6919144a699e1d04aa89068ac3804853, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  PC: {fileID: 4639992981897814336, guid: 66547290c08ae4b17ba39c0496fbc53b, type: 3}
-  AR: {fileID: 4294713324928184186, guid: b5434458d9481494ebc508db4b547d9f, type: 3}
-  pcSpawnPointTag: PCSpawn
-  arSpawnPointTag: ARSpawn
-  removeSpawnPointAfterUse: 1
-  autoSpawnDelay: 15
