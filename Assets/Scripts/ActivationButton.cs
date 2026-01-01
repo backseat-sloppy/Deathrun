@@ -88,7 +88,7 @@ public class ActivationButton : MonoBehaviour
         Debug.Log("[VRSteppingStoneTrap] Starting staggered fall...");
         foreach (SteppingStone stone in sortedStones)
         {
-            stone.ActivateStoneFall();
+            stone.ActivateTrap();
             yield return new WaitForSeconds(fallStaggerDelay); 
         }
 
