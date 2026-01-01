@@ -72,15 +72,13 @@ namespace DeathrunGame
             }
 
             // Check if the key is being held down
-            if (Input.GetKey(startKey))
-            {
-                if (!isHoldingKey)
-                {
-                    isHoldingKey = true;
-                    holdTimer = 0f;
+            
+            
+              
+                   
                     isCountdownActive.Value = true;
                     Log($"🎮 Host started holding '{startKey}' key");
-                }
+                
 
                 holdTimer += Time.deltaTime;
                 countdownProgress.Value = Mathf.Clamp01(holdTimer / holdDuration);
@@ -90,7 +88,7 @@ namespace DeathrunGame
                 {
                     InitiateSceneChange();
                 }
-            }
+            
             else if (isHoldingKey)
             {
                 // Key was released before duration completed

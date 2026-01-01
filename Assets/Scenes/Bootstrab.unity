@@ -12478,7 +12478,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2652391507748525859, guid: fed22725692e1034c9727a38de334912, type: 3}
       propertyPath: holdDuration
-      value: 2
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2652391507748525859, guid: fed22725692e1034c9727a38de334912, type: 3}
       propertyPath: countdownText
