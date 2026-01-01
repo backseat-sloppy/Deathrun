@@ -11,7 +11,6 @@ public class SteppingStone : MonoBehaviour
     [Tooltip("The range for movement duration (lower value is faster)")]
     public Vector2 durationRange = new Vector2(0.8f, 1.5f); 
 
-    // This stores the individual stone data
     private struct StoneData
     {
         public Transform transform;
@@ -24,7 +23,7 @@ public class SteppingStone : MonoBehaviour
 
     private void Awake()
     {
-        // Find all children with Renderers (actual visual stones)
+        // Find all immediate children
         foreach (Transform child in transform)
         {
             StoneData data = new StoneData();
@@ -36,26 +35,32 @@ public class SteppingStone : MonoBehaviour
         }
     }
 
+    // --- ACTIVATION METHODS ---
+
     /// <summary>
-    /// This matches the 'Activation Method Name' in your VRTrapActivator.
-    /// It triggers every child stone to fall.
+    /// This is what ActivationButton.cs is looking for.
+    /// It simply redirects to the main logic.
+    /// </summary>
+    public void ActivateStoneFall()
+    {
+        ActivateTrap();
+    }
+
+    /// <summary>
+    /// This is what VRTrapActivator (the VR Grab script) is looking for.
     /// </summary>
     public void ActivateTrap()
     {
         for (int i = 0; i < childStones.Count; i++)
         {
-            // If the stone is already moving, stop it
             if (childStones[i].activeCoroutine != null) 
                 StopCoroutine(childStones[i].activeCoroutine);
 
-            // Start the fall for this specific stone
+            // We store the reference to the coroutine so we can stop it if needed
             StartCoroutine(MoveChild(i, childStones[i].fallY));
         }
     }
 
-    /// <summary>
-    /// Call this to make all stones rise back up.
-    /// </summary>
     public void ActivateStoneRise()
     {
         for (int i = 0; i < childStones.Count; i++)
@@ -66,6 +71,8 @@ public class SteppingStone : MonoBehaviour
             StartCoroutine(MoveChild(i, childStones[i].startY));
         }
     }
+
+    // --- INTERNAL MOVEMENT LOGIC ---
 
     private IEnumerator MoveChild(int index, float endY)
     {
@@ -78,10 +85,10 @@ public class SteppingStone : MonoBehaviour
 
         while (elapsedTime < duration)
         {
-            if (stoneTrans == null) yield break; // Safety check
+            if (stoneTrans == null) yield break;
 
             float t = elapsedTime / duration;
-            float easedT = t * t * (3f - 2f * t); // SmoothStep
+            float easedT = t * t * (3f - 2f * t); // SmoothStep easing
 
             stoneTrans.position = Vector3.Lerp(startPos, endPos, easedT); 
 
