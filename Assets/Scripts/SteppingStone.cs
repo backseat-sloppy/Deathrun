@@ -1,80 +1,94 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SteppingStone : MonoBehaviour
 {
-    // The final desired Y position (read from its initial position)
-    private float targetY; 
-
-    // The submerged Y position (where it rests)
-    private float submergedY; 
-    
     [Header("Movement Settings")]
-    [Tooltip("How far below the surface the stone starts/returns to")]
-    public float submergedDepth = 0.5f; 
+    [Tooltip("How far below the surface the stones fall")]
+    public float submergedDepth = 2.0f; 
 
     [Tooltip("The range for movement duration (lower value is faster)")]
-    public Vector2 durationRange = new Vector2(0.8f, 1.5f); // Adjusted duration for faster fall/rise
+    public Vector2 durationRange = new Vector2(0.8f, 1.5f); 
 
-    private Coroutine movementCoroutine;
+    // This stores the individual stone data
+    private struct StoneData
+    {
+        public Transform transform;
+        public float startY;
+        public float fallY;
+        public Coroutine activeCoroutine;
+    }
+
+    private List<StoneData> childStones = new List<StoneData>();
 
     private void Awake()
     {
-        // 1. Save the stone's current Y position (where it starts).
-        targetY = transform.position.y; 
-
-        // 2. Calculate the submerged position.
-        submergedY = targetY - submergedDepth; 
-        
-        // **IMPORTANT:** The stone remains at targetY (UP) when the game starts.
+        // Find all children with Renderers (actual visual stones)
+        foreach (Transform child in transform)
+        {
+            StoneData data = new StoneData();
+            data.transform = child;
+            data.startY = child.position.y;
+            data.fallY = child.position.y - submergedDepth;
+            data.activeCoroutine = null;
+            childStones.Add(data);
+        }
     }
 
     /// <summary>
-    /// Starts the movement of the stone, moving it DOWN to the water.
-    /// This is triggered in sequence by the ButtonActivator.
+    /// This matches the 'Activation Method Name' in your VRTrapActivator.
+    /// It triggers every child stone to fall.
     /// </summary>
-    public void ActivateStoneFall()
+    public void ActivateTrap()
     {
-        // Stop any previous movement
-        if (movementCoroutine != null) StopCoroutine(movementCoroutine); 
-        movementCoroutine = StartCoroutine(MoveStone(submergedY));
+        for (int i = 0; i < childStones.Count; i++)
+        {
+            // If the stone is already moving, stop it
+            if (childStones[i].activeCoroutine != null) 
+                StopCoroutine(childStones[i].activeCoroutine);
+
+            // Start the fall for this specific stone
+            StartCoroutine(MoveChild(i, childStones[i].fallY));
+        }
     }
 
     /// <summary>
-    /// Starts the movement of the stone, moving it UP from the water.
-    /// This is triggered by the ButtonActivator for the 5-second reset.
+    /// Call this to make all stones rise back up.
     /// </summary>
     public void ActivateStoneRise()
     {
-        // Stop any previous movement
-        if (movementCoroutine != null) StopCoroutine(movementCoroutine); 
-        movementCoroutine = StartCoroutine(MoveStone(targetY));
+        for (int i = 0; i < childStones.Count; i++)
+        {
+            if (childStones[i].activeCoroutine != null) 
+                StopCoroutine(childStones[i].activeCoroutine);
+
+            StartCoroutine(MoveChild(i, childStones[i].startY));
+        }
     }
 
-    private IEnumerator MoveStone(float endY)
+    private IEnumerator MoveChild(int index, float endY)
     {
-        // Random speed variation still applies
         float duration = Random.Range(durationRange.x, durationRange.y); 
         float elapsedTime = 0f;
 
-        Vector3 startPos = transform.position;
+        Transform stoneTrans = childStones[index].transform;
+        Vector3 startPos = stoneTrans.position;
         Vector3 endPos = new Vector3(startPos.x, endY, startPos.z);
 
         while (elapsedTime < duration)
         {
+            if (stoneTrans == null) yield break; // Safety check
+
             float t = elapsedTime / duration;
-            // Use an easing function for a smoother look
             float easedT = t * t * (3f - 2f * t); // SmoothStep
 
-            transform.position = Vector3.Lerp(startPos, endPos, easedT); 
+            stoneTrans.position = Vector3.Lerp(startPos, endPos, easedT); 
 
             elapsedTime += Time.deltaTime;
             yield return null; 
         }
 
-        transform.position = endPos;
+        stoneTrans.position = endPos;
     }
-    
-    // NOTE: The OnPlayerStep/OnCollisionEnter logic is REMOVED 
-    // as the fall is now sequence-based, not player-step-based.
 }
