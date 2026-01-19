@@ -624,13 +624,51 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: dc58408c44f4cf341a4d42dd4a145165, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 94132068}
   m_SourcePrefab: {fileID: 100100000, guid: dc58408c44f4cf341a4d42dd4a145165, type: 3}
 --- !u!4 &94132065 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: dc58408c44f4cf341a4d42dd4a145165, type: 3}
   m_PrefabInstance: {fileID: 94132064}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &94132066 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: dc58408c44f4cf341a4d42dd4a145165, type: 3}
+  m_PrefabInstance: {fileID: 94132064}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &94132067 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: dc58408c44f4cf341a4d42dd4a145165, type: 3}
+  m_PrefabInstance: {fileID: 94132064}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &94132068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 94132066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fea389aeaaa203458b591a6533c8933, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handAnimator: {fileID: 94132067}
+  grabAction:
+    m_UseReference: 0
+    m_Action:
+      m_Name: Grab
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 49b9e239-28c3-4ce0-969f-c05a76daf032
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 0}
 --- !u!4 &106938305 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6ae7edc17d404b346a3cdb561c1a4ccc, type: 3}
