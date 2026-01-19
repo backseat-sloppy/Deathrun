@@ -118,6 +118,7 @@
   <Project Path="Unity.Services.Core.Telemetry.csproj" />
   <Project Path="AK.Wwise.Unity.AddressableInstaller.csproj" />
   <Project Path="Unity.Services.Core.Components.csproj" />
+  <Project Path="Unity.XR.Interaction.Toolkit.Samples.StarterAssets.csproj" />
   <Project Path="Unity.XR.Management.csproj" />
   <Project Path="Unity.Mathematics.Editor.csproj" />
   <Project Path="Unity.VisualScripting.SettingsProvider.Editor.csproj" />
@@ -145,6 +146,7 @@
   <Project Path="Unity.Multiplayer.Tools.MetricEvents.csproj" />
   <Project Path="Unity.EditorCoroutines.Editor.csproj" />
   <Project Path="Unity.Services.Lobby.Editor.csproj" />
+  <Project Path="Unity.XR.Interaction.Toolkit.Samples.StarterAssets.Editor.csproj" />
   <Project Path="Unity.XR.OpenXR.Features.MetaQuestSupport.csproj" />
   <Project Path="Unity.TerrainTools.csproj" />
   <Project Path="Unity.RenderPipeline.Universal.ShaderLibrary.csproj" />
