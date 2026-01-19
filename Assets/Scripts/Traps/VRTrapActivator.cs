@@ -1,15 +1,16 @@
 ﻿using UnityEngine;
 using Unity.Netcode;
-using Oculus.Interaction;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 namespace DeathrunGame
 {
     /// <summary>
     /// VR trap activator that synchronizes activation across the network.
     /// When the VR player grabs/releases this object, all clients see the trap activate.
-    /// Attach this to any GameObject with a Grabbable component.
+    /// Attach this to any GameObject with an XRGrabInteractable component.
     /// </summary>
-    [RequireComponent(typeof(Grabbable))]
+    [RequireComponent(typeof(UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable))]
     public class VRTrapActivator : NetworkBehaviour
     {
         [Header("Trap Settings")]
@@ -50,7 +51,7 @@ namespace DeathrunGame
             NetworkVariableWritePermission.Server
         );
 
-        private Grabbable grabbable;
+        private UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable grabbable;
         private Rigidbody rb;
         private Renderer objectRenderer;
         private Material originalMaterial;
@@ -58,8 +59,8 @@ namespace DeathrunGame
 
         private void Awake()
         {
-            // Get the Grabbable component
-            grabbable = GetComponent<Grabbable>();
+            // Get the XRGrabInteractable component
+            grabbable = GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
 
             // Get Rigidbody (if exists) for locking movement
             rb = GetComponent<Rigidbody>();
@@ -120,7 +121,8 @@ namespace DeathrunGame
             // Subscribe to grab events
             if (grabbable != null)
             {
-                grabbable.WhenPointerEventRaised += OnGrabEvent;
+                grabbable.selectEntered.AddListener(OnGrabbed);
+                grabbable.selectExited.AddListener(OnReleased);
             }
         }
 
@@ -129,7 +131,8 @@ namespace DeathrunGame
             // Unsubscribe to prevent memory leaks
             if (grabbable != null)
             {
-                grabbable.WhenPointerEventRaised -= OnGrabEvent;
+                grabbable.selectEntered.RemoveListener(OnGrabbed);
+                grabbable.selectExited.RemoveListener(OnReleased);
             }
         }
 
@@ -167,9 +170,9 @@ namespace DeathrunGame
         }
 
         /// <summary>
-        /// Called when grab/release happens (LOCAL event, VR player only)
+        /// Called when object is grabbed (LOCAL event, VR player only)
         /// </summary>
-        private void OnGrabEvent(PointerEvent evt)
+        private void OnGrabbed(SelectEnterEventArgs args)
         {
             // Only the owner (VR player/host) should handle grab events
             if (!IsOwner && !IsHost)
@@ -184,15 +187,25 @@ namespace DeathrunGame
                 return;
             }
 
-            // Check if object was grabbed
-            if (evt.Type == PointerEventType.Select && activateOnGrab)
+            if (activateOnGrab)
             {
                 Log("🖐️ Object grabbed!");
                 ActivateTrap();
             }
+        }
 
-            // Check if object was released
-            if (evt.Type == PointerEventType.Unselect && activateOnRelease)
+        /// <summary>
+        /// Called when object is released (LOCAL event, VR player only)
+        /// </summary>
+        private void OnReleased(SelectExitEventArgs args)
+        {
+            // Only the owner (VR player/host) should handle release events
+            if (!IsOwner && !IsHost)
+            {
+                return;
+            }
+
+            if (activateOnRelease)
             {
                 Log("👋 Object released!");
                 ActivateTrap();
@@ -311,11 +324,11 @@ namespace DeathrunGame
         /// </summary>
         private void LockMovement()
         {
-            // Disable the grabbable component (only on VR player's machine)
+            // Disable the XRGrabInteractable component (only on VR player's machine)
             if (grabbable != null && (IsOwner || IsHost))
             {
                 grabbable.enabled = false;
-                Log("🔒 Grabbable disabled - object locked!");
+                Log("🔒 XRGrabInteractable disabled - object locked!");
             }
 
             // Lock the Rigidbody
@@ -351,7 +364,7 @@ namespace DeathrunGame
 
             isActivated.Value = false;
 
-            // Re-enable grabbable
+            // Re-enable XRGrabInteractable
             if (grabbable != null)
             {
                 grabbable.enabled = true;
@@ -380,8 +393,10 @@ namespace DeathrunGame
             }
         }
 
-        private void OnDestroy()
+        public override void OnDestroy()
         {
+            base.OnDestroy();
+            
             // Clean up materials to prevent memory leaks
             if (activatedMaterial != null)
             {
